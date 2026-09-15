@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>วิริยะประกันภัย - นโยบายการคุ้มครองข้อมูลส่วนบุคคล</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
+
+  :root{
+    --brand-blue:#0a3d8f;
+    --text-dark:#22314f;
+    --text-muted:#7b8494;
+    --border:#e4e8ef;
+    --link-blue:#2f6fed;
+    --bg-page:#f4f6fa;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Prompt', sans-serif;
+    background:#c9cdd6;
+    display:flex;
+    justify-content:center;
+    padding:24px 0;
+  }
+  .page{
+    width:1040px;
+    background:#fff;
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,0.15);
+  }
+
+  /* Top bar */
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 30px;
+  }
+  .topbar-left{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .logo-badge{
+    width:32px;
+    height:32px;
+    background:var(--brand-blue);
+    border-radius:9px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:16px;
+    color:#ffcb3d;
+  }
+  .brand-text .th{
+    font-weight:800;
+    font-size:14px;
+    color:var(--brand-blue);
+  }
+  .brand-text .en{
+    font-size:8px;
+    letter-spacing:0.3px;
+    color:var(--brand-blue);
+    font-weight:700;
+  }
+  .divider-v{
+    width:1px;
+    height:22px;
+    background:#ddd;
+    margin:0 6px;
+  }
+  .care-badge{
+    display:flex;
+    align-items:center;
+    gap:4px;
+    font-size:12px;
+  }
+  .care-badge .heart{color:#5da8d6;font-size:13px;}
+  .care-badge b{
+    color:var(--brand-blue);
+    font-weight:800;
+    font-size:12px;
+    display:block;
+  }
+  .care-badge small{
+    font-size:6.5px;
+    color:#9aa4b5;
+    display:block;
+  }
+  .topbar-right{
+    display:flex;
+    align-items:center;
+    gap:20px;
+    font-size:12px;
+    color:var(--text-dark);
+  }
+  .topbar-right span{
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .icon-circle{
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    border:1.5px solid #ccc;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:11px;
+  }
+
+  /* Nav */
+  .navbar{
+    display:flex;
+    align-items:center;
+    gap:28px;
+    padding:12px 30px;
+    border-top:1px solid #eee;
+    border-bottom:1px solid #eee;
+    font-size:12.5px;
+    color:var(--text-dark);
+  }
+  .navbar a{
+    color:var(--text-dark);
+    text-decoration:none;
+    display:flex;
+    align-items:center;
+    gap:4px;
+  }
+  .navbar a.chev::after{
+    content:"⌄";
+    font-size:10px;
+    color:var(--text-muted);
+  }
+
+  /* Breadcrumb */
+  .breadcrumb{
+    padding:12px 30px;
+    font-size:11.5px;
+    color:var(--text-muted);
+  }
+  .breadcrumb a{
+    color:var(--text-muted);
+    text-decoration:none;
+  }
+  .breadcrumb .sep{
+    margin:0 8px;
+  }
+
+  /* Content */
+  .content{
+    padding:16px 60px 60px;
+  }
+  h1.title{
+    text-align:center;
+    font-size:19px;
+    font-weight:800;
+    color:var(--brand-blue);
+    line-height:1.7;
+    margin:14px 0 26px;
+  }
+
+  .body-text{
+    font-size:13px;
+    color:var(--text-dark);
+    line-height:2;
+    text-align:justify;
+    margin-bottom:22px;
+  }
+
+  h2.section-title{
+    font-size:14px;
+    font-weight:800;
+    color:var(--text-dark);
+    margin:26px 0 14px;
+  }
+
+  ol.obj-list{
+    margin:0;
+    padding-left:20px;
+  }
+  ol.obj-list li{
+    font-size:13px;
+    color:var(--text-dark);
+    line-height:1.95;
+    text-align:justify;
+    margin-bottom:10px;
+  }
+</style>
+</head>
+<body>
+
+<div style="position:fixed; top:0; left:0; right:0; z-index:99999; display:flex; align-items:center; justify-content:center; gap:14px; background:#0a2a5e; padding:6px 20px; font-family:'Prompt',sans-serif; font-size:12px; box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+  <a href="../index.html" style="color:#fff; text-decoration:none;">&#8962; กลับหน้าหลัก</a>
+  <span style="color:rgba(255,255,255,0.4);">|</span>
+  <a href="vinsure.html" style="color:#fff; text-decoration:none;">เมนู Vinsure</a>
+</div>
+<div class="page" style="margin-top:32px;">
+
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <img src="../assets/viriyah-logo.png" alt="วิริยะประกันภัย" style="height:100px;width:auto;display:block;">
+      <div class="divider-v"></div>
+      <div class="care-badge">
+        <span class="heart">♡</span>
+        <div>
+          <b>CARE</b>
+          <small>ดูแลกันมากกว่าที่คุณคิด</small>
+        </div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span>📞 ให้เราดูแลคุณ 0-2422-8888</span>
+      <span><span class="icon-circle">🔍</span> ค้นหา</span>
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <div class="navbar">
+    <a href="#">ค้นหาแผนประกันสุขภาพที่ใช่</a>
+    <a href="#" class="chev">ประกันลูกค้ารายบุคคล</a>
+    <a href="#" class="chev">บริการของเรา</a>
+    <a href="#">บทความ</a>
+    <a href="#">เที่ยวกับเรา</a>
+    <a href="#">ติดต่อเรา</a>
+  </div>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a href="#">หน้าหลัก</a>
+    <span class="sep">›</span>
+    <span>Privacy</span>
+  </div>
+
+  <div class="content">
+    <h1 class="title">
+      นโยบายการคุ้มครอง ข้อมูลส่วนบุคคล บริษัท วิริยะประกันภัย จำกัด (มหาชน)<br>
+      (สำหรับลูกค้าและผู้มุ่งหวัง)
+    </h1>
+
+    <p class="body-text">
+      บริษัท วิริยะประกันภัย จำกัด (มหาชน) (“บริษัท”) ตระหนักถึงสิทธิความเป็นส่วนตัวของความสำคัญของการคุ้มครองข้อมูลส่วนบุคคล และมีการตกลงและ กำหนดให้การเก็บรวบรวม ใช้ และ เปิดเผย (“ประมวลผล”หรือ“การประมวลผล”) ข้อมูลส่วนบุคคลของท่านที่ทำธุรกรรมหรือให้บริการผ่านทางบริษัทจึงได้จัดทำนโยบายฉบับนี้ขึ้นเพื่อแจ้งให้ท่านซึ่งเป็นเจ้าของข้อมูลส่วนบุคคลทราบถึง วัตถุประสงค์ของบริษัทในการเก็บรวบรวม ใช้และเปิดเผยข้อมูลส่วนบุคคล รวมถึงสิทธิของเจ้าของข้อมูลส่วนบุคคล การเปิดเผยข้อมูลส่วนบุคคล และวิธีการติดต่อกับบริษัท ทั้งนี้เพื่อให้เป็นไปตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (“พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล”)
+    </p>
+
+    <h2 class="section-title">วัตถุประสงค์</h2>
+
+    <ol class="obj-list">
+      <li>เพื่อจริงและเป็นไปตามความประสงค์ของเจ้าของข้อมูลส่วนบุคคล การทำธุรกรรม ให้บริการทางประกันภัยและระหว่างบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562</li>
+      <li>เพื่อป้องกันการนำข้อมูลส่วนบุคคลของเจ้าของข้อมูลส่วนบุคคลไปใช้ในลักษณะที่ไม่เหมาะสมหรือละเมิดสิทธิของบุคคลอื่น และเพื่อระบุตัวตนและยืนยันตัวตนก่อนการทำธุรกรรม หรือก่อนให้บริการต่างๆ</li>
+      <li>เพื่อป้องกันความสูญเสียของข้อมูลส่วนบุคคลและผู้ที่ต้องการข้อมูลส่วนบุคคลของเจ้าของข้อมูลเกี่ยวข้อกับเจ้าของบุคคลของบริษัทว่า และระบบข้อมูลอิเล็กทรอนิกส์ ไม่ให้กระทำการต่างๆ หรือเข้าถึงข้อมูลโดยไม่ได้รับอนุญาตนั้น ถือว่าเป็นความรับผิดชอบ</li>
+      <li>เพื่อใช้ป้องกันหรือระงับอันตรายต่อชีวิต ร่างกายหรือสุขภาพของบุคคล และเป็นสิ่งจำเป็นในการเปิดเผยหรือแลกเปลี่ยนข้อมูลระหว่างหน่วยงานที่เกี่ยวข้อง สถาบันการเงินหรือหน่วยงานที่กำกับดูแล</li>
+      <li>เพื่อวิเคราะห์และปรับปรุงข้อมูลส่วนบุคคลให้มีความถูกต้องและเป็นปัจจุบันในการนำเสนอผลิตภัณฑ์และบริการอันเป็นประโยชน์ต่อเจ้าของข้อมูลได้อย่างเหมาะสมและมีประสิทธิภาพยิ่งขึ้น</li>
+    </ol>
+  </div>
+
+</div>
+
+</body>
+</html>

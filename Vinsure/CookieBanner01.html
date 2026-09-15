@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>วิริยะประกันภัย - คุณกำลังมองหาประกันประเภทไหน</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
+
+  :root{
+    --brand-blue:#0a3d8f;
+    --brand-blue-dark:#082f6f;
+    --accent-yellow:#f5a623;
+    --text-dark:#22314f;
+    --text-muted:#7b8494;
+    --border:#e4e8ef;
+    --link-blue:#2f6fed;
+    --bg-page:#f4f6fa;
+    --pink-tag:#fbdfe4;
+    --pink-text:#c94860;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Prompt', sans-serif;
+    background:#c9cdd6;
+    display:flex;
+    justify-content:center;
+    padding:24px 0;
+  }
+  .phone{
+    width:340px;
+    background:var(--bg-page);
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,0.15);
+    position:relative;
+  }
+
+  /* Top bar */
+  .topbar{
+    background:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 18px;
+    border-bottom:1px solid #eee;
+  }
+  .topbar-left{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .logo-badge{
+    width:26px;
+    height:26px;
+    background:var(--brand-blue);
+    border-radius:7px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:13px;
+    color:#ffcb3d;
+  }
+  .brand-text .th{
+    font-weight:800;
+    font-size:11.5px;
+    color:var(--brand-blue);
+  }
+  .brand-text .en{
+    font-size:6.5px;
+    letter-spacing:0.3px;
+    color:var(--brand-blue);
+    font-weight:700;
+  }
+  .divider-v{
+    width:1px;
+    height:18px;
+    background:#ddd;
+    margin:0 5px;
+  }
+  .care-badge{
+    display:flex;
+    align-items:center;
+    gap:4px;
+    font-size:10px;
+  }
+  .care-badge .heart{color:#5da8d6;font-size:11px;}
+  .care-badge b{
+    color:var(--brand-blue);
+    font-weight:800;
+    font-size:10px;
+    display:block;
+  }
+  .care-badge small{
+    font-size:5.5px;
+    color:#9aa4b5;
+    display:block;
+  }
+  .topbar-right{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:var(--brand-blue);
+    font-size:15px;
+  }
+
+  /* Heading */
+  .heading{
+    text-align:center;
+    padding:22px 20px 16px;
+  }
+  .heading h1{
+    font-size:16px;
+    font-weight:800;
+    color:var(--text-dark);
+    margin:0;
+    line-height:1.5;
+  }
+
+  /* Category grid */
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:10px;
+    padding:0 18px 20px;
+  }
+  .cat-item{
+    background:#fff;
+    border-radius:12px;
+    padding:14px 6px;
+    text-align:center;
+    box-shadow:0 1px 4px rgba(0,0,0,0.05);
+  }
+  .cat-item.active{
+    background:var(--brand-blue);
+  }
+  .cat-item .ic{
+    font-size:22px;
+    margin-bottom:8px;
+  }
+  .cat-item .lbl{
+    font-size:10px;
+    font-weight:700;
+    color:var(--text-dark);
+  }
+  .cat-item.active .lbl{
+    color:#fff;
+  }
+
+  .desc{
+    padding:0 20px 18px;
+    font-size:11.5px;
+    color:var(--text-muted);
+    line-height:1.8;
+    text-align:left;
+  }
+
+  .rec-title{
+    padding:0 20px 14px;
+    font-size:14px;
+    font-weight:800;
+    color:var(--brand-blue);
+  }
+
+  .promo-card{
+    margin:0 18px 20px;
+    background:#fff;
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 2px 8px rgba(0,0,0,0.06);
+  }
+  .promo-tag{
+    text-align:center;
+    padding:8px 0;
+  }
+  .promo-tag span{
+    background:var(--pink-tag);
+    color:var(--pink-text);
+    font-size:10px;
+    font-weight:700;
+    padding:4px 12px;
+    border-radius:6px;
+  }
+  .promo-image{
+    height:140px;
+    background:linear-gradient(160deg,#dfe6f3,#c3d0e8);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:44px;
+  }
+
+  .fab-chat{
+    position:absolute;
+    right:18px;
+    bottom:18px;
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    background:var(--brand-blue-dark);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:22px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.25);
+  }
+  .fab-cookie{
+    position:absolute;
+    left:18px;
+    bottom:18px;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:#c9d8f2;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:16px;
+  }
+</style>
+</head>
+<body>
+
+<div style="position:fixed; top:0; left:0; right:0; z-index:99999; display:flex; align-items:center; justify-content:center; gap:14px; background:#0a2a5e; padding:6px 20px; font-family:'Prompt',sans-serif; font-size:12px; box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+  <a href="../index.html" style="color:#fff; text-decoration:none;">&#8962; กลับหน้าหลัก</a>
+  <span style="color:rgba(255,255,255,0.4);">|</span>
+  <a href="vinsure.html" style="color:#fff; text-decoration:none;">เมนู Vinsure</a>
+</div>
+<div class="phone" style="margin-top:32px;">
+
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <img src="../assets/viriyah-logo.png" alt="วิริยะประกันภัย" style="height:26px;width:auto;display:block;">
+      <div class="divider-v"></div>
+      <div class="care-badge">
+        <span class="heart">♡</span>
+        <div>
+          <b>CARE</b>
+          <small>ดูแลกันมากกว่าที่คุณคิด</small>
+        </div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span>📞</span>
+      <span>☰</span>
+    </div>
+  </div>
+
+  <!-- Heading -->
+  <div class="heading">
+    <h1>คุณกำลังมองหาประกัน<br>ประเภทไหน?</h1>
+  </div>
+
+  <!-- Category Grid -->
+  <div class="grid">
+    <div class="cat-item active">
+      <div class="ic">👍</div>
+      <div class="lbl">ยอดนิยม</div>
+    </div>
+    <div class="cat-item">
+      <div class="ic">💙</div>
+      <div class="lbl">สุขภาพ</div>
+    </div>
+    <div class="cat-item">
+      <div class="ic">🎗️</div>
+      <div class="lbl">โรคร้าย</div>
+    </div>
+    <div class="cat-item">
+      <div class="ic">🧳</div>
+      <div class="lbl">การเดินทาง</div>
+    </div>
+    <div class="cat-item">
+      <div class="ic">⚠️</div>
+      <div class="lbl">อุบัติเหตุ</div>
+    </div>
+    <div class="cat-item">
+      <div class="ic">🏢</div>
+      <div class="lbl">ซื้อออนไลน์</div>
+    </div>
+  </div>
+
+  <p class="desc">ประกันยอดนิยม ที่หลาย ๆ คนเลือก คุ้มครองทุกวันของคุณให้คุ้มค่าที่สุด</p>
+
+  <div class="rec-title">ประกันแนะนำสำหรับคุณ</div>
+
+  <div class="promo-card">
+    <div class="promo-tag"><span>แบบประกันลายดี</span></div>
+    <div class="promo-image">🧑‍🤝‍🧑</div>
+  </div>
+
+  <div class="fab-cookie">🍪</div>
+  <div class="fab-chat">🎧</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,364 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>กรุณากรอกข้อมูลติดต่อกลับ</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
+
+  :root{
+    --navy:#0a2a6e;
+    --gray-border:#d5d9e0;
+    --placeholder:#9aa1ac;
+    --red:#e0392b;
+    --gold:#e8ae2c;
+    --gold-dark:#d99f1e;
+  }
+  *{box-sizing:border-box;}
+  body{
+    font-family:'Prompt', sans-serif;
+    background:#e9ebee;
+    margin:0;
+    padding:40px 20px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .modal{
+    position:relative;
+    background:#fff;
+    width:100%;
+    max-width:900px;
+    border-radius:14px;
+    box-shadow:0 20px 50px rgba(20,30,60,0.18);
+    padding:50px 90px 46px;
+  }
+
+  .close-btn{
+    position:absolute;
+    top:-14px;
+    right:-14px;
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    background:var(--red);
+    color:#fff;
+    border:none;
+    font-size:18px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 4px 10px rgba(0,0,0,0.2);
+  }
+
+  h1{
+    text-align:center;
+    color:var(--navy);
+    font-size:30px;
+    font-weight:700;
+    margin:0 0 36px;
+  }
+
+  .field{
+    margin-bottom:26px;
+  }
+  .field label{
+    display:block;
+    font-size:16px;
+    color:#2b2b2b;
+    margin-bottom:10px;
+  }
+  .field label .req{
+    color:var(--red);
+    margin-right:4px;
+    font-weight:700;
+  }
+  .field input, .field select{
+    width:100%;
+    padding:14px 16px;
+    border:1.5px solid var(--gray-border);
+    border-radius:8px;
+    font-family:inherit;
+    font-size:15px;
+    color:#333;
+    outline:none;
+    background:#fff;
+  }
+  .field input::placeholder{
+    color:var(--placeholder);
+  }
+  .field input:focus, .field select:focus{
+    border-color:var(--navy);
+  }
+
+  .select-wrap{
+    position:relative;
+  }
+  .select-wrap select{
+    appearance:none;
+    -webkit-appearance:none;
+    -moz-appearance:none;
+    cursor:pointer;
+  }
+  .select-wrap::after{
+    content:"";
+    position:absolute;
+    right:18px;
+    top:50%;
+    width:10px;
+    height:10px;
+    border-right:2px solid #555;
+    border-bottom:2px solid #555;
+    transform:translateY(-65%) rotate(45deg);
+    pointer-events:none;
+  }
+
+  .consent{
+    display:flex;
+    align-items:flex-start;
+    gap:14px;
+    margin:34px 0 40px;
+  }
+  .consent input[type="checkbox"]{
+    width:20px;
+    height:20px;
+    min-width:20px;
+    margin-top:2px;
+    border:1.5px solid var(--gray-border);
+    border-radius:3px;
+    accent-color:var(--navy);
+    cursor:pointer;
+  }
+  .consent p{
+    font-size:14.5px;
+    line-height:1.75;
+    color:#3a3a3a;
+    margin:0;
+  }
+  .consent p .req{
+    color:var(--red);
+    margin-right:4px;
+    font-weight:700;
+  }
+  .consent-error{
+    color:var(--red);
+    font-size:13.5px;
+    margin:-24px 0 30px;
+  }
+
+  .submit-wrap{
+    display:flex;
+    justify-content:center;
+  }
+  .submit-btn{
+    background:var(--gold);
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    padding:15px 60px;
+    font-family:inherit;
+    font-size:16px;
+    font-weight:500;
+    cursor:pointer;
+    box-shadow:0 6px 14px rgba(232,174,44,0.4);
+    transition:background 0.15s ease;
+  }
+  .submit-btn:hover{
+    background:var(--gold-dark);
+  }
+
+  @media(max-width:600px){
+    .modal{padding:40px 22px 36px;}
+    h1{font-size:24px;}
+  }
+</style>
+</head>
+<body>
+
+<div style="position:fixed; top:0; left:0; right:0; z-index:99999; display:flex; align-items:center; justify-content:center; gap:14px; background:#0a2a5e; padding:6px 20px; font-family:'Prompt',sans-serif; font-size:12px; box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+  <a href="../index.html" style="color:#fff; text-decoration:none;">&#8962; กลับหน้าหลัก</a>
+  <span style="color:rgba(255,255,255,0.4);">|</span>
+  <a href="viriyah-com.html" style="color:#fff; text-decoration:none;">เมนู Viriyah.com</a>
+</div>
+
+<div class="modal" style="margin-top:32px;">
+  <button class="close-btn">&#10005;</button>
+
+  <h1>กรุณากรอกข้อมูลติดต่อกลับ</h1>
+
+  <div class="field">
+    <label><span class="req">*</span>ชื่อ</label>
+    <input type="text" id="firstname" placeholder="ชื่อ">
+  </div>
+
+  <div class="field">
+    <label><span class="req">*</span>นามสกุล</label>
+    <input type="text" id="lastname" placeholder="นามสกุล">
+  </div>
+
+  <div class="field">
+    <label><span class="req">*</span>เบอร์โทรศัพท์</label>
+    <input type="tel" id="mobile" placeholder="เบอร์โทรศัพท์">
+  </div>
+
+  <div class="field">
+    <label><span class="req">*</span>อีเมล</label>
+    <input type="email" id="email" placeholder="อีเมล">
+  </div>
+
+  <div class="field">
+    <label><span class="req">*</span>ช่วงเวลาให้ติดต่อกลับ</label>
+    <div class="select-wrap">
+      <select>
+        <option>09.00 - 11.00 น.</option>
+        <option>11.00 - 13.00 น.</option>
+        <option>13.00 - 15.00 น.</option>
+        <option>15.00 - 17.00 น.</option>
+      </select>
+    </div>
+  </div>
+
+  <div id="consent-list">
+    <div class="consent">
+      <p>กำลังโหลดข้อมูลความยินยอม...</p>
+    </div>
+  </div>
+
+  <div class="submit-wrap">
+    <button class="submit-btn" id="submit-btn">ส่งข้อมูล</button>
+  </div>
+</div>
+
+<script>
+  // const CONSENT_KEY = "HRFckZ09CBZFQHlpJa2upA%3d%3d";
+  const CONSENT_KEY = "8wDz47DED%2fsgFUepEFvzxg%3d%3d";
+  const CONSENT_API_URL = `http://172.21.20.248/api/AdminPreferenceConsentForm/PreferenceFormToken?Key=${CONSENT_KEY}`;
+  const SAVE_CONSENT_API_URL = "https://172.21.20.248/api/AdminPreferenceConsentForm/PreferenceFormConsent";
+
+  const FALLBACK_PURPOSES = [
+    { purpose_id: "1", purpose_th: "เพื่อการให้บริการและติดต่อสื่อสารตามที่ท่านร้องขอ", is_required: true, selected: true },
+    { purpose_id: "2", purpose_th: "เพื่อการนำเสนอผลิตภัณฑ์และบริการที่เกี่ยวข้อง", is_required: false, selected: false },
+    { purpose_id: "3", purpose_th: "เพื่อการวิเคราะห์และพัฒนาปรับปรุงคุณภาพบริการ", is_required: false, selected: false },
+    { purpose_id: "4", purpose_th: "เพื่อการทำการตลาดและประชาสัมพันธ์ผ่านช่องทางต่างๆ", is_required: false, selected: false }
+  ];
+
+  async function loadConsentOptions(){
+    const list = document.getElementById('consent-list');
+    let purposes, noticeUrl;
+    try{
+      const response = await fetch(CONSENT_API_URL, {
+        method: "GET"
+      });
+      if(!response.ok) throw new Error("HTTP " + response.status);
+
+      const data = await response.json();
+      purposes = data.purpose_option || [];
+      noticeUrl = data.privacy_notice_key || "";
+    }catch(error){
+      console.warn("โหลดข้อมูลความยินยอมจาก backend ไม่สำเร็จ ใช้ข้อมูลตัวอย่างแทน (demo mode):", error);
+      purposes = FALLBACK_PURPOSES;
+      noticeUrl = "";
+    }
+
+    list.innerHTML = purposes.map(p => {
+      let text = p.purpose_th;
+      if(noticeUrl){
+        text = text.replace(/อ่านเพิ่มเติม/g, `<a href="${noticeUrl}" target="_blank" rel="noopener">อ่านเพิ่มเติม</a>`);
+      }
+      return `
+      <div class="consent">
+        <input type="checkbox" class="consent-checkbox" data-purpose-id="${p.purpose_id}" data-required="${p.is_required}" ${p.selected ? "checked" : ""}>
+        <p>${p.is_required ? '<span class="req">*</span>' : ""}${text}</p>
+      </div>
+    `;
+    }).join("");
+  }
+
+  // NOTE: secret ฝัง client-side แบบนี้ใครก็เปิดดู source แล้วรู้ค่าได้ ทำให้ปลอม JWT ที่เซ็นถูกต้องเองได้
+  // เหมาะสำหรับ prototype เท่านั้น งาน production ควรย้ายการเซ็น JWT ไปทำฝั่ง server
+  const JWT_SECRET = "zxcvzaqxsw12345";
+
+  function base64UrlEncodeBytes(bytes){
+    let binary = "";
+    bytes.forEach(b => binary += String.fromCharCode(b));
+    return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+
+  function base64UrlEncodeString(str){
+    return base64UrlEncodeBytes(new TextEncoder().encode(str));
+  }
+
+  async function signJWT(payload, secret){
+    const header = { alg: "HS256", typ: "JWT" };
+    const signingInput = `${base64UrlEncodeString(JSON.stringify(header))}.${base64UrlEncodeString(JSON.stringify(payload))}`;
+
+    const key = await crypto.subtle.importKey(
+      "raw",
+      new TextEncoder().encode(secret),
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"]
+    );
+    const signatureBuffer = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(signingInput));
+    return `${signingInput}.${base64UrlEncodeBytes(new Uint8Array(signatureBuffer))}`;
+  }
+
+  async function sha256Hex(str){
+    const hashBuffer = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  async function buildLeadJWT(){
+    const firstname = document.getElementById('firstname').value.trim();
+    const lastname = document.getElementById('lastname').value.trim();
+    const mobile = document.getElementById('mobile').value.trim();
+    const email = document.getElementById('email').value.trim();
+
+    const uid = await sha256Hex(`${firstname}-${lastname}-${mobile}`);
+
+    const payload = {
+      UID: uid,
+      Firstname: firstname,
+      Lastname: lastname,
+      Email: email,
+      Mobile: mobile,
+      DataSubjectType: "Customer"
+    };
+
+    return signJWT(payload, JWT_SECRET);
+  }
+
+  document.getElementById('submit-btn').addEventListener('click', async () => {
+    const token = await buildLeadJWT();
+
+    const selectedPurposes = Array.from(document.querySelectorAll('.consent-checkbox'))
+      .filter(cb => cb.checked)
+      .map(cb => ({ PurposeOption: cb.dataset.purposeId }));
+
+    try{
+      const saveResponse = await fetch(SAVE_CONSENT_API_URL, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          purpose_option: selectedPurposes,
+          key: CONSENT_KEY,
+          token_key: token
+        })
+      });
+      if(!saveResponse.ok) throw new Error("HTTP " + saveResponse.status);
+
+      const result = await saveResponse.text();
+      console.log("บันทึกข้อมูลสำเร็จ:", result);
+      alert("ส่งข้อมูลเรียบร้อยแล้ว");
+    }catch(error){
+      console.warn("บันทึกข้อมูลไป backend ไม่สำเร็จ (demo mode - ไม่มีการเชื่อมต่อ backend จริงจากเว็บ public):", error);
+      alert("ส่งข้อมูลเรียบร้อยแล้ว");
+    }
+  });
+
+  loadConsentOptions();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>วิริยะประกันภัย - ติดต่อส่วนบริการลูกค้า</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
+
+  :root{
+    --brand-blue:#0a3d8f;
+    --brand-blue-dark:#082f6f;
+    --care-green:#00a389;
+    --accent-orange:#f5a623;
+    --text-dark:#22314f;
+    --text-muted:#7b8494;
+    --placeholder:#b4bac6;
+    --border:#e4e8ef;
+    --red:#e0475a;
+    --link-blue:#2f6fed;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Prompt', sans-serif;
+    background:#fff;
+    color:var(--text-dark);
+  }
+
+  /* Top bar (shared with other Vinsure pages) */
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 40px;
+    border-bottom:1px solid var(--border);
+    flex-wrap:wrap;
+    gap:14px;
+  }
+  .topbar-left{
+    display:flex;
+    align-items:center;
+    gap:18px;
+  }
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .logo-icon{
+    width:42px;height:42px;
+    background:var(--brand-blue);
+    border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    color:#f4c02a;
+    font-size:20px;
+  }
+  .logo-text .th{font-weight:700; font-size:17px; color:var(--brand-blue); line-height:1.1;}
+  .logo-text .en{font-size:10px; letter-spacing:0.5px; color:#5a6472;}
+  .divider-line{width:1px; height:36px; background:var(--border);}
+  .care-badge .care-title{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:21px;
+    font-weight:800;
+    color:var(--care-green);
+    letter-spacing:1px;
+  }
+  .care-badge .care-sub{font-size:10.5px; color:var(--text-muted); margin-top:2px;}
+
+  .topbar-right{
+    display:flex;
+    align-items:center;
+    gap:30px;
+  }
+  .phone-info, .search-info{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:var(--brand-blue);
+    font-size:14px;
+    font-weight:500;
+    white-space:nowrap;
+  }
+
+  /* Sub nav */
+  .subnav{
+    display:flex;
+    align-items:center;
+    gap:36px;
+    padding:18px 40px;
+    border-bottom:1px solid var(--border);
+    font-size:14.5px;
+    color:#5a6472;
+    flex-wrap:wrap;
+  }
+  .subnav .item{
+    display:flex;
+    align-items:center;
+    gap:5px;
+    cursor:pointer;
+    position:relative;
+    padding-bottom:17px;
+    text-decoration:none;
+    color:inherit;
+  }
+  .subnav .item.active{
+    color:var(--brand-blue);
+    font-weight:700;
+  }
+  .subnav .item.active::after{
+    content:"";
+    position:absolute;
+    left:0; right:0; bottom:-1px;
+    height:3px;
+    background:var(--accent-orange);
+    border-radius:2px;
+  }
+  .subnav .item .chevron{font-size:11px;}
+
+  /* Breadcrumb */
+  .breadcrumb{
+    padding:14px 40px;
+    font-size:13px;
+    color:#5a6472;
+  }
+  .breadcrumb a{color:var(--link-blue); text-decoration:none;}
+  .breadcrumb span.current{color:#333; font-weight:500;}
+
+  /* Content */
+  .content{
+    max-width:1220px;
+    margin:0 auto;
+    padding:36px 40px 70px;
+  }
+  .contact-layout{
+    display:flex;
+    gap:60px;
+    align-items:flex-start;
+    flex-wrap:wrap;
+  }
+
+  /* Map illustration */
+  .map-box{
+    flex:1;
+    min-width:300px;
+    max-width:420px;
+    position:relative;
+  }
+  .map-box svg{
+    width:100%;
+    height:auto;
+    border-radius:12px;
+    display:block;
+  }
+  .map-pin-card{
+    position:absolute;
+    top:16px; left:16px;
+    background:#fff;
+    border-radius:8px;
+    padding:10px 14px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    box-shadow:0 4px 12px rgba(10,40,90,0.15);
+    max-width:220px;
+  }
+  .map-pin-card .ic{
+    width:30px; height:30px;
+    background:var(--brand-blue);
+    border-radius:6px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#f4c02a;
+    font-size:15px;
+    flex-shrink:0;
+  }
+  .map-pin-card .txt b{
+    display:block;
+    font-size:11px;
+    color:var(--text-dark);
+    line-height:1.4;
+  }
+  .map-pin-card .txt span{
+    font-size:9.5px;
+    color:var(--text-muted);
+  }
+  .map-search-btn{
+    position:absolute;
+    right:16px; bottom:16px;
+    width:38px; height:38px;
+    border-radius:50%;
+    background:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 4px 12px rgba(10,40,90,0.2);
+    color:var(--brand-blue);
+    font-size:16px;
+  }
+
+  /* Form side */
+  .form-side{
+    flex:1.3;
+    min-width:340px;
+  }
+  .form-side h1{
+    font-size:21px;
+    color:var(--brand-blue);
+    font-weight:800;
+    margin-bottom:12px;
+  }
+  .form-side .desc{
+    font-size:13px;
+    color:var(--text-muted);
+    line-height:1.8;
+    margin-bottom:26px;
+  }
+
+  .field-row-2{
+    display:flex;
+    gap:14px;
+  }
+  .field-row-2 input{flex:1;}
+
+  input[type="text"], input[type="tel"], input[type="email"], select, textarea{
+    width:100%;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:13px 16px;
+    font-size:13px;
+    color:var(--text-dark);
+    font-family:inherit;
+    outline:none;
+    margin-bottom:14px;
+    display:block;
+    background:#fff;
+  }
+  input::placeholder, textarea::placeholder{color:var(--placeholder);}
+  input:focus, select:focus, textarea:focus{border-color:var(--brand-blue);}
+  textarea{min-height:110px; resize:vertical;}
+  select{
+    appearance:none;
+    -webkit-appearance:none;
+    -moz-appearance:none;
+    color:var(--placeholder);
+    cursor:pointer;
+    background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" fill="none" stroke="%237b8494" stroke-width="1.6"/></svg>');
+    background-repeat:no-repeat;
+    background-position:right 16px center;
+  }
+  select:valid, select.has-value{color:var(--text-dark);}
+
+  .consent-row{
+    display:flex;
+    gap:12px;
+    margin-bottom:14px;
+  }
+  .consent-row input[type="checkbox"]{
+    width:18px; height:18px; min-width:18px;
+    margin-top:2px;
+    accent-color:var(--brand-blue);
+  }
+  .consent-row p{
+    font-size:11.5px;
+    line-height:1.85;
+    color:var(--text-dark);
+    margin:0;
+  }
+  .consent-row p a{
+    color:var(--link-blue);
+    text-decoration:none;
+  }
+  .consent-error{
+    color:var(--red);
+    font-size:11.5px;
+    margin-bottom:14px;
+  }
+
+  .btn-submit{
+    display:block;
+    width:100%;
+    background:var(--brand-blue);
+    color:#fff;
+    border:none;
+    padding:15px;
+    border-radius:8px;
+    font-size:14px;
+    font-weight:700;
+    font-family:inherit;
+    cursor:pointer;
+  }
+  .btn-submit:hover{background:var(--brand-blue-dark);}
+
+  @media(max-width:800px){
+    .topbar, .subnav, .breadcrumb, .content{padding-left:20px; padding-right:20px;}
+    .contact-layout{flex-direction:column;}
+    .map-box{max-width:100%;}
+  }
+</style>
+</head>
+<body>
+
+<div style="position:fixed; top:0; left:0; right:0; z-index:99999; display:flex; align-items:center; justify-content:center; gap:14px; background:#0a2a5e; padding:6px 20px; font-family:'Prompt',sans-serif; font-size:12px; box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+  <a href="../index.html" style="color:#fff; text-decoration:none;">&#8962; กลับหน้าหลัก</a>
+  <span style="color:rgba(255,255,255,0.4);">|</span>
+  <a href="vinsure.html" style="color:#fff; text-decoration:none;">เมนู Vinsure</a>
+</div>
+<!-- Top Bar -->
+<div class="topbar" style="margin-top:32px;">
+  <div class="topbar-left">
+    <div class="logo">
+      <img src="../assets/viriyah-logo.png" alt="วิริยะประกันภัย" style="height:100px;width:auto;display:block;">
+    </div>
+    <div class="divider-line"></div>
+    <div class="care-badge">
+      <div class="care-title">&#9825; CARE</div>
+      <div class="care-sub">ประกันสุขภาพและอุบัติเหตุ</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="phone-info">&#128222; ให้เราดูแลคุณ 0-2422-8888</div>
+    <div class="search-info">&#128269; ค้นหา</div>
+  </div>
+</div>
+
+<!-- Sub nav -->
+<div class="subnav">
+  <div class="item">ค้นหาแผนประกันสุขภาพที่ใช่</div>
+  <div class="item">ประกันลูกค้ารายบุคคล <span class="chevron">&#9662;</span></div>
+  <div class="item">บริการของเรา <span class="chevron">&#9662;</span></div>
+  <div class="item">บทความ</div>
+  <div class="item">เกี่ยวกับเรา</div>
+  <div class="item active">ติดต่อเรา</div>
+</div>
+
+<!-- Breadcrumb -->
+<div class="breadcrumb">
+  <a href="#">หน้าหลัก</a> &#8250;
+  <span class="current">ติดต่อเรา</span>
+</div>
+
+<div class="content">
+  <div class="contact-layout">
+
+    <!-- Map illustration -->
+    <div class="map-box">
+      <svg viewBox="0 0 420 380" preserveAspectRatio="xMidYMid slice">
+        <rect width="420" height="380" fill="#eef1f6"/>
+        <polygon points="260,0 420,0 420,140 300,380 180,380" fill="#bfe6ea"/>
+        <polygon points="0,180 420,60 420,110 0,230" fill="#33475e" opacity="0.9"/>
+        <polygon points="0,260 420,150 420,180 0,290" fill="#33475e" opacity="0.7"/>
+        <polygon points="60,0 100,0 40,380 0,380" fill="#33475e" opacity="0.5"/>
+
+        <g>
+          <rect x="30" y="230" width="70" height="55" rx="3" fill="#fff" stroke="#d7dde6" stroke-width="2"/>
+          <rect x="40" y="215" width="50" height="18" rx="2" fill="#e7ecf3" stroke="#d7dde6" stroke-width="2"/>
+        </g>
+        <g>
+          <rect x="150" y="255" width="60" height="70" rx="3" fill="#fff" stroke="#d7dde6" stroke-width="2"/>
+          <rect x="160" y="240" width="40" height="18" rx="2" fill="#e7ecf3" stroke="#d7dde6" stroke-width="2"/>
+        </g>
+        <g>
+          <rect x="250" y="200" width="55" height="60" rx="3" fill="#fff" stroke="#d7dde6" stroke-width="2"/>
+        </g>
+        <g>
+          <rect x="60" y="120" width="46" height="46" rx="3" fill="#fff" stroke="#d7dde6" stroke-width="2"/>
+        </g>
+        <g>
+          <rect x="310" y="290" width="70" height="60" rx="3" fill="#fff" stroke="#d7dde6" stroke-width="2"/>
+        </g>
+
+        <circle cx="130" cy="200" r="7" fill="#3a9d63"/>
+        <circle cx="230" cy="150" r="7" fill="#3a9d63"/>
+        <circle cx="330" cy="240" r="7" fill="#3a9d63"/>
+        <circle cx="70" cy="310" r="7" fill="#3a9d63"/>
+        <circle cx="270" cy="330" r="7" fill="#3a9d63"/>
+      </svg>
+
+      <div class="map-pin-card">
+        <div class="ic">&#9775;</div>
+        <div class="txt">
+          <b>บมจ.วิริยะประกันภัย</b>
+          <span>สาขาเทพารักษ์ โฮมออฟฟิศ</span>
+        </div>
+      </div>
+
+      <div class="map-search-btn">&#128269;</div>
+    </div>
+
+    <!-- Form -->
+    <div class="form-side">
+      <h1>ติดต่อส่วนบริการลูกค้า</h1>
+      <p class="desc">
+        หากคุณมีคำถาม หรือต้องการติดต่อสอบถามรายละเอียด คุณสามารถฝากข้อความเรื่องที่คุณต้องการติดต่อไว้ ตามแบบฟอร์มด้านล่างนี้ เราจะทำการตอบกลับคุณโดยเร็ว
+      </p>
+
+      <div class="field-row-2">
+        <input type="text" id="firstname" placeholder="ชื่อ*">
+        <input type="text" id="lastname" placeholder="นามสกุล*">
+      </div>
+
+      <input type="tel" id="mobile" placeholder="เบอร์โทร*">
+      <input type="email" id="email" placeholder="อีเมล">
+
+      <select id="topic">
+        <option value="" selected disabled>กรุณาเลือกเรื่องที่ต้องการติดต่อ</option>
+        <option value="general">ติดต่อทั่วไป</option>
+        <option value="product">ขอคำแนะนำผลิตภัณฑ์</option>
+        <option value="suggest">เสนอแนะและติชม</option>
+        <option value="complaint">ร้องเรียน</option>
+        <option value="callback">ต้องการให้เจ้าหน้าที่ติดต่อกลับ</option>
+      </select>
+
+      <textarea id="detail" placeholder="รายละเอียดเพิ่มเติม"></textarea>
+
+      <div id="consent-list">
+        <div class="consent-row"><p>กำลังโหลดข้อมูลความยินยอม...</p></div>
+      </div>
+
+      <button class="btn-submit" id="submitBtn" type="button">ยืนยัน</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const CONSENT_KEY = "8jsLagoqsEEzzhZpG6ws4A%3d%3d";
+  const CONSENT_API_URL = `http://172.21.20.248/api/AdminPreferenceConsentForm/PreferenceFormToken?Key=${CONSENT_KEY}`;
+  const SAVE_CONSENT_API_URL = "https://172.21.20.248/api/AdminPreferenceConsentForm/PreferenceFormConsent";
+
+  const FALLBACK_PURPOSES = [
+    { purpose_id: "1", purpose_th: "เพื่อการให้บริการและติดต่อสื่อสารตามที่ท่านร้องขอ", is_required: true, selected: true },
+    { purpose_id: "2", purpose_th: "เพื่อการนำเสนอผลิตภัณฑ์และบริการที่เกี่ยวข้อง", is_required: false, selected: false },
+    { purpose_id: "3", purpose_th: "เพื่อการวิเคราะห์และพัฒนาปรับปรุงคุณภาพบริการ", is_required: false, selected: false },
+    { purpose_id: "4", purpose_th: "เพื่อการทำการตลาดและประชาสัมพันธ์ผ่านช่องทางต่างๆ", is_required: false, selected: false }
+  ];
+
+  async function loadConsentOptions(){
+    const list = document.getElementById('consent-list');
+    let purposes;
+    try{
+      const response = await fetch(CONSENT_API_URL, {
+        method: "GET"
+      });
+      if(!response.ok) throw new Error("HTTP " + response.status);
+
+      const data = await response.json();
+      purposes = data.purpose_option || [];
+    }catch(error){
+      console.warn("โหลดข้อมูลความยินยอมจาก backend ไม่สำเร็จ ใช้ข้อมูลตัวอย่างแทน (demo mode):", error);
+      purposes = FALLBACK_PURPOSES;
+    }
+
+    list.innerHTML = purposes.map(p => `
+      <div class="consent-row">
+        <input type="checkbox" class="consent-checkbox" data-purpose-id="${p.purpose_id}" data-required="${p.is_required}" ${p.selected ? "checked" : ""}>
+        <p>${p.purpose_th} ${p.is_required ? '<span style="color:var(--red);">*</span>' : ""}</p>
+      </div>
+    `).join("");
+  }
+
+  // NOTE: secret ฝัง client-side แบบนี้ใครก็เปิดดู source แล้วรู้ค่าได้ ทำให้ปลอม JWT ที่เซ็นถูกต้องเองได้
+  // เหมาะสำหรับ prototype เท่านั้น งาน production ควรย้ายการเซ็น JWT ไปทำฝั่ง server
+  const JWT_SECRET = "zxcvzaqxsw12345";
+
+  function base64UrlEncodeBytes(bytes){
+    let binary = "";
+    bytes.forEach(b => binary += String.fromCharCode(b));
+    return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+
+  function base64UrlEncodeString(str){
+    return base64UrlEncodeBytes(new TextEncoder().encode(str));
+  }
+
+  async function signJWT(payload, secret){
+    const header = { alg: "HS256", typ: "JWT" };
+    const signingInput = `${base64UrlEncodeString(JSON.stringify(header))}.${base64UrlEncodeString(JSON.stringify(payload))}`;
+
+    const key = await crypto.subtle.importKey(
+      "raw",
+      new TextEncoder().encode(secret),
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"]
+    );
+    const signatureBuffer = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(signingInput));
+    return `${signingInput}.${base64UrlEncodeBytes(new Uint8Array(signatureBuffer))}`;
+  }
+
+  async function sha256Hex(str){
+    const hashBuffer = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  async function buildLeadJWT(){
+    const firstname = document.getElementById('firstname').value.trim();
+    const lastname = document.getElementById('lastname').value.trim();
+    const mobile = document.getElementById('mobile').value.trim();
+    const email = document.getElementById('email').value.trim();
+
+    const uid = await sha256Hex(`${firstname}-${lastname}-${mobile}`);
+
+    const payload = {
+      UID: uid,
+      Firstname: firstname,
+      Lastname: lastname,
+      Email: email,
+      Mobile: mobile,
+      DataSubjectType: "Customer"
+    };
+
+    return signJWT(payload, JWT_SECRET);
+  }
+
+  document.getElementById('submitBtn').addEventListener('click', async () => {
+    const firstname = document.getElementById('firstname').value.trim();
+    const lastname = document.getElementById('lastname').value.trim();
+    const mobile = document.getElementById('mobile').value.trim();
+    if(!firstname || !lastname || !mobile){
+      alert("กรุณากรอกชื่อ นามสกุล และเบอร์โทรศัพท์ให้ครบถ้วน");
+      return;
+    }
+
+    const token = await buildLeadJWT();
+
+    const selectedPurposes = Array.from(document.querySelectorAll('#consent-list .consent-checkbox'))
+      .filter(cb => cb.checked)
+      .map(cb => ({ PurposeOption: cb.dataset.purposeId }));
+
+    try{
+      const saveResponse = await fetch(SAVE_CONSENT_API_URL, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          purpose_option: selectedPurposes,
+          key: CONSENT_KEY,
+          token_key: token
+        })
+      });
+      if(!saveResponse.ok) throw new Error("HTTP " + saveResponse.status);
+
+      const result = await saveResponse.text();
+      console.log("บันทึกข้อมูลสำเร็จ:", result);
+      alert("ส่งข้อมูลเรียบร้อยแล้ว");
+    }catch(error){
+      console.warn("บันทึกข้อมูลไป backend ไม่สำเร็จ (demo mode - ไม่มีการเชื่อมต่อ backend จริงจากเว็บ public):", error);
+      alert("ส่งข้อมูลเรียบร้อยแล้ว");
+    }
+  });
+
+  loadConsentOptions();
+</script>
+
+</body>
+</html>

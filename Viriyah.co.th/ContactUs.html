@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>ติดต่อเรา - วิริยะประกันภัย</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
+
+  :root{
+    --navy-dark:#0a2a5e;
+    --navy:#1b4fa0;
+    --orange:#f0714a;
+    --gold:#f5a623;
+    --border:#e4e7ec;
+    --text:#333c4d;
+    --link:#2f6fd6;
+    --bg:#fff;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Prompt', sans-serif;
+    background:#fff;
+    color:var(--text);
+  }
+
+  /* Top header */
+  .topheader{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 30px;
+    border-bottom:1px solid var(--border);
+  }
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .logo-icon{
+    width:36px;height:36px;
+    background:var(--navy-dark);
+    border-radius:6px;
+    display:flex;align-items:center;justify-content:center;
+    color:#f4c02a;
+    font-size:18px;
+  }
+  .logo-text .th{font-weight:700; font-size:16px; color:var(--navy-dark); line-height:1.1;}
+  .logo-text .en{font-size:9px; letter-spacing:0.4px; color:var(--navy);}
+  .top-right{
+    display:flex;
+    align-items:center;
+    gap:14px;
+  }
+  .search-circle{
+    width:32px;height:32px;
+    border-radius:50%;
+    border:1.5px solid #d5d9e0;
+    display:flex;align-items:center;justify-content:center;
+    color:#5a6472;
+  }
+  .lang{
+    display:flex;align-items:center;gap:6px;
+    font-size:13px; color:#333;
+  }
+  .claim-badge{
+    background:#f5a623;
+    color:#fff;
+    border-radius:6px;
+    padding:6px 10px;
+    font-size:11px;
+    display:flex;
+    flex-direction:column;
+    line-height:1.2;
+    text-align:center;
+  }
+  .contact-link{font-size:13.5px; color:#333; font-weight:500;}
+  .online-btn{
+    background:var(--navy-dark);
+    color:#fff;
+    padding:9px 18px;
+    border-radius:4px;
+    font-size:13px;
+    text-align:center;
+    line-height:1.4;
+  }
+  .online-btn b{display:block; font-size:14px;}
+  .hamburger{
+    display:flex;flex-direction:column;gap:4px;
+  }
+  .hamburger span{width:22px;height:2.5px;background:var(--navy-dark);}
+
+  /* Hero */
+  .contact-hero{
+    height:150px;
+    background:linear-gradient(120deg, var(--navy-dark), var(--navy));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .contact-hero svg.deco{
+    position:absolute;
+    right:60px;
+    top:50%;
+    transform:translateY(-50%);
+    width:90px;
+    height:90px;
+    opacity:0.18;
+  }
+  .contact-hero h1{
+    color:#fff;
+    font-size:26px;
+    font-weight:700;
+  }
+
+  /* Tab bar */
+  .tab-bar{
+    display:flex;
+    max-width:1140px;
+    margin:34px auto 0;
+    border-bottom:1px solid var(--border);
+  }
+  .tab-item{
+    flex:1;
+    text-align:center;
+    padding:22px 20px;
+    font-size:16px;
+    font-weight:600;
+    color:var(--navy-dark);
+    text-decoration:none;
+    border-right:1px solid var(--border);
+    border-top:3px solid transparent;
+    transition:background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+  .tab-item:last-child{border-right:none;}
+  .tab-item:hover{
+    background:#f4f6f9;
+    color:var(--orange);
+    border-top-color:var(--orange);
+  }
+
+  /* Company info */
+  .company-section{
+    max-width:1140px;
+    margin:0 auto;
+    padding:40px 30px 30px;
+  }
+  .company-section h2{
+    color:var(--navy);
+    font-size:24px;
+    font-weight:700;
+    margin-bottom:10px;
+  }
+  .reg-no{
+    color:var(--navy);
+    font-size:14px;
+    margin-bottom:26px;
+  }
+  .map-box{
+    display:flex;
+    flex-wrap:wrap;
+    border:1px solid var(--border);
+    border-radius:8px;
+    overflow:hidden;
+  }
+  .map-address{
+    flex:1;
+    min-width:260px;
+    padding:34px 36px;
+  }
+  .map-address h3{
+    color:var(--navy);
+    font-size:15px;
+    font-weight:600;
+    margin-bottom:8px;
+  }
+  .map-address p{
+    font-size:14px;
+    color:var(--text);
+    line-height:1.8;
+    margin-bottom:22px;
+  }
+  .map-placeholder{
+    flex:1.4;
+    min-width:280px;
+    min-height:280px;
+    position:relative;
+    background:#e9edf2;
+  }
+  .map-placeholder svg{
+    width:100%;
+    height:100%;
+    display:block;
+  }
+
+  /* Complaint channels */
+  .channel-section{
+    max-width:1140px;
+    margin:0 auto;
+    padding:10px 30px 60px;
+    display:flex;
+    gap:40px;
+    flex-wrap:wrap;
+  }
+  .channel-left{
+    flex:1;
+    min-width:280px;
+  }
+  .channel-left h3{
+    color:var(--navy);
+    font-size:17px;
+    font-weight:700;
+    margin-bottom:16px;
+  }
+  .channel-left ul{
+    margin-left:20px;
+  }
+  .channel-left li{
+    font-size:14px;
+    color:var(--text);
+    line-height:2.1;
+  }
+  .channel-left li a{
+    color:var(--orange);
+    font-weight:600;
+    text-decoration:none;
+  }
+  .accident-box{
+    background:var(--navy-dark);
+    border-radius:8px;
+    padding:22px 28px;
+    min-width:220px;
+    color:#fff;
+    text-align:center;
+  }
+  .accident-box .label{
+    font-size:13.5px;
+    margin-bottom:4px;
+  }
+  .accident-box .brand{
+    font-size:13.5px;
+    color:var(--gold);
+    font-weight:600;
+    margin-bottom:10px;
+  }
+  .accident-box .phone-box{
+    background:var(--navy);
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 20px;
+    border-radius:6px;
+    font-size:20px;
+    font-weight:700;
+  }
+
+  @media(max-width:800px){
+    .tab-bar{flex-direction:column;}
+    .tab-item{border-right:none; border-bottom:1px solid var(--border); border-top:none; border-left:3px solid transparent;}
+    .tab-item:hover{border-top-color:transparent; border-left-color:var(--orange);}
+    .topheader{flex-wrap:wrap; gap:10px;}
+  }
+</style>
+</head>
+<body>
+
+<div style="position:fixed; top:0; left:0; right:0; z-index:99999; display:flex; align-items:center; justify-content:center; gap:14px; background:#0a2a5e; padding:6px 20px; font-family:'Prompt',sans-serif; font-size:12px; box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+  <a href="../index.html" style="color:#fff; text-decoration:none;">&#8962; กลับหน้าหลัก</a>
+  <span style="color:rgba(255,255,255,0.4);">|</span>
+  <a href="viriyah-co-th.html" style="color:#fff; text-decoration:none;">เมนู Viriyah.co.th</a>
+</div>
+
+<div class="topheader" style="margin-top:32px;">
+  <div class="logo">
+    <img src="../assets/viriyah-logo.png" alt="วิริยะประกันภัย" style="height:100px;width:auto;display:block;">
+  </div>
+  <div class="top-right">
+    <div class="search-circle">&#128269;</div>
+    <div class="lang">&#127760; TH &#9662;</div>
+    <div class="claim-badge">แจ้งอุบัติเหตุ<br><b>1557</b></div>
+    <div class="contact-link">ติดต่อเรา</div>
+    <div class="online-btn">ซื้อประกันภัยออนไลน์<br><b>(T.02-129-7474)</b></div>
+    <div class="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</div>
+
+<div class="contact-hero">
+  <svg class="deco" viewBox="0 0 100 100" fill="none" stroke="#fff" stroke-width="4">
+    <circle cx="50" cy="38" r="16"/>
+    <path d="M20 88 q30 -34 60 0" stroke-linecap="round"/>
+  </svg>
+  <h1>ติดต่อเรา</h1>
+</div>
+
+<div class="tab-bar">
+  <a href="ContactForm01.html" class="tab-item">เสนอแนะ ติชม ร้องเรียนบริการ</a>
+  <a href="ContactForm.html" class="tab-item">ติดตาม/สอบถามรายละเอียดกรมธรรม์</a>
+  <a href="Careers.html" class="tab-item">ร่วมงานกับวิริยะประกันภัย</a>
+</div>
+
+<div class="company-section">
+  <h2>บริษัท วิริยะประกันภัย จำกัด (มหาชน)</h2>
+  <p class="reg-no">ทะเบียนเลขที่ 0107555000139</p>
+
+  <div class="map-box">
+    <div class="map-address">
+      <h3>สำนักงานใหญ่</h3>
+      <p>เลขที่ 121/28, 121/65 อาคารอาร์เอสทาวเวอร์ ถนนรัชดาภิเษก แขวงดินแดง เขตดินแดง กรุงเทพฯ 10400</p>
+      <h3>โทรศัพท์</h3>
+      <p>0-2129-8888</p>
+    </div>
+    <div class="map-placeholder">
+      <svg viewBox="0 0 400 280" preserveAspectRatio="xMidYMid slice">
+        <rect width="400" height="280" fill="#e9edf2"/>
+        <path d="M0 60 H400 M0 140 H400 M0 210 H400" stroke="#d5dbe3" stroke-width="6"/>
+        <path d="M80 0 V280 M220 0 V280 M320 0 V280" stroke="#d5dbe3" stroke-width="6"/>
+        <path d="M0 100 L400 180" stroke="#c7cfda" stroke-width="10"/>
+        <path d="M220 100 c-18 0 -30 13 -30 30 c0 22 30 50 30 50 s30 -28 30 -50 c0 -17 -12 -30 -30 -30z" fill="#f0714a"/>
+        <circle cx="220" cy="128" r="10" fill="#fff"/>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<div class="channel-section">
+  <div class="channel-left">
+    <h3>ช่องทางการรับเรื่องร้องเรียน</h3>
+    <ul>
+      <li>ศูนย์ฯ/สาขาทั่วประเทศ ค้นหารายละเอียด <a href="#">คลิก</a></li>
+      <li>ฝ่ายลูกค้าสัมพันธ์ 1557 หมายเลขโทรศัพท์ 0 2239 1557</li>
+      <li>E-mail : cs@viriyah.co.th</li>
+    </ul>
+  </div>
+  <div class="accident-box">
+    <div class="label">แจ้งอุบัติเหตุ</div>
+    <div class="brand">วิริยะประกันภัย</div>
+    <div class="phone-box">&#9742; 1557</div>
+  </div>
+</div>
+
+</body>
+</html>

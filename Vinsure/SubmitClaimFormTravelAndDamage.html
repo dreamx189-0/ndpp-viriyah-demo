@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>วิริยะประกันภัย - เคลมประกันเดินทางต่างประเทศ</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
+
+  :root{
+    --brand-blue:#0a3d8f;
+    --brand-blue-dark:#082f6f;
+    --care-green:#00a389;
+    --accent-orange:#f5a623;
+    --text-dark:#22314f;
+    --text-muted:#7b8494;
+    --border:#e4e8ef;
+    --link-blue:#2f6fed;
+    --hero-bg:#e6ebf9;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Prompt', sans-serif;
+    background:#fff;
+    color:var(--text-dark);
+  }
+
+  /* Top bar (shared with other Vinsure pages) */
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 40px;
+    border-bottom:1px solid var(--border);
+    flex-wrap:wrap;
+    gap:14px;
+  }
+  .topbar-left{
+    display:flex;
+    align-items:center;
+    gap:18px;
+  }
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .logo-icon{
+    width:42px;height:42px;
+    background:var(--brand-blue);
+    border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    color:#f4c02a;
+    font-size:20px;
+  }
+  .logo-text .th{font-weight:700; font-size:17px; color:var(--brand-blue); line-height:1.1;}
+  .logo-text .en{font-size:10px; letter-spacing:0.5px; color:#5a6472;}
+  .divider-line{width:1px; height:36px; background:var(--border);}
+  .care-badge .care-title{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:21px;
+    font-weight:800;
+    color:var(--care-green);
+    letter-spacing:1px;
+  }
+  .care-badge .care-sub{font-size:10.5px; color:var(--text-muted); margin-top:2px;}
+
+  /* Breadcrumb */
+  .breadcrumb{
+    padding:14px 40px;
+    font-size:13px;
+    color:#5a6472;
+  }
+  .breadcrumb a{color:var(--link-blue); text-decoration:none;}
+  .breadcrumb span.current{color:#333; font-weight:500;}
+
+  /* Hero section */
+  .hero-section{
+    background:var(--hero-bg);
+    padding:36px 0 46px;
+  }
+  .hero-inner{
+    max-width:1220px;
+    margin:0 auto;
+    padding:0 40px;
+    display:flex;
+    align-items:center;
+    gap:50px;
+    flex-wrap:wrap;
+  }
+
+  /* Instagram-style mockup */
+  .ig-mock{
+    width:380px;
+    max-width:100%;
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(10,40,90,0.18);
+    background:#fff;
+    flex-shrink:0;
+  }
+  .ig-photo{
+    position:relative;
+    height:230px;
+    background:linear-gradient(160deg,#4a7fd6,#1c3f7a 75%);
+    overflow:hidden;
+  }
+  .ig-collage{
+    position:absolute;
+    top:12px; left:12px;
+    display:grid;
+    grid-template-columns:repeat(2,32px);
+    grid-template-rows:repeat(2,32px);
+    gap:3px;
+    z-index:2;
+  }
+  .ig-collage div{
+    background:#fff;
+    border-radius:4px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:15px;
+  }
+  .ig-tower{
+    position:absolute;
+    right:34px; bottom:0;
+    width:22px; height:120px;
+    background:#0b1f45;
+    opacity:0.5;
+  }
+  .ig-tower::before{
+    content:"";
+    position:absolute;
+    top:-12px; left:-8px;
+    width:38px; height:16px;
+    background:#0b1f45;
+    border-radius:6px 6px 0 0;
+  }
+  .ig-person{
+    position:absolute;
+    right:66px; bottom:0;
+    width:0; height:0;
+  }
+  .ig-person .body{
+    position:absolute;
+    bottom:0; left:-24px;
+    width:50px; height:110px;
+    background:#2472c8;
+    border-radius:22px 22px 6px 6px;
+  }
+  .ig-person .head{
+    position:absolute;
+    bottom:104px; left:-9px;
+    width:22px; height:22px;
+    border-radius:50%;
+    background:#f0c199;
+  }
+  .ig-person .scarf{
+    position:absolute;
+    bottom:96px; left:-14px;
+    width:32px; height:14px;
+    background:#f5a623;
+    border-radius:6px;
+  }
+  .ig-person .suitcase{
+    position:absolute;
+    bottom:0; left:16px;
+    width:26px; height:34px;
+    background:#f5c94a;
+    border-radius:4px;
+  }
+  .ig-caption{
+    position:absolute;
+    left:16px; top:52px;
+    z-index:3;
+  }
+  .ig-caption .tag{
+    font-size:10px;
+    color:#fff;
+    background:rgba(255,255,255,0.2);
+    display:inline-block;
+    padding:3px 10px;
+    border-radius:10px;
+    margin-bottom:10px;
+  }
+  .ig-caption .line1{
+    background:var(--brand-blue);
+    color:#fff;
+    font-weight:800;
+    font-size:19px;
+    display:inline-block;
+    padding:3px 10px;
+    margin-bottom:5px;
+  }
+  .ig-caption .line2{
+    color:#fff;
+    font-weight:800;
+    font-size:19px;
+    line-height:1.3;
+  }
+  .ig-caption .line2 .accent{color:var(--accent-orange);}
+  .ig-actions{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:10px 14px;
+    font-size:16px;
+    color:var(--text-dark);
+    border-bottom:1px solid var(--border);
+  }
+  .ig-actions .spacer{flex:1;}
+  .ig-note{
+    padding:8px 14px 14px;
+    font-size:11px;
+    color:var(--text-muted);
+    line-height:1.6;
+  }
+
+  .hero-text{flex:1; min-width:280px;}
+  .hero-text h1{
+    font-size:24px;
+    color:var(--brand-blue);
+    font-weight:800;
+    margin-bottom:14px;
+  }
+  .hero-text p{
+    font-size:14px;
+    color:var(--text-muted);
+    margin-bottom:22px;
+    line-height:1.7;
+  }
+  .btn-hero{
+    background:var(--brand-blue);
+    color:#fff;
+    border:none;
+    padding:14px 26px;
+    border-radius:8px;
+    font-size:14px;
+    font-weight:700;
+    font-family:inherit;
+    cursor:pointer;
+  }
+  .btn-hero:hover{background:var(--brand-blue-dark);}
+
+  /* Section heading */
+  .section-heading{
+    text-align:center;
+    font-size:22px;
+    font-weight:800;
+    color:var(--brand-blue);
+    margin:46px 0 30px;
+  }
+
+  /* Two column groups */
+  .groups{
+    display:flex;
+    gap:24px;
+    max-width:1220px;
+    margin:0 auto;
+    padding:0 40px 60px;
+    flex-wrap:wrap;
+  }
+  .group{
+    flex:1;
+    min-width:300px;
+    border-radius:14px;
+    padding:26px;
+    background:#eef1f9;
+  }
+  .group-heading{
+    text-align:center;
+    margin-bottom:20px;
+  }
+  .group-heading h2{
+    font-size:16px;
+    color:var(--brand-blue);
+    font-weight:700;
+    margin:0 0 8px;
+  }
+  .group-heading p{
+    font-size:12.5px;
+    color:var(--text-muted);
+    margin:0;
+    line-height:1.7;
+  }
+
+  .card-row{
+    display:flex;
+    gap:14px;
+  }
+  .mini-card{
+    flex:1;
+    background:#fff;
+    border-radius:12px;
+    padding:20px 14px;
+    text-align:center;
+    box-shadow:0 1px 4px rgba(0,0,0,0.05);
+    text-decoration:none;
+    color:inherit;
+    display:block;
+    cursor:pointer;
+    transition:box-shadow 0.15s ease, transform 0.15s ease;
+  }
+  .mini-card:hover{
+    box-shadow:0 6px 16px rgba(10,61,143,0.15);
+    transform:translateY(-2px);
+  }
+  .mini-card .ic{
+    font-size:30px;
+    margin-bottom:12px;
+  }
+  .mini-card .ttl{
+    font-size:13.5px;
+    font-weight:700;
+    color:var(--text-dark);
+    margin-bottom:6px;
+  }
+  .mini-card .sub{
+    font-size:11.5px;
+    color:var(--text-muted);
+    line-height:1.6;
+    margin-bottom:12px;
+    min-height:34px;
+  }
+  .mini-card .link{
+    font-size:12px;
+    color:var(--link-blue);
+    font-weight:600;
+  }
+
+  @media(max-width:800px){
+    .topbar, .breadcrumb, .hero-inner, .groups{padding-left:20px; padding-right:20px;}
+    .card-row{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<div style="position:fixed; top:0; left:0; right:0; z-index:99999; display:flex; align-items:center; justify-content:center; gap:14px; background:#0a2a5e; padding:6px 20px; font-family:'Prompt',sans-serif; font-size:12px; box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+  <a href="../index.html" style="color:#fff; text-decoration:none;">&#8962; กลับหน้าหลัก</a>
+  <span style="color:rgba(255,255,255,0.4);">|</span>
+  <a href="vinsure.html" style="color:#fff; text-decoration:none;">เมนู Vinsure</a>
+</div>
+<!-- Top Bar -->
+<div class="topbar" style="margin-top:32px;">
+  <div class="topbar-left">
+    <div class="logo">
+      <img src="../assets/viriyah-logo.png" alt="วิริยะประกันภัย" style="height:100px;width:auto;display:block;">
+    </div>
+    <div class="divider-line"></div>
+    <div class="care-badge">
+      <div class="care-title">&#9825; CARE</div>
+      <div class="care-sub">ประกันเดินทางและอุบัติเหตุ</div>
+    </div>
+  </div>
+</div>
+
+<!-- Breadcrumb -->
+<div class="breadcrumb">
+  <a href="#">หน้าหลัก</a> &#8250;
+  <span class="current">เคลมประกันเดินทางต่างประเทศ</span>
+</div>
+
+<!-- Hero -->
+<div class="hero-section">
+  <div class="hero-inner">
+    <div class="ig-mock">
+      <div class="ig-photo">
+        <div class="ig-collage">
+          <div>&#128658;</div>
+          <div>&#128100;</div>
+          <div>&#129517;</div>
+          <div>&#128188;</div>
+        </div>
+        <div class="ig-tower"></div>
+        <div class="ig-person">
+          <div class="body"></div>
+          <div class="scarf"></div>
+          <div class="head"></div>
+          <div class="suitcase"></div>
+        </div>
+        <div class="ig-caption">
+          <div class="tag">ลูกค้าวิริยะประกันภัย</div>
+          <div class="line1">แจ้งเคลม</div>
+          <div class="line2">ประกันเดินทางออนไลน์<br>ได้แล้ว<span class="accent">!</span></div>
+        </div>
+      </div>
+      <div class="ig-actions">
+        <span>&#9825;</span>
+        <span>&#128172;</span>
+        <span>&#10148;</span>
+        <span class="spacer"></span>
+        <span>&#128278;</span>
+      </div>
+      <div class="ig-note">สามารถเคลมประกันเดินทางออนไลน์ได้แล้ว วันนี้!</div>
+    </div>
+
+    <div class="hero-text">
+      <h1>เคลมประกันเดินทางต่างประเทศ</h1>
+      <p>เลือกหมวดเพื่อดูรายละเอียดเอกสารประกอบการเคลมและช่องทางการแจ้งเคลม</p>
+      <button class="btn-hero" onclick="document.getElementById('claim-groups').scrollIntoView({behavior:'smooth'})">เลือกหมวดการยื่นเคลมประกันเดินทางต่างประเทศ</button>
+    </div>
+  </div>
+</div>
+
+<div class="section-heading">เคลมประกันเดินทางต่างประเทศ</div>
+
+<!-- Groups -->
+<div class="groups" id="claim-groups">
+  <div class="group">
+    <div class="group-heading">
+      <h2>การเคลมค่ารักษาพยาบาล</h2>
+      <p>เลือกหมวดการเคลมเพื่อตรวจสอบเอกสารประกอบการเคลมที่ต้องใช้<br>และดาวน์โหลดแบบฟอร์มการเรียกร้องค่าสินไหมทดแทน</p>
+    </div>
+    <div class="card-row">
+      <a class="mini-card" href="#">
+        <div class="ic">&#128153;</div>
+        <div class="ttl">ค่ารักษาพยาบาล</div>
+        <div class="sub">กรณีเจ็บป่วยหรือเข้ารับการรักษาพยาบาล</div>
+        <div class="link">ดูวิธีดำเนินการ</div>
+      </a>
+      <a class="mini-card" href="#">
+        <div class="ic">&#128719;</div>
+        <div class="ttl">กรณีเสียชีวิต</div>
+        <div class="sub">กรณีเสียชีวิตจากอุบัติเหตุคุ้มครองตามกรมธรรม์</div>
+        <div class="link">ดูวิธีดำเนินการ</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="group-heading">
+      <h2>แจ้งเคลมผ่านช่องทางออนไลน์</h2>
+      <p>กรอกแบบฟอร์มออนไลน์การเรียกร้องค่าสินไหมทดแทน<br>และอัปโหลดเอกสารการเรียกร้องค่าสินไหมทดแทน</p>
+    </div>
+    <div class="card-row">
+      <a class="mini-card" href="SubmitClaimFormTravel.html">
+        <div class="ic">&#9992;</div>
+        <div class="ttl">เที่ยวบินและการเดินทาง</div>
+        <div class="sub">เที่ยวบินล่าช้า ยกเลิก หรือพลาดการเดินทาง</div>
+        <div class="link">แจ้งเคลมออนไลน์</div>
+      </a>
+      <a class="mini-card" href="SubmitClaimFormDamage.html">
+        <div class="ic">&#128181;</div>
+        <div class="ttl">ทรัพย์สินเสียหาย</div>
+        <div class="sub">กระเป๋าเดินทางหรือทรัพย์สินสูญหาย/เสียหาย</div>
+        <div class="link">แจ้งเคลมออนไลน์</div>
+      </a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

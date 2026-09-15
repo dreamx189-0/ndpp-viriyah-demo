@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>ประกันสุขภาพ CARE - วิริยะประกันภัย</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
+
+  :root{
+    --brand-blue:#0a3d8f;
+    --brand-blue-dark:#082f6f;
+    --accent-yellow:#f5a623;
+    --accent-yellow-light:#fdeeca;
+    --care-green:#00a389;
+    --text-dark:#1c2b45;
+    --text-muted:#6b7280;
+    --border:#e2e6ee;
+    --bg:#eef1f6;
+    --placeholder:#a9b0bd;
+    --border-focus:#2b4fb0;
+    --link-blue:#2f6fed;
+    --disabled-bg:#eef0f4;
+    --disabled-text:#c4c9d2;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Prompt', sans-serif;
+    background:#fff;
+    color:var(--text-dark);
+  }
+
+  /* Top bar */
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 40px;
+    border-bottom:1px solid var(--border);
+    flex-wrap:wrap;
+    gap:14px;
+  }
+  .topbar-left{
+    display:flex;
+    align-items:center;
+    gap:18px;
+  }
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .logo-icon{
+    width:42px;height:42px;
+    background:var(--brand-blue);
+    border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    color:#f4c02a;
+    font-size:20px;
+  }
+  .logo-text .th{font-weight:700; font-size:17px; color:var(--brand-blue); line-height:1.1;}
+  .logo-text .en{font-size:10px; letter-spacing:0.5px; color:#5a6472;}
+  .divider-line{width:1px; height:36px; background:var(--border);}
+  .care-badge .care-title{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:21px;
+    font-weight:800;
+    color:var(--care-green);
+    letter-spacing:1px;
+  }
+  .care-badge .care-sub{font-size:10.5px; color:var(--text-muted); margin-top:2px;}
+
+  .topbar-right{
+    display:flex;
+    align-items:center;
+    gap:30px;
+  }
+  .phone-info, .search-info{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:var(--brand-blue);
+    font-size:14px;
+    font-weight:500;
+    white-space:nowrap;
+  }
+
+  /* Sub nav */
+  .subnav{
+    display:flex;
+    align-items:center;
+    gap:36px;
+    padding:18px 40px;
+    border-bottom:1px solid var(--border);
+    font-size:14.5px;
+    color:#5a6472;
+    flex-wrap:wrap;
+  }
+  .subnav .item{
+    display:flex;
+    align-items:center;
+    gap:5px;
+    cursor:pointer;
+    position:relative;
+    padding-bottom:17px;
+  }
+  .subnav .item.active{
+    color:var(--brand-blue);
+    font-weight:700;
+  }
+  .subnav .item.active::after{
+    content:"";
+    position:absolute;
+    left:0; right:0; bottom:-1px;
+    height:3px;
+    background:var(--accent-yellow);
+    border-radius:2px;
+  }
+  .subnav .item .chevron{font-size:11px;}
+
+  /* Main content */
+  .content{
+    max-width:1220px;
+    margin:0 auto;
+    padding:44px 30px 70px;
+  }
+  .page-title{
+    text-align:center;
+    color:var(--brand-blue);
+    font-size:26px;
+    font-weight:800;
+    margin-bottom:36px;
+  }
+
+  .plans-row{
+    position:relative;
+    display:flex;
+    gap:26px;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+
+  .plan-card{
+    flex:1;
+    min-width:300px;
+    max-width:390px;
+    background:#fff;
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:0 6px 20px rgba(10,61,143,0.12);
+    border:1px solid var(--border);
+  }
+  .plan-header{
+    background:var(--brand-blue);
+    color:#fff;
+    text-align:center;
+    font-size:19px;
+    font-weight:800;
+    padding:16px 0;
+  }
+  .plan-body{
+    padding:22px 22px 26px;
+  }
+
+  .coverage-box{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:14px 16px;
+    margin-bottom:20px;
+    gap:10px;
+  }
+  .coverage-left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .shield-icon{
+    width:44px;height:44px;
+    border-radius:50%;
+    background:#fff4e0;
+    display:flex;align-items:center;justify-content:center;
+    font-size:22px;
+    flex-shrink:0;
+  }
+  .coverage-left .label{font-size:12px; color:var(--text-muted); margin-bottom:3px;}
+  .coverage-left .value{font-size:18px; font-weight:800; color:var(--text-dark);}
+  .pill-yellow{
+    background:var(--accent-yellow);
+    color:#3a2400;
+    font-size:11px;
+    font-weight:700;
+    padding:8px 12px;
+    border-radius:10px;
+    text-align:center;
+    line-height:1.35;
+    white-space:nowrap;
+  }
+
+  .feature-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px 12px;
+    margin-bottom:18px;
+  }
+  .feature{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    gap:8px;
+  }
+  .feature .ficon{font-size:26px;}
+  .feature .flabel{font-size:12.5px; color:var(--text-dark); line-height:1.5;}
+  .feature .flabel b{display:block; font-size:13px; color:var(--text-dark);}
+
+  .toggle-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:12px 14px;
+    margin-bottom:16px;
+    font-size:13px;
+    color:var(--text-dark);
+    font-weight:600;
+  }
+  .toggle{
+    width:38px; height:21px;
+    background:#dfe3ea;
+    border-radius:12px;
+    position:relative;
+    flex-shrink:0;
+  }
+  .toggle::after{
+    content:"";
+    position:absolute;
+    top:2px; left:2px;
+    width:17px; height:17px;
+    background:#fff;
+    border-radius:50%;
+    box-shadow:0 1px 3px rgba(0,0,0,0.25);
+  }
+
+  .price-box{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:var(--accent-yellow-light);
+    border-radius:10px;
+    padding:14px 16px;
+    margin-bottom:18px;
+    font-size:13px;
+    color:var(--text-dark);
+    font-weight:600;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .price-box .amount{font-size:16.5px; font-weight:800; color:var(--text-dark);}
+
+  .btn-contact{
+    display:block;
+    width:100%;
+    background:var(--brand-blue);
+    color:#fff;
+    text-align:center;
+    padding:14px;
+    border-radius:10px;
+    font-weight:700;
+    font-size:14.5px;
+    border:none;
+    font-family:inherit;
+    cursor:pointer;
+  }
+  .btn-contact:hover{background:var(--brand-blue-dark);}
+
+  .arrow-btn{
+    position:absolute;
+    right:-22px;
+    top:44%;
+    width:46px; height:46px;
+    border-radius:50%;
+    background:var(--brand-blue);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 4px 12px rgba(0,0,0,0.2);
+    font-size:20px;
+    border:none;
+    cursor:pointer;
+  }
+
+  /* Floating chat button + option menu */
+  .fab-wrap{
+    position:fixed;
+    right:30px;
+    bottom:30px;
+    z-index:601;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:12px;
+  }
+  .fab-menu{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:10px;
+    opacity:0;
+    visibility:hidden;
+    transform:translateY(10px);
+    transition:opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  }
+  .fab-menu.open{
+    opacity:1;
+    visibility:visible;
+    transform:translateY(0);
+  }
+  .fab-option{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:#fff;
+    border-radius:30px;
+    padding:8px 18px 8px 8px;
+    box-shadow:0 4px 14px rgba(0,0,0,0.18);
+    font-size:13.5px;
+    font-weight:600;
+    color:var(--text-dark);
+    cursor:pointer;
+    white-space:nowrap;
+    border:none;
+    font-family:inherit;
+  }
+  .fab-option .opt-icon{
+    width:32px;height:32px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:15px;
+    flex-shrink:0;
+  }
+  .fab-option.product .opt-icon{background:#e7edfb; color:var(--brand-blue);}
+  .fab-option.line .opt-icon{background:#06c755; color:#fff; font-weight:800; font-size:9px; letter-spacing:-0.5px;}
+
+  .fab-main{
+    width:56px;height:56px;
+    border-radius:50%;
+    background:var(--brand-blue);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:24px;
+    box-shadow:0 4px 14px rgba(0,0,0,0.25);
+    cursor:pointer;
+    border:none;
+  }
+
+  /* Slide-in panels (product inquiry / LINE QR) */
+  .product-panel, .line-panel{
+    position:fixed;
+    right:30px;
+    bottom:100px;
+    max-width:calc(100vw - 40px);
+    max-height:75vh;
+    overflow-y:auto;
+    background:#fff;
+    border-radius:20px;
+    box-shadow:0 10px 40px rgba(0,0,0,0.25);
+    padding:26px 24px 30px;
+    z-index:600;
+    opacity:0;
+    visibility:hidden;
+    transform:translateY(24px);
+    transition:opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+  }
+  .product-panel{width:380px;}
+  .line-panel{width:300px; text-align:center;}
+  .product-panel.open, .line-panel.open{
+    opacity:1;
+    visibility:visible;
+    transform:translateY(0);
+  }
+
+  .close-btn{
+    position:absolute;
+    top:22px;
+    right:22px;
+    width:26px;
+    height:26px;
+    color:var(--text-dark);
+    font-size:22px;
+    line-height:1;
+    cursor:pointer;
+    background:none;
+    border:none;
+  }
+
+  h2.section-title{
+    font-size:16px;
+    color:var(--brand-blue);
+    font-weight:700;
+    margin:6px 0 16px;
+  }
+  h2.section-title.second{margin-top:26px;}
+
+  .select-field{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:16px 18px;
+    margin-bottom:16px;
+    font-size:14px;
+    color:var(--placeholder);
+    cursor:pointer;
+  }
+  .select-field.focused{
+    border-color:var(--border-focus);
+    color:var(--text-dark);
+  }
+  .select-field .chevron{
+    color:var(--text-muted);
+    font-size:13px;
+  }
+
+  .text-field{
+    display:block;
+    width:100%;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:16px 18px;
+    margin-bottom:16px;
+    font-size:14px;
+    font-family:inherit;
+    color:var(--text-dark);
+    outline:none;
+    background:#fff;
+  }
+  .text-field::placeholder{color:var(--placeholder);}
+  .text-field:focus{border-color:var(--border-focus);}
+
+  .consent{
+    display:flex;
+    gap:12px;
+    margin:6px 0 24px;
+  }
+  .checkbox{
+    width:20px;
+    height:20px;
+    border:1.5px solid #c4c9d2;
+    border-radius:5px;
+    flex-shrink:0;
+    margin-top:2px;
+  }
+  .consent p{
+    font-size:12.5px;
+    line-height:1.85;
+    color:var(--text-dark);
+    margin:0;
+  }
+
+  /* Dynamically-loaded consent checkboxes (shared by both forms) */
+  .consent-row{
+    display:flex;
+    gap:12px;
+    margin-bottom:14px;
+  }
+  .consent-row input[type="checkbox"]{
+    width:20px;
+    height:20px;
+    min-width:20px;
+    margin-top:2px;
+    accent-color:var(--brand-blue);
+  }
+  .consent-row p{
+    font-size:12.5px;
+    line-height:1.85;
+    color:var(--text-dark);
+    margin:0;
+  }
+  .consent-error{
+    color:#e0392b;
+    font-size:12.5px;
+    margin-bottom:14px;
+  }
+
+  .btn-confirm{
+    display:block;
+    width:100%;
+    background:var(--brand-blue);
+    color:#fff;
+    border:none;
+    padding:16px;
+    border-radius:10px;
+    font-size:15px;
+    font-weight:700;
+    font-family:inherit;
+    cursor:pointer;
+  }
+  .btn-confirm:hover{background:var(--brand-blue-dark);}
+
+  /* "สนใจแผนประกันนี้?" section */
+  .interest-section{
+    max-width:1100px;
+    margin:20px auto 60px;
+    background:#fdf3e2;
+    border-radius:20px;
+    padding:36px 46px 42px;
+    scroll-margin-top:24px;
+  }
+  .interest-title{
+    text-align:center;
+    color:var(--brand-blue);
+    font-size:20px;
+    font-weight:800;
+    margin-bottom:28px;
+  }
+  .interest-body{
+    display:flex;
+    align-items:stretch;
+    gap:0;
+    flex-wrap:wrap;
+  }
+  .interest-left{
+    flex:1;
+    min-width:220px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    gap:6px;
+    padding:10px 20px;
+  }
+  .interest-callus{font-size:13px; color:var(--text-muted); margin-top:8px;}
+  .interest-phone{font-size:15px; font-weight:700;}
+  .interest-phone a{color:var(--brand-blue); text-decoration:underline;}
+  .interest-divider{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:0 34px;
+    position:relative;
+  }
+  .interest-divider::before{
+    content:"";
+    position:absolute;
+    top:0; bottom:0; left:50%;
+    width:1px;
+    background:var(--border);
+  }
+  .interest-divider span{
+    background:#fdf3e2;
+    color:var(--text-muted);
+    font-size:13px;
+    padding:6px 0;
+    position:relative;
+    z-index:1;
+  }
+  .interest-right{
+    flex:1.3;
+    min-width:280px;
+    padding:10px;
+  }
+  .interest-hint{
+    font-size:13px;
+    color:var(--text-dark);
+    margin-bottom:16px;
+    text-align:right;
+  }
+  .field-row-2{display:flex; gap:14px; margin-bottom:0;}
+  .field-row-2 input{flex:1;}
+  .interest-right input{
+    width:100%;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:14px 16px;
+    font-size:14px;
+    font-family:inherit;
+    color:var(--text-dark);
+    outline:none;
+    margin-bottom:14px;
+    display:block;
+  }
+  .interest-right input::placeholder{color:var(--placeholder);}
+  .interest-right input:focus{border-color:var(--border-focus);}
+
+  .consent2{display:flex; gap:12px; margin:6px 0 20px; cursor:pointer;}
+  .checkbox2{
+    width:20px;height:20px;
+    border:1.5px solid #c4c9d2;
+    border-radius:5px;
+    flex-shrink:0;
+    margin-top:2px;
+  }
+  .consent2 p{font-size:12px; line-height:1.8; color:var(--text-dark); margin:0;}
+
+  .btn-confirm2{
+    display:block;
+    width:100%;
+    background:var(--brand-blue);
+    color:#fff;
+    border:none;
+    padding:15px;
+    border-radius:10px;
+    font-size:15px;
+    font-weight:700;
+    font-family:inherit;
+    cursor:pointer;
+  }
+  .btn-confirm2:hover{background:var(--brand-blue-dark);}
+
+  @media(max-width:900px){
+    .topbar, .subnav{padding:14px 20px;}
+    .arrow-btn{display:none;}
+  }
+  @media(max-width:800px){
+    .interest-section{padding:30px 24px 34px;}
+    .interest-body{flex-direction:column;}
+    .interest-divider{padding:20px 0;}
+    .interest-divider::before{top:0; left:0; right:0; bottom:auto; width:auto; height:1px; top:50%;}
+    .field-row-2{flex-direction:column;}
+    .interest-hint{text-align:left;}
+  }
+</style>
+</head>
+<body>
+
+<div style="position:fixed; top:0; left:0; right:0; z-index:99999; display:flex; align-items:center; justify-content:center; gap:14px; background:#0a2a5e; padding:6px 20px; font-family:'Prompt',sans-serif; font-size:12px; box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+  <a href="../index.html" style="color:#fff; text-decoration:none;">&#8962; กลับหน้าหลัก</a>
+  <span style="color:rgba(255,255,255,0.4);">|</span>
+  <a href="vinsure.html" style="color:#fff; text-decoration:none;">เมนู Vinsure</a>
+</div>
+<!-- Top bar -->
+<div class="topbar" style="margin-top:32px;">
+  <div class="topbar-left">
+    <div class="logo">
+      <img src="../assets/viriyah-logo.png" alt="วิริยะประกันภัย" style="height:100px;width:auto;display:block;">
+    </div>
+    <div class="divider-line"></div>
+    <div class="care-badge">
+      <div class="care-title">&#9825; CARE</div>
+      <div class="care-sub">ประกันสุขภาพและอุบัติเหตุ</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="phone-info">&#128222; ให้เราดูแลคุณ 0-2422-8888</div>
+    <div class="search-info">&#128269; ค้นหา</div>
+  </div>
+</div>
+
+<!-- Sub nav -->
+<div class="subnav">
+  <div class="item">ค้นหาแผนประกันสุขภาพที่ใช่</div>
+  <div class="item active">ประกันลูกค้ารายบุคคล <span class="chevron">&#9662;</span></div>
+  <div class="item">บริการของเรา <span class="chevron">&#9662;</span></div>
+  <div class="item">บทความ</div>
+  <div class="item">เกี่ยวกับเรา</div>
+  <div class="item">ติดต่อเรา</div>
+</div>
+
+<div class="content">
+  <h1 class="page-title">แผนความคุ้มครอง แบบย่อ</h1>
+
+  <div class="plans-row">
+
+    <div class="plan-card">
+      <div class="plan-header">แผน 1</div>
+      <div class="plan-body">
+        <div class="coverage-box">
+          <div class="coverage-left">
+            <div class="shield-icon">&#128737;</div>
+            <div>
+              <div class="label">วงเงินคุ้มครองสูงสุด</div>
+              <div class="value">600,000 บาท</div>
+            </div>
+          </div>
+          <div class="pill-yellow">เหมาจ่าย<br>ต่อครั้ง</div>
+        </div>
+
+        <div class="feature-grid">
+          <div class="feature">
+            <div class="ficon">&#128715;</div>
+            <div class="flabel">ค่าห้องผู้ป่วยในสูงสุด<br><b>สูงสุด 6,000 บาท/วัน</b></div>
+          </div>
+          <div class="feature">
+            <div class="ficon">&#127973;</div>
+            <div class="flabel">ค่าห้อง ICU<br><b>จ่ายตามจริง*</b></div>
+          </div>
+          <div class="feature">
+            <div class="ficon">&#128137;</div>
+            <div class="flabel">ค่ายา/ค่าแพทย์/ค่าผ่าตัด<br><b>จ่ายตามจริง*</b></div>
+          </div>
+          <div class="feature">
+            <div class="ficon">&#128179;</div>
+            <div class="flabel">ใช้บริการเครือ BDMS<br><b>ไม่ต้องสำรองจ่าย</b></div>
+          </div>
+        </div>
+
+        <div class="toggle-row">
+          <span>ความคุ้มครองเสริม &#9432;</span>
+          <div class="toggle"></div>
+        </div>
+
+        <div class="price-box">
+          <span>เบี้ยประกันต่อเดือน</span>
+          <span class="amount">เริ่มต้น 1,827 บาท &#9432;</span>
+        </div>
+
+        <button class="btn-contact" onclick="scrollToInterest()">สนใจโปรดติดต่อเจ้าหน้าที่</button>
+      </div>
+    </div>
+
+    <div class="plan-card">
+      <div class="plan-header">แผน 2</div>
+      <div class="plan-body">
+        <div class="coverage-box">
+          <div class="coverage-left">
+            <div class="shield-icon">&#128737;</div>
+            <div>
+              <div class="label">วงเงินคุ้มครองสูงสุด</div>
+              <div class="value">1,000,000 บาท</div>
+            </div>
+          </div>
+          <div class="pill-yellow">เหมาจ่าย<br>ต่อครั้ง</div>
+        </div>
+
+        <div class="feature-grid">
+          <div class="feature">
+            <div class="ficon">&#128715;</div>
+            <div class="flabel">ค่าห้องผู้ป่วยในสูงสุด<br><b>สูงสุด 10,000 บาท/วัน</b></div>
+          </div>
+          <div class="feature">
+            <div class="ficon">&#127973;</div>
+            <div class="flabel">ค่าห้อง ICU<br><b>จ่ายตามจริง*</b></div>
+          </div>
+          <div class="feature">
+            <div class="ficon">&#128137;</div>
+            <div class="flabel">ค่ายา/ค่าแพทย์/ค่าผ่าตัด<br><b>จ่ายตามจริง*</b></div>
+          </div>
+          <div class="feature">
+            <div class="ficon">&#128179;</div>
+            <div class="flabel">ใช้บริการเครือ BDMS<br><b>ไม่ต้องสำรองจ่าย</b></div>
+          </div>
+        </div>
+
+        <div class="toggle-row">
+          <span>ความคุ้มครองเสริม &#9432;</span>
+          <div class="toggle"></div>
+        </div>
+
+        <div class="price-box">
+          <span>เบี้ยประกันต่อเดือน</span>
+          <span class="amount">เริ่มต้น 2,255 บาท &#9432;</span>
+        </div>
+
+        <button class="btn-contact" onclick="scrollToInterest()">สนใจโปรดติดต่อเจ้าหน้าที่</button>
+      </div>
+    </div>
+
+    <div class="plan-card">
+      <div class="plan-header">แผน 3</div>
+      <div class="plan-body">
+        <div class="coverage-box">
+          <div class="coverage-left">
+            <div class="shield-icon">&#128737;</div>
+            <div>
+              <div class="label">วงเงินคุ้มครองสูงสุด</div>
+              <div class="value">3,000,000 บาท</div>
+            </div>
+          </div>
+          <div class="pill-yellow">เหมาจ่าย<br>ต่อครั้ง</div>
+        </div>
+
+        <div class="feature-grid">
+          <div class="feature">
+            <div class="ficon">&#128715;</div>
+            <div class="flabel">ค่าห้องผู้ป่วยในสูงสุด<br><b>สูงสุด 12,000 บาท/วัน</b></div>
+          </div>
+          <div class="feature">
+            <div class="ficon">&#127973;</div>
+            <div class="flabel">ค่าห้อง ICU<br><b>จ่ายตามจริง*</b></div>
+          </div>
+          <div class="feature">
+            <div class="ficon">&#128137;</div>
+            <div class="flabel">ค่ายา/ค่าแพทย์/ค่าผ่าตัด<br><b>จ่ายตามจริง*</b></div>
+          </div>
+          <div class="feature">
+            <div class="ficon">&#128179;</div>
+            <div class="flabel">ใช้บริการเครือ BDMS<br><b>ไม่ต้องสำรองจ่าย</b></div>
+          </div>
+        </div>
+
+        <div class="toggle-row">
+          <span>ความคุ้มครองเสริม &#9432;</span>
+          <div class="toggle"></div>
+        </div>
+
+        <div class="price-box">
+          <span>เบี้ยประกันต่อเดือน</span>
+          <span class="amount">เริ่มต้น 3,037 บาท &#9432;</span>
+        </div>
+
+        <button class="btn-contact" onclick="scrollToInterest()">สนใจโปรดติดต่อเจ้าหน้าที่</button>
+      </div>
+    </div>
+
+    <button class="arrow-btn">&#8594;</button>
+  </div>
+</div>
+
+<div class="interest-section" id="interestSection">
+  <h2 class="interest-title">สนใจแผนประกันนี้?</h2>
+  <div class="interest-body">
+    <div class="interest-left">
+      <svg class="interest-illus" viewBox="0 0 300 220" width="170" height="125">
+        <circle cx="150" cy="110" r="95" fill="#eef3fa"/>
+        <rect x="70" y="130" width="160" height="66" rx="10" fill="#dbe6f5"/>
+        <rect x="95" y="72" width="110" height="66" rx="8" fill="#ffffff" stroke="#c9d6e8" stroke-width="3"/>
+        <path d="M112 102 q38 -24 76 0 l0 40 l-76 0 Z" fill="#3a5a9c"/>
+        <circle cx="150" cy="60" r="26" fill="#f7c9a0"/>
+        <path d="M124 55 q26 -34 52 0 q0 -20 -26 -22 q-26 2 -26 22Z" fill="#2b3a55"/>
+        <path d="M122 63 q28 -30 56 0" fill="none" stroke="#2b3a55" stroke-width="4"/>
+        <circle cx="122" cy="63" r="6" fill="#2b3a55"/>
+        <circle cx="178" cy="63" r="6" fill="#2b3a55"/>
+        <rect x="200" y="34" width="46" height="26" rx="8" fill="#fff" stroke="#c9d6e8" stroke-width="2"/>
+        <rect x="212" y="14" width="60" height="26" rx="8" fill="#fff" stroke="#c9d6e8" stroke-width="2"/>
+      </svg>
+      <div class="interest-callus">ให้เราดูแลคุณ</div>
+      <div class="interest-phone">โทร. <a href="tel:0-2700-5505">0-2700-5505</a></div>
+    </div>
+
+    <div class="interest-divider"><span>หรือ</span></div>
+
+    <div class="interest-right">
+      <p class="interest-hint">กรุณากรอกข้อมูลด้านล่างนี้ เพื่อให้เจ้าหน้าที่ติดต่อกลับ</p>
+      <div class="field-row-2">
+        <input type="text" id="interestFirstname" placeholder="ชื่อ*">
+        <input type="text" id="interestLastname" placeholder="นามสกุล*">
+      </div>
+      <input type="tel" id="interestMobile" placeholder="เบอร์โทร*">
+      <input type="email" id="interestEmail" placeholder="อีเมล">
+      <div id="interest-consent-list">
+        <div class="consent-row"><p>กำลังโหลดข้อมูลความยินยอม...</p></div>
+      </div>
+      <button class="btn-confirm2" id="interestSubmitBtn" type="button">ยืนยัน</button>
+    </div>
+  </div>
+</div>
+
+<!-- Floating chat button + option menu -->
+<div class="fab-wrap">
+  <div class="fab-menu" id="fabMenu">
+    <button class="fab-option product" onclick="openProductPanel()">
+      <span class="opt-icon">&#128221;</span> สอบถามข้อมูลผลิตภัณฑ์
+    </button>
+    <button class="fab-option line" onclick="openLinePanel()">
+      <span class="opt-icon">LINE</span> สอบถามข้อมูลด้านบริการต่างๆ
+    </button>
+  </div>
+  <button class="fab-main" id="fabMain" onclick="toggleFabMenu()">&#127911;</button>
+</div>
+
+<!-- Product inquiry panel (form reused exactly from DropLead03.html) -->
+<div class="product-panel" id="productPanel">
+  <button class="close-btn" onclick="closeProductPanel()">&times;</button>
+
+  <h2 class="section-title">ข้อมูลผลิตภัณฑ์ประกันภัย</h2>
+
+  <div class="select-field">
+    <span>ประเภทประกันภัย</span>
+    <span class="chevron">&#8964;</span>
+  </div>
+
+  <div class="select-field focused">
+    <span>ชื่อผลิตภัณฑ์ประกันภัย</span>
+    <span class="chevron">&#8964;</span>
+  </div>
+
+  <h2 class="section-title second">ข้อมูลสำหรับติดต่อกลับ</h2>
+
+  <input class="text-field" type="text" id="productFirstname" placeholder="ชื่อ*">
+  <input class="text-field" type="text" id="productLastname" placeholder="นามสกุล*">
+  <input class="text-field" type="tel" id="productMobile" placeholder="เบอร์โทร*">
+  <input class="text-field" type="email" id="productEmail" placeholder="อีเมล">
+
+  <div id="product-consent-list">
+    <div class="consent-row"><p>กำลังโหลดข้อมูลความยินยอม...</p></div>
+  </div>
+
+  <button class="btn-confirm" id="productSubmitBtn" type="button">ยืนยัน</button>
+</div>
+
+<!-- LINE QR panel -->
+<div class="line-panel" id="linePanel">
+  <button class="close-btn" onclick="closeLinePanel()">&times;</button>
+  <h2 class="section-title" style="text-align:center;">สแกน QR Code เพื่อเพิ่มเพื่อน</h2>
+  <svg viewBox="0 0 200 200" width="160" height="160" style="margin:6px auto 16px; display:block;">
+    <defs>
+      <pattern id="qrDots" width="20" height="20" patternUnits="userSpaceOnUse">
+        <rect width="10" height="10" fill="#1c2b45"/>
+        <rect x="10" y="10" width="10" height="10" fill="#1c2b45"/>
+      </pattern>
+    </defs>
+    <rect width="200" height="200" fill="#fff"/>
+    <rect x="10" y="10" width="180" height="180" fill="url(#qrDots)"/>
+    <rect x="0" y="0" width="90" height="90" fill="#fff"/>
+    <rect x="110" y="0" width="90" height="90" fill="#fff"/>
+    <rect x="0" y="110" width="90" height="90" fill="#fff"/>
+    <rect x="10" y="10" width="70" height="70" fill="#1c2b45"/>
+    <rect x="20" y="20" width="50" height="50" fill="#fff"/>
+    <rect x="30" y="30" width="30" height="30" fill="#1c2b45"/>
+    <rect x="120" y="10" width="70" height="70" fill="#1c2b45"/>
+    <rect x="130" y="20" width="50" height="50" fill="#fff"/>
+    <rect x="140" y="30" width="30" height="30" fill="#1c2b45"/>
+    <rect x="10" y="120" width="70" height="70" fill="#1c2b45"/>
+    <rect x="20" y="130" width="50" height="50" fill="#fff"/>
+    <rect x="30" y="140" width="30" height="30" fill="#1c2b45"/>
+  </svg>
+  <div style="font-size:13px; color:var(--text-muted);">LINE Official Account</div>
+  <div style="font-size:15px; font-weight:700; color:#06c755; margin-top:2px;">@viriyahcare</div>
+</div>
+
+<script>
+  function toggleFabMenu(){
+    const menu = document.getElementById('fabMenu');
+    const main = document.getElementById('fabMain');
+    const isOpen = menu.classList.toggle('open');
+    main.innerHTML = isOpen ? '&times;' : '&#127911;';
+  }
+  function closeFabMenu(){
+    document.getElementById('fabMenu').classList.remove('open');
+    document.getElementById('fabMain').innerHTML = '&#127911;';
+  }
+  function openProductPanel(){
+    closeFabMenu();
+    document.getElementById('linePanel').classList.remove('open');
+    document.getElementById('productPanel').classList.add('open');
+  }
+  function closeProductPanel(){
+    document.getElementById('productPanel').classList.remove('open');
+  }
+  function openLinePanel(){
+    closeFabMenu();
+    document.getElementById('productPanel').classList.remove('open');
+    document.getElementById('linePanel').classList.add('open');
+  }
+  function closeLinePanel(){
+    document.getElementById('linePanel').classList.remove('open');
+  }
+  function scrollToInterest(){
+    document.getElementById('interestSection').scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  // --- Preference Consent / Data Subject logic (same key & flow as Viriyah.co.th/DropLead.html) ---
+  const CONSENT_KEY = "HRFckZ09CBZFQHlpJa2upA%3d%3d";
+  const CONSENT_API_URL = `http://172.21.20.248/api/AdminPreferenceConsentForm/PreferenceFormToken?Key=${CONSENT_KEY}`;
+  const SAVE_CONSENT_API_URL = "https://172.21.20.248/api/AdminPreferenceConsentForm/PreferenceFormConsent";
+
+  function renderConsentList(containerId, purposes){
+    const list = document.getElementById(containerId);
+    list.innerHTML = purposes.map(p => `
+      <div class="consent-row">
+        <input type="checkbox" class="consent-checkbox" data-purpose-id="${p.purpose_id}" data-required="${p.is_required}" ${p.selected ? "checked" : ""}>
+        <p>${p.purpose_th} ${p.is_required ? '<span style="color:#e0392b;">*</span>' : ""}</p>
+      </div>
+    `).join("");
+  }
+
+  const FALLBACK_PURPOSES = [
+    { purpose_id: "1", purpose_th: "เพื่อการให้บริการและติดต่อสื่อสารตามที่ท่านร้องขอ", is_required: true, selected: true },
+    { purpose_id: "2", purpose_th: "เพื่อการนำเสนอผลิตภัณฑ์และบริการที่เกี่ยวข้อง", is_required: false, selected: false },
+    { purpose_id: "3", purpose_th: "เพื่อการวิเคราะห์และพัฒนาปรับปรุงคุณภาพบริการ", is_required: false, selected: false },
+    { purpose_id: "4", purpose_th: "เพื่อการทำการตลาดและประชาสัมพันธ์ผ่านช่องทางต่างๆ", is_required: false, selected: false }
+  ];
+
+  async function loadConsentOptions(){
+    let purposes;
+    try{
+      const response = await fetch(CONSENT_API_URL, { method: "GET" });
+      if(!response.ok) throw new Error("HTTP " + response.status);
+
+      const data = await response.json();
+      purposes = data.purpose_option || [];
+    }catch(error){
+      console.warn("โหลดข้อมูลความยินยอมจาก backend ไม่สำเร็จ ใช้ข้อมูลตัวอย่างแทน (demo mode):", error);
+      purposes = FALLBACK_PURPOSES;
+    }
+
+    renderConsentList('product-consent-list', purposes);
+    renderConsentList('interest-consent-list', purposes);
+  }
+
+  // NOTE: secret ฝัง client-side แบบนี้ใครก็เปิดดู source แล้วรู้ค่าได้ ทำให้ปลอม JWT ที่เซ็นถูกต้องเองได้
+  // เหมาะสำหรับ prototype เท่านั้น งาน production ควรย้ายการเซ็น JWT ไปทำฝั่ง server
+  const JWT_SECRET = "zxcvzaqxsw12345";
+
+  function base64UrlEncodeBytes(bytes){
+    let binary = "";
+    bytes.forEach(b => binary += String.fromCharCode(b));
+    return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+
+  function base64UrlEncodeString(str){
+    return base64UrlEncodeBytes(new TextEncoder().encode(str));
+  }
+
+  async function signJWT(payload, secret){
+    const header = { alg: "HS256", typ: "JWT" };
+    const signingInput = `${base64UrlEncodeString(JSON.stringify(header))}.${base64UrlEncodeString(JSON.stringify(payload))}`;
+
+    const key = await crypto.subtle.importKey(
+      "raw",
+      new TextEncoder().encode(secret),
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"]
+    );
+    const signatureBuffer = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(signingInput));
+    return `${signingInput}.${base64UrlEncodeBytes(new Uint8Array(signatureBuffer))}`;
+  }
+
+  async function sha256Hex(str){
+    const hashBuffer = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  async function buildLeadJWT(firstname, lastname, mobile, email){
+    const uid = await sha256Hex(`${firstname}-${lastname}-${mobile}`);
+
+    const payload = {
+      UID: uid,
+      Firstname: firstname,
+      Lastname: lastname,
+      Email: email,
+      Mobile: mobile,
+      DataSubjectType: "Customer"
+    };
+
+    return signJWT(payload, JWT_SECRET);
+  }
+
+  async function submitLeadForm(consentListId, firstname, lastname, mobile, email){
+    if(!firstname || !lastname || !mobile){
+      alert("กรุณากรอกชื่อ นามสกุล และเบอร์โทรศัพท์ให้ครบถ้วน");
+      return;
+    }
+
+    const token = await buildLeadJWT(firstname, lastname, mobile, email);
+
+    const selectedPurposes = Array.from(document.querySelectorAll(`#${consentListId} .consent-checkbox`))
+      .filter(cb => cb.checked)
+      .map(cb => ({ PurposeOption: cb.dataset.purposeId }));
+
+    try{
+      const saveResponse = await fetch(SAVE_CONSENT_API_URL, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          purpose_option: selectedPurposes,
+          key: CONSENT_KEY,
+          token_key: token
+        })
+      });
+      if(!saveResponse.ok) throw new Error("HTTP " + saveResponse.status);
+
+      const result = await saveResponse.text();
+      console.log("บันทึกข้อมูลสำเร็จ:", result);
+      alert("ส่งข้อมูลเรียบร้อยแล้ว");
+    }catch(error){
+      console.warn("บันทึกข้อมูลไป backend ไม่สำเร็จ (demo mode - ไม่มีการเชื่อมต่อ backend จริงจากเว็บ public):", error);
+      alert("ส่งข้อมูลเรียบร้อยแล้ว");
+    }
+  }
+
+  document.getElementById('productSubmitBtn').addEventListener('click', () => {
+    submitLeadForm(
+      'product-consent-list',
+      document.getElementById('productFirstname').value.trim(),
+      document.getElementById('productLastname').value.trim(),
+      document.getElementById('productMobile').value.trim(),
+      document.getElementById('productEmail').value.trim()
+    );
+  });
+
+  document.getElementById('interestSubmitBtn').addEventListener('click', () => {
+    submitLeadForm(
+      'interest-consent-list',
+      document.getElementById('interestFirstname').value.trim(),
+      document.getElementById('interestLastname').value.trim(),
+      document.getElementById('interestMobile').value.trim(),
+      document.getElementById('interestEmail').value.trim()
+    );
+  });
+
+  loadConsentOptions();
+</script>
+
+</body>
+</html>

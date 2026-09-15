@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>เสนอแนะ ติชม ร้องเรียนบริการ</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
+
+  :root{
+    --navy-dark:#0a2a5e;
+    --navy:#1b4fa0;
+    --orange:#f0714a;
+    --border:#e4e7ec;
+    --text:#333c4d;
+    --link:#2f6fd6;
+
+    --bg-panel:#2b4a75;
+    --dropdown-bg:#1c3a63;
+    --field-bg:#24457a;
+    --option-text:#f5c94a;
+    --red:#e74c3c;
+    --placeholder:#8fa3c2;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Prompt', sans-serif;
+    background:#e9ebee;
+    color:var(--text);
+  }
+
+  /* Top header */
+  .topheader{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 30px;
+    border-bottom:1px solid var(--border);
+    background:#fff;
+  }
+  .logo{display:flex; align-items:center; gap:8px;}
+  .logo-icon{
+    width:36px;height:36px;
+    background:var(--navy-dark);
+    border-radius:6px;
+    display:flex;align-items:center;justify-content:center;
+    color:#f4c02a;
+    font-size:18px;
+  }
+  .logo-text .th{font-weight:700; font-size:16px; color:var(--navy-dark); line-height:1.1;}
+  .logo-text .en{font-size:9px; letter-spacing:0.4px; color:var(--navy);}
+  .top-right{display:flex; align-items:center; gap:14px;}
+  .search-circle{
+    width:32px;height:32px;
+    border-radius:50%;
+    border:1.5px solid #d5d9e0;
+    display:flex;align-items:center;justify-content:center;
+    color:#5a6472;
+  }
+  .lang{display:flex;align-items:center;gap:6px; font-size:13px; color:#333;}
+  .claim-badge{
+    background:#f5a623;
+    color:#fff;
+    border-radius:6px;
+    padding:6px 10px;
+    font-size:11px;
+    display:flex;
+    flex-direction:column;
+    line-height:1.2;
+    text-align:center;
+  }
+  .contact-link{font-size:13.5px; color:#333; font-weight:500;}
+  .online-btn{
+    background:var(--navy-dark);
+    color:#fff;
+    padding:9px 18px;
+    border-radius:4px;
+    font-size:13px;
+    text-align:center;
+    line-height:1.4;
+  }
+  .online-btn b{display:block; font-size:14px;}
+  .hamburger{display:flex;flex-direction:column;gap:4px;}
+  .hamburger span{width:22px;height:2.5px;background:var(--navy-dark);}
+
+  /* Breadcrumb */
+  .breadcrumb{
+    padding:12px 30px;
+    font-size:13px;
+    color:#5a6472;
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    background:#fff;
+  }
+  .breadcrumb a{color:var(--link); text-decoration:none;}
+  .breadcrumb span.current{color:#333; font-weight:500;}
+
+  /* Panel */
+  .page-wrap{
+    display:flex;
+    justify-content:center;
+    padding:30px 12px 60px;
+  }
+  .panel{
+    width:100%;
+    max-width:900px;
+    background:linear-gradient(180deg,#2b4a75,#284266);
+    border-radius:10px;
+    padding:44px 50px 50px;
+  }
+
+  h1{
+    color:#fff;
+    font-size:26px;
+    font-weight:700;
+    margin-bottom:40px;
+  }
+
+  .field{margin-bottom:30px;}
+  .field-row{display:flex; gap:30px; margin-bottom:30px;}
+  .field-row .field{flex:1; margin-bottom:0;}
+  label{display:block; color:#fff; font-size:14.5px; margin-bottom:12px;}
+  label .req{color:var(--red); margin-left:2px;}
+
+  .select-wrap{position:relative;}
+  .select-wrap select{
+    width:100%;
+    appearance:none;
+    -webkit-appearance:none;
+    -moz-appearance:none;
+    background:var(--dropdown-bg);
+    color:var(--option-text);
+    border:none;
+    border-radius:6px;
+    padding:15px 40px 15px 20px;
+    font-family:inherit;
+    font-size:14.5px;
+    text-align:center;
+    text-align-last:center;
+    cursor:pointer;
+    outline:none;
+  }
+  .select-wrap svg{
+    position:absolute;
+    right:20px; top:50%;
+    transform:translateY(-50%);
+    width:12px; height:12px;
+    stroke:var(--option-text);
+    pointer-events:none;
+  }
+
+  input[type="text"], input[type="email"], input[type="tel"], textarea{
+    width:100%;
+    background:var(--field-bg);
+    border:1px solid #3a5c8c;
+    border-radius:6px;
+    padding:13px 16px;
+    color:#fff;
+    font-family:inherit;
+    font-size:14px;
+    outline:none;
+  }
+  input::placeholder, textarea::placeholder{color:var(--placeholder);}
+  input:focus, textarea:focus{border-color:#5aa8e8;}
+  textarea{min-height:100px; resize:vertical;}
+
+  .consent-row{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    margin:36px 0 30px;
+  }
+  .consent-row input[type="checkbox"]{
+    width:16px;height:16px; min-width:16px;
+    margin-top:3px;
+    accent-color:#fff;
+  }
+  .consent-row p{color:#fff; font-size:13.5px; line-height:1.8;}
+  .consent-error{
+    color:var(--red);
+    font-size:13px;
+    margin-bottom:20px;
+  }
+
+  .submit-row{display:flex; justify-content:flex-end;}
+  .submit-btn{
+    background:#fff;
+    color:#1c3a63;
+    border:none;
+    border-radius:6px;
+    padding:14px 34px;
+    font-family:inherit;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+
+  @media(max-width:700px){
+    .field-row{flex-direction:column; gap:24px;}
+    .panel{padding:30px 22px 40px;}
+    .topheader{flex-wrap:wrap; gap:10px;}
+  }
+</style>
+</head>
+<body>
+
+<div style="position:fixed; top:0; left:0; right:0; z-index:99999; display:flex; align-items:center; justify-content:center; gap:14px; background:#0a2a5e; padding:6px 20px; font-family:'Prompt',sans-serif; font-size:12px; box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+  <a href="../index.html" style="color:#fff; text-decoration:none;">&#8962; กลับหน้าหลัก</a>
+  <span style="color:rgba(255,255,255,0.4);">|</span>
+  <a href="viriyah-co-th.html" style="color:#fff; text-decoration:none;">เมนู Viriyah.co.th</a>
+</div>
+
+<div class="topheader" style="margin-top:32px;">
+  <div class="logo">
+    <img src="../assets/viriyah-logo.png" alt="วิริยะประกันภัย" style="height:100px;width:auto;display:block;">
+  </div>
+  <div class="top-right">
+    <div class="search-circle">&#128269;</div>
+    <div class="lang">&#127760; TH &#9662;</div>
+    <div class="claim-badge">แจ้งอุบัติเหตุ<br><b>1557</b></div>
+    <div class="contact-link">ติดต่อเรา</div>
+    <div class="online-btn">ซื้อประกันภัยออนไลน์<br><b>(T.02-129-7474)</b></div>
+    <div class="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</div>
+
+<div class="breadcrumb">
+  <a href="#">หน้าแรก</a> &#8250;
+  <a href="ContactUs.html">ติดต่อเรา</a> &#8250;
+  <span class="current">เสนอแนะ ติชม ร้องเรียนบริการ</span>
+</div>
+
+<div class="page-wrap">
+  <div class="panel">
+    <h1>เสนอแนะ ติชม ร้องเรียนบริการ</h1>
+
+    <div class="field">
+      <label>หัวข้อที่ต้องการสอบถาม <span class="req">*</span></label>
+      <div class="select-wrap">
+        <select id="topic">
+          <option value="">โปรดเลือกหัวข้อ</option>
+          <option value="complaint">ร้องเรียน/ชมเชยบริการ</option>
+          <option value="suggest">เสนอแนะและติชม</option>
+        </select>
+        <svg viewBox="0 0 10 6" fill="none" stroke-width="1.8"><path d="M1 1l4 4 4-4"/></svg>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>ชื่อ <span class="req">*</span></label>
+        <input type="text" id="firstname">
+      </div>
+      <div class="field">
+        <label>นามสกุล <span class="req">*</span></label>
+        <input type="text" id="lastname">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>จังหวัด <span class="req">*</span></label>
+      <div class="select-wrap">
+        <select id="province">
+          <option value="">โปรดเลือกจังหวัด</option>
+        </select>
+        <svg viewBox="0 0 10 6" fill="none" stroke-width="1.8"><path d="M1 1l4 4 4-4"/></svg>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>เบอร์โทรศัพท์ <span class="req">*</span></label>
+        <input type="tel" id="mobile">
+      </div>
+      <div class="field">
+        <label>อีเมล <span class="req">*</span></label>
+        <input type="email" id="email">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>รายละเอียด <span class="req">*</span></label>
+      <textarea id="detail"></textarea>
+    </div>
+
+    <div id="consent-list">
+      <div class="consent-row">
+        <p>กำลังโหลดข้อมูลความยินยอม...</p>
+      </div>
+    </div>
+
+    <div class="submit-row">
+      <button class="submit-btn" id="submit-btn" type="button">ส่งคำถาม &#187;&#187;</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const CONSENT_KEY = "HRFckZ09CBZFQHlpJa2upA%3d%3d";
+  const CONSENT_API_URL = `http://172.21.20.248/api/AdminPreferenceConsentForm/PreferenceFormToken?Key=${CONSENT_KEY}`;
+  const SAVE_CONSENT_API_URL = "https://172.21.20.248/api/AdminPreferenceConsentForm/PreferenceFormConsent";
+
+  const FALLBACK_PURPOSES = [
+    { purpose_id: "1", purpose_th: "เพื่อการให้บริการและติดต่อสื่อสารตามที่ท่านร้องขอ", is_required: true, selected: true },
+    { purpose_id: "2", purpose_th: "เพื่อการนำเสนอผลิตภัณฑ์และบริการที่เกี่ยวข้อง", is_required: false, selected: false },
+    { purpose_id: "3", purpose_th: "เพื่อการวิเคราะห์และพัฒนาปรับปรุงคุณภาพบริการ", is_required: false, selected: false },
+    { purpose_id: "4", purpose_th: "เพื่อการทำการตลาดและประชาสัมพันธ์ผ่านช่องทางต่างๆ", is_required: false, selected: false }
+  ];
+
+  async function loadConsentOptions(){
+    const list = document.getElementById('consent-list');
+    let purposes;
+    try{
+      const response = await fetch(CONSENT_API_URL, {
+        method: "GET"
+      });
+      if(!response.ok) throw new Error("HTTP " + response.status);
+
+      const data = await response.json();
+      purposes = data.purpose_option || [];
+    }catch(error){
+      console.warn("โหลดข้อมูลความยินยอมจาก backend ไม่สำเร็จ ใช้ข้อมูลตัวอย่างแทน (demo mode):", error);
+      purposes = FALLBACK_PURPOSES;
+    }
+
+    list.innerHTML = purposes.map(p => `
+      <div class="consent-row">
+        <input type="checkbox" class="consent-checkbox" data-purpose-id="${p.purpose_id}" data-required="${p.is_required}" ${p.selected ? "checked" : ""}>
+        <p>${p.purpose_th} ${p.is_required ? '<span class="req">*</span>' : ""}</p>
+      </div>
+    `).join("");
+  }
+
+  // NOTE: secret ฝัง client-side แบบนี้ใครก็เปิดดู source แล้วรู้ค่าได้ ทำให้ปลอม JWT ที่เซ็นถูกต้องเองได้
+  // เหมาะสำหรับ prototype เท่านั้น งาน production ควรย้ายการเซ็น JWT ไปทำฝั่ง server
+  const JWT_SECRET = "zxcvzaqxsw12345";
+
+  function base64UrlEncodeBytes(bytes){
+    let binary = "";
+    bytes.forEach(b => binary += String.fromCharCode(b));
+    return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+
+  function base64UrlEncodeString(str){
+    return base64UrlEncodeBytes(new TextEncoder().encode(str));
+  }
+
+  async function signJWT(payload, secret){
+    const header = { alg: "HS256", typ: "JWT" };
+    const signingInput = `${base64UrlEncodeString(JSON.stringify(header))}.${base64UrlEncodeString(JSON.stringify(payload))}`;
+
+    const key = await crypto.subtle.importKey(
+      "raw",
+      new TextEncoder().encode(secret),
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"]
+    );
+    const signatureBuffer = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(signingInput));
+    return `${signingInput}.${base64UrlEncodeBytes(new Uint8Array(signatureBuffer))}`;
+  }
+
+  async function sha256Hex(str){
+    const hashBuffer = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  async function buildLeadJWT(){
+    const firstname = document.getElementById('firstname').value.trim();
+    const lastname = document.getElementById('lastname').value.trim();
+    const mobile = document.getElementById('mobile').value.trim();
+    const email = document.getElementById('email').value.trim();
+
+    const uid = await sha256Hex(`${firstname}-${lastname}-${mobile}`);
+
+    const payload = {
+      UID: uid,
+      Firstname: firstname,
+      Lastname: lastname,
+      Email: email,
+      Mobile: mobile,
+      DataSubjectType: "Customer"
+    };
+
+    return signJWT(payload, JWT_SECRET);
+  }
+
+  document.getElementById('submit-btn').addEventListener('click', async () => {
+    const firstname = document.getElementById('firstname').value.trim();
+    const lastname = document.getElementById('lastname').value.trim();
+    const mobile = document.getElementById('mobile').value.trim();
+    if(!firstname || !lastname || !mobile){
+      alert("กรุณากรอกชื่อ นามสกุล และเบอร์โทรศัพท์ให้ครบถ้วน");
+      return;
+    }
+
+    const token = await buildLeadJWT();
+
+    const selectedPurposes = Array.from(document.querySelectorAll('.consent-checkbox'))
+      .filter(cb => cb.checked)
+      .map(cb => ({ PurposeOption: cb.dataset.purposeId }));
+
+    try{
+      const saveResponse = await fetch(SAVE_CONSENT_API_URL, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          purpose_option: selectedPurposes,
+          key: CONSENT_KEY,
+          token_key: token
+        })
+      });
+      if(!saveResponse.ok) throw new Error("HTTP " + saveResponse.status);
+
+      const result = await saveResponse.text();
+      console.log("บันทึกข้อมูลสำเร็จ:", result);
+      alert("ส่งข้อมูลเรียบร้อยแล้ว");
+    }catch(error){
+      console.warn("บันทึกข้อมูลไป backend ไม่สำเร็จ (demo mode - ไม่มีการเชื่อมต่อ backend จริงจากเว็บ public):", error);
+      alert("ส่งข้อมูลเรียบร้อยแล้ว");
+    }
+  });
+
+  loadConsentOptions();
+</script>
+
+</body>
+</html>

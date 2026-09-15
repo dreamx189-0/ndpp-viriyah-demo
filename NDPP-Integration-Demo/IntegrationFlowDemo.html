@@ -1,0 +1,2622 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>NDPP × Viriyah — Integration Flow Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  :root{
+    --navy:#0f2a5c;
+    --navy-dark:#0a1e42;
+    --blue:#2563eb;
+    --blue-light:#eaf1ff;
+    --teal:#0d9488;
+    --teal-light:#e6fbf8;
+    --green:#16a34a;
+    --amber:#d97706;
+    --bg:#f6f8fb;
+    --surface:#ffffff;
+    --border:#e2e8f0;
+    --text:#1e293b;
+    --text-muted:#64748b;
+    --code-bg:#0f172a;
+    --code-text:#e2e8f0;
+    --radius:14px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Prompt', sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.7;
+  }
+  code, pre, .mono{font-family:'JetBrains Mono', 'Consolas', monospace;}
+  section{padding:70px 24px;}
+  .container{max-width:1180px; margin:0 auto;}
+  h2.section-title{
+    font-size:26px;
+    font-weight:700;
+    color:var(--navy);
+    margin-bottom:10px;
+    text-align:center;
+  }
+  p.section-sub{
+    text-align:center;
+    color:var(--text-muted);
+    font-size:14.5px;
+    max-width:720px;
+    margin:0 auto 44px;
+  }
+
+  /* ===== Navbar ===== */
+  .navbar{
+    position:sticky;
+    top:0;
+    z-index:500;
+    background:rgba(255,255,255,0.95);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+    padding:14px 30px;
+  }
+  .navbar .brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-weight:700;
+    color:var(--navy);
+    font-size:15px;
+  }
+  .navbar .brand .badge{
+    width:36px;height:36px;
+    border-radius:9px;
+    background:linear-gradient(135deg,var(--blue),var(--teal));
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;
+    font-size:16px;
+    font-weight:800;
+  }
+  .navbar .brand small{
+    display:block;
+    font-weight:400;
+    color:var(--text-muted);
+    font-size:11px;
+  }
+  .navlinks{
+    display:flex;
+    gap:26px;
+    font-size:13.5px;
+    font-weight:500;
+    color:var(--text);
+  }
+  .navlinks a{color:inherit; text-decoration:none; cursor:pointer;}
+  .navlinks a:hover{color:var(--blue);}
+  .navbar .live-tag{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:11.5px;
+    font-weight:700;
+    color:var(--green);
+    background:#ecfdf3;
+    border:1px solid #bbf7d0;
+    padding:5px 12px;
+    border-radius:20px;
+  }
+  .live-dot{
+    width:7px;height:7px;
+    border-radius:50%;
+    background:var(--green);
+    box-shadow:0 0 0 0 rgba(22,163,74,0.6);
+    animation:pulse 2s infinite;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(22,163,74,0.5);}
+    70%{box-shadow:0 0 0 7px rgba(22,163,74,0);}
+    100%{box-shadow:0 0 0 0 rgba(22,163,74,0);}
+  }
+
+  .acc-toolbar{display:flex; gap:8px;}
+  .acc-toolbar-btn{
+    font-family:inherit;
+    font-size:11.5px;
+    font-weight:600;
+    color:var(--text-muted);
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:6px 14px;
+    cursor:pointer;
+    transition:border-color 0.15s ease, color 0.15s ease;
+  }
+  .acc-toolbar-btn:hover{border-color:var(--blue); color:var(--blue);}
+
+  /* ===== Accordion (collapsible sections) =====
+     Sections default to collapsed; multiple can be open at once (not
+     exclusive) so the "ขยายทั้งหมด" button can genuinely open everything
+     at rehearsal time, while presenters can still expand/collapse each
+     topic independently in step with their talking points. */
+  .acc-header{
+    cursor:pointer;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:32px 50px;
+    transition:background 0.15s ease;
+    user-select:none;
+    border-radius:14px;
+  }
+  .acc-header:hover{background:rgba(37,99,235,0.05);}
+  .acc-header .section-title{margin-bottom:0;}
+  .acc-chevron{
+    position:absolute;
+    right:12px;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:15px;
+    color:var(--text-muted);
+    transition:transform 0.3s ease;
+  }
+  .acc-header.open .acc-chevron{transform:translateY(-50%) rotate(180deg);}
+  .acc-body{
+    max-height:0;
+    overflow:hidden;
+    opacity:0;
+    transition:max-height 0.4s ease, opacity 0.3s ease;
+  }
+  .acc-body.open{opacity:1;}
+  .acc-body-inner{padding-bottom:70px;}
+
+  .complexity-dots{display:flex; justify-content:center; gap:6px; margin:14px 0 4px;}
+  .complexity-dots .dot{width:10px; height:10px; border-radius:50%; background:var(--border);}
+  .complexity-dots .dot.on{background:var(--blue);}
+
+  /* ===== Hero ===== */
+  .hero{
+    background:linear-gradient(160deg, var(--navy) 0%, #133a7c 55%, var(--teal) 140%);
+    color:#fff;
+    padding:64px 24px 80px;
+    text-align:center;
+  }
+  .hero .tag{
+    display:inline-block;
+    background:rgba(255,255,255,0.14);
+    border:1px solid rgba(255,255,255,0.25);
+    padding:6px 16px;
+    border-radius:20px;
+    font-size:12.5px;
+    font-weight:600;
+    margin-bottom:18px;
+  }
+  .hero h1{
+    font-size:32px;
+    font-weight:800;
+    margin-bottom:14px;
+    line-height:1.5;
+  }
+  .hero h1 span{color:#7dd3fc;}
+  .hero p{
+    max-width:660px;
+    margin:0 auto;
+    color:rgba(255,255,255,0.85);
+    font-size:14.5px;
+  }
+
+  /* ===== Overview flow diagram ===== */
+  .flow-diagram{
+    display:flex;
+    align-items:stretch;
+    justify-content:center;
+    gap:0;
+    flex-wrap:wrap;
+    margin-top:10px;
+  }
+  .step-node{
+    background:var(--surface);
+    border:1.5px solid var(--border);
+    border-radius:var(--radius);
+    padding:22px 18px;
+    width:200px;
+    text-align:center;
+    cursor:pointer;
+    transition:transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  }
+  .step-node:hover{
+    transform:translateY(-4px);
+    box-shadow:0 14px 28px rgba(15,42,92,0.12);
+    border-color:var(--blue);
+  }
+  .step-node .num{
+    width:36px;height:36px;
+    border-radius:50%;
+    background:var(--blue-light);
+    color:var(--blue);
+    font-weight:800;
+    font-size:15px;
+    display:flex;align-items:center;justify-content:center;
+    margin:0 auto 12px;
+  }
+  .step-node.ndpp .num{background:var(--teal-light); color:var(--teal);}
+  .step-node .ttl{font-size:13.5px; font-weight:700; color:var(--navy); margin-bottom:6px; line-height:1.5;}
+  .step-node .desc{font-size:11.5px; color:var(--text-muted); line-height:1.6;}
+  .flow-arrow{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:40px;
+    color:#94a3b8;
+    font-size:22px;
+  }
+  @media(max-width:1100px){
+    .flow-arrow{width:100%; transform:rotate(90deg); padding:4px 0;}
+    .flow-diagram{flex-direction:column; align-items:center;}
+    .step-node{width:100%; max-width:320px;}
+  }
+
+  /* ===== System Overview (wide 3-part architecture diagram) ===== */
+  .sys-overview-wrap{
+    background:var(--surface);
+    border:1.5px solid var(--border);
+    border-radius:18px;
+    padding:44px 30px 40px;
+    margin-bottom:50px;
+  }
+  .sys-overview-cap{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    font-size:12px;
+    font-weight:700;
+    color:var(--text-muted);
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    margin-bottom:38px;
+  }
+  .sys-overview-cap .ic{font-size:14px;}
+
+  .sys-overview{
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .ov-card{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    width:210px;
+    gap:12px;
+  }
+  .ov-icon{
+    width:88px; height:88px;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:36px;
+    background:#f1f5f9;
+  }
+  .ov-icon.viriyah{background:var(--blue-light);}
+  .ov-icon.ndpp{background:var(--teal-light);}
+  .ov-name{font-size:17px; font-weight:800; color:var(--navy);}
+  .ov-name small{display:block; font-size:12px; font-weight:500; color:var(--text-muted); margin-top:4px;}
+  .ov-desc{font-size:12.5px; color:var(--text-muted); line-height:1.6; max-width:190px;}
+
+  .ov-arrow{font-size:24px; color:#94a3b8; margin-top:34px;}
+
+  .ov-link{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+    margin-top:22px;
+    min-width:110px;
+  }
+  .ov-link-badges{display:flex; gap:5px;}
+  .ov-link-arrow{font-size:20px; color:#94a3b8;}
+  .ov-link-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    background:var(--blue-light);
+    color:var(--blue);
+    font-size:12px;
+    font-weight:700;
+    padding:6px 16px;
+    border-radius:20px;
+    white-space:nowrap;
+  }
+  .ov-link-sub{font-size:10.5px; color:var(--text-muted); font-weight:600;}
+
+  .ov-col{display:flex; flex-direction:column; align-items:center;}
+  .ov-db-wrap{display:flex; flex-direction:column; align-items:center;}
+  .ov-db-line{width:2px; height:26px; background:var(--border);}
+  .ov-db{
+    position:relative;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:var(--teal-light);
+    border:1.5px solid var(--teal);
+    border-radius:12px;
+    padding:10px 20px;
+    font-size:13px;
+    font-weight:700;
+    color:var(--navy);
+    white-space:nowrap;
+  }
+
+  /* ===== Step-pairing badges (link System Overview <-> Process Flow) ===== */
+  .pair-badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:19px;
+    height:19px;
+    min-width:19px;
+    border-radius:50%;
+    background:var(--green);
+    color:#fff;
+    font-size:10.5px;
+    font-weight:800;
+    line-height:1;
+  }
+  .pair-badge.mini{width:15px; height:15px; min-width:15px; font-size:9px;}
+  .pair-badge.corner{position:absolute; top:-9px; right:-9px;}
+  [data-pair]{cursor:pointer; transition:outline-color 0.2s ease;}
+  [data-pair].pair-highlight{outline:3px solid var(--green); outline-offset:3px; border-radius:10px;}
+  @keyframes pairFlash{ 0%,100%{outline-color:var(--green);} 50%{outline-color:#86efac;} }
+  .pair-flash{animation:pairFlash 0.45s ease 2;}
+
+  @media(max-width:900px){
+    .sys-overview{flex-direction:column;}
+    .ov-arrow{margin-top:0; transform:rotate(90deg);}
+    .ov-link{margin-top:0; flex-direction:row; gap:10px;}
+    .ov-link-badges{flex-direction:column;}
+    .pair-badge{width:16px; height:16px; min-width:16px; font-size:9px;}
+  }
+
+  /* ===== Integration Coverage table ===== */
+  .coverage-wrap{
+    overflow-x:auto;
+    border:1.5px solid var(--border);
+    border-radius:18px;
+    -webkit-overflow-scrolling:touch;
+  }
+  .coverage-table{width:100%; border-collapse:collapse; min-width:820px;}
+  .coverage-table thead th{
+    background:#f8fafc;
+    text-align:left;
+    font-size:11px;
+    font-weight:700;
+    color:var(--text-muted);
+    text-transform:uppercase;
+    letter-spacing:0.4px;
+    padding:14px 16px;
+    border-bottom:1.5px solid var(--border);
+    white-space:nowrap;
+  }
+  .coverage-table thead th.center{text-align:center;}
+  .coverage-table tbody td{
+    padding:13px 16px;
+    font-size:13px;
+    color:var(--text);
+    border-bottom:1px solid var(--border);
+    vertical-align:middle;
+  }
+  .coverage-table tbody td.center{text-align:center;}
+  .coverage-table tbody tr:last-child td{border-bottom:none;}
+  .cov-row.clickable{cursor:pointer; transition:background 0.15s ease, box-shadow 0.15s ease;}
+  .cov-row.clickable:hover{background:var(--blue-light);}
+  .cov-row.clickable:hover .cov-sitename{color:var(--blue);}
+  .cov-row.disabled{opacity:0.5;}
+  .cov-row.disabled td{cursor:help;}
+  .cov-sitename{font-weight:800; color:var(--navy); white-space:nowrap; transition:color 0.15s ease;}
+
+  .cov-icon{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:26px; height:26px;
+    border-radius:50%;
+    font-size:12px;
+    border:1.5px solid;
+  }
+  .cov-icon.yes{background:#f0fdf4; border-color:#bbf7d0; color:#166534;}
+  .cov-icon.no{background:#f8fafc; border-color:var(--border); color:#94a3b8;}
+  .cov-icon.pending{background:#fffbeb; border-color:#fde68a; color:#92400e;}
+
+  .cov-note{
+    display:inline-block;
+    max-width:230px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    vertical-align:bottom;
+    color:var(--text-muted);
+    font-size:12px;
+  }
+
+  @media(max-width:700px){
+    .coverage-wrap{border-radius:12px;}
+  }
+
+  /* ===== Step detail ===== */
+  .step-detail{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:40px 44px;
+    margin-bottom:28px;
+    scroll-margin-top:90px;
+  }
+  .step-detail.flash{
+    animation:flashHighlight 1.1s ease;
+  }
+  @keyframes flashHighlight{
+    0%{box-shadow:0 0 0 4px rgba(37,99,235,0.35);}
+    100%{box-shadow:0 0 0 0 rgba(37,99,235,0);}
+  }
+  .step-detail-head{
+    display:flex;
+    align-items:flex-start;
+    gap:18px;
+    margin-bottom:26px;
+  }
+  .step-detail-head .num{
+    width:42px;height:42px;
+    min-width:42px;
+    border-radius:50%;
+    background:var(--navy);
+    color:#fff;
+    font-weight:800;
+    font-size:17px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .step-detail-head h3{font-size:20px; color:var(--navy); font-weight:700; margin-bottom:6px;}
+  .step-detail-head p{font-size:13.5px; color:var(--text-muted);}
+
+  .swimlane{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+    margin-bottom:28px;
+  }
+  .lane{
+    border-radius:12px;
+    padding:18px 20px;
+    font-size:13px;
+    line-height:1.8;
+  }
+  .lane.viriyah{background:var(--blue-light); border:1px solid #c7dbff;}
+  .lane.ndpp{background:var(--teal-light); border:1px solid #b8ece5;}
+  .lane .lane-title{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-weight:700;
+    font-size:12.5px;
+    margin-bottom:10px;
+    text-transform:uppercase;
+    letter-spacing:0.4px;
+  }
+  .lane.viriyah .lane-title{color:var(--blue);}
+  .lane.ndpp .lane-title{color:var(--teal);}
+  .lane .dot{width:8px;height:8px;border-radius:50%;background:currentColor;}
+  @media(max-width:800px){ .swimlane{grid-template-columns:1fr;} }
+
+  .api-block{
+    border-top:1px dashed var(--border);
+    padding-top:24px;
+  }
+  .api-line{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:18px;
+    flex-wrap:wrap;
+  }
+  .method-badge{
+    font-family:'JetBrains Mono', monospace;
+    font-weight:700;
+    font-size:12px;
+    padding:5px 12px;
+    border-radius:6px;
+    color:#fff;
+  }
+  .method-badge.get{background:#2563eb;}
+  .method-badge.post{background:#16a34a;}
+  .method-badge.put{background:#c2410c;}
+  .live-tag{display:inline-flex; align-items:center; gap:5px; font-size:10.5px; font-weight:700; color:#166534; background:#f0fdf4; border:1px solid #bbf7d0; padding:3px 10px; border-radius:20px; margin-left:8px;}
+  .live-tag .dot{width:6px; height:6px; border-radius:50%; background:#22c55e; animation:nodePulse 1.8s ease-in-out infinite;}
+  .endpoint-text{
+    font-family:'JetBrains Mono', monospace;
+    font-size:13px;
+    color:var(--navy);
+    background:#f1f5f9;
+    padding:6px 12px;
+    border-radius:6px;
+  }
+
+  table.param-table{
+    width:100%;
+    border-collapse:collapse;
+    margin-bottom:22px;
+    font-size:12.5px;
+  }
+  table.param-table th{
+    background:#f1f5f9;
+    color:var(--navy);
+    text-align:left;
+    padding:10px 14px;
+    font-weight:700;
+    border-bottom:2px solid var(--border);
+  }
+  table.param-table td{
+    padding:10px 14px;
+    border-bottom:1px solid var(--border);
+    color:var(--text);
+  }
+  table.param-table td.param-name{font-family:'JetBrains Mono', monospace; color:var(--navy); font-weight:600;}
+  .req-tag{
+    font-size:10.5px;
+    font-weight:700;
+    padding:3px 9px;
+    border-radius:20px;
+  }
+  .req-tag.mandatory{background:#fef2f2; color:#dc2626;}
+  .req-tag.optional{background:#f1f5f9; color:var(--text-muted);}
+
+  .code-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+  }
+  @media(max-width:800px){ .code-grid{grid-template-columns:1fr;} }
+  .code-card{
+    background:var(--code-bg);
+    border-radius:12px;
+    overflow:hidden;
+  }
+  .code-card .code-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:9px 14px;
+    background:rgba(255,255,255,0.05);
+    color:#94a3b8;
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:0.3px;
+    text-transform:uppercase;
+  }
+  .copy-btn{
+    background:none;
+    border:1px solid #334155;
+    color:#cbd5e1;
+    font-family:inherit;
+    font-size:10.5px;
+    padding:3px 9px;
+    border-radius:5px;
+    cursor:pointer;
+  }
+  .copy-btn:hover{background:#1e293b;}
+  .code-card pre{
+    padding:16px 18px;
+    overflow-x:auto;
+    font-size:12px;
+    color:var(--code-text);
+    line-height:1.75;
+    max-height:260px;
+  }
+  .code-card .key{color:#7dd3fc;}
+  .code-card .str{color:#86efac;}
+  .code-card .num{color:#fca5a5;}
+  .code-card .bool{color:#fcd34d;}
+  .code-card .null{color:#94a3b8;}
+
+  .try-row{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-top:22px;
+    flex-wrap:wrap;
+  }
+  .btn-try{
+    background:var(--navy);
+    color:#fff;
+    border:none;
+    padding:12px 24px;
+    border-radius:9px;
+    font-family:inherit;
+    font-size:13.5px;
+    font-weight:600;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:9px;
+    transition:background 0.15s ease;
+  }
+  .btn-try:hover{background:var(--navy-dark);}
+  .btn-try:disabled{opacity:0.6; cursor:default;}
+  .spinner{
+    width:14px;height:14px;
+    border-radius:50%;
+    border:2px solid rgba(255,255,255,0.35);
+    border-top-color:#fff;
+    animation:spin 0.7s linear infinite;
+    display:none;
+  }
+  .btn-try.loading .spinner{display:inline-block;}
+  .btn-try.loading .btn-label::after{content:"กำลังเรียก API...";}
+  .try-status{font-size:12px; color:var(--text-muted);}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  .response-panel{
+    margin-top:16px;
+    max-height:0;
+    overflow:hidden;
+    opacity:0;
+    transform:translateY(-6px);
+    transition:max-height 0.4s ease, opacity 0.35s ease, transform 0.35s ease;
+  }
+  .response-panel.open{
+    max-height:600px;
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  /* ===== Step 3: editable key input ===== */
+  .key-input-row{
+    display:flex;
+    align-items:stretch;
+    flex-wrap:wrap;
+    margin:14px 0 6px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12.5px;
+  }
+  .key-input-base{
+    background:#f1f5f9;
+    color:var(--navy);
+    padding:9px 4px 9px 12px;
+    border-radius:8px 0 0 8px;
+    white-space:nowrap;
+    display:flex;
+    align-items:center;
+  }
+  .key-input{
+    flex:1;
+    min-width:180px;
+    border:1.5px solid var(--border);
+    border-left:none;
+    border-radius:0 8px 8px 0;
+    padding:9px 12px;
+    font-family:inherit;
+    font-size:12.5px;
+    color:var(--navy);
+    background:#fff;
+    outline:none;
+  }
+  .key-input:focus{border-color:var(--blue);}
+  .key-full-url{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px;
+    color:var(--text-muted);
+    background:#f8fafc;
+    border:1px dashed var(--border);
+    border-radius:6px;
+    padding:8px 12px;
+    margin-bottom:16px;
+    word-break:break-all;
+  }
+  .key-carry-note{font-size:11.5px; margin-top:10px; font-weight:600;}
+  .key-carry-note.ok{color:var(--green);}
+  .key-carry-note.warn{color:#c2410c;}
+
+  /* ===== Response box states (placeholder / loading / error) ===== */
+  .resp-state{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    padding:26px 14px;
+    color:#64748b;
+    font-size:11.5px;
+    text-align:center;
+    white-space:normal;
+  }
+  .resp-skeleton-line{
+    height:9px;
+    width:100%;
+    border-radius:5px;
+    background:linear-gradient(90deg,#1e293b 25%,#334155 37%,#1e293b 63%);
+    background-size:400% 100%;
+    animation:skeletonShine 1.3s ease infinite;
+  }
+  @keyframes skeletonShine{0%{background-position:100% 50%;} 100%{background-position:0 50%;}}
+  .resp-error{
+    background:rgba(220,38,38,0.14);
+    border:1px solid rgba(220,38,38,0.4);
+    border-radius:8px;
+    padding:14px 16px;
+    color:#fca5a5;
+    font-size:11.5px;
+    line-height:1.7;
+    white-space:normal;
+  }
+  .resp-error b{color:#f87171;}
+
+  /* ===== Step 4: mini form + step-by-step flow log ===== */
+  .mini-form{margin:14px 0 4px;}
+  .mini-form-row{display:flex; flex-wrap:wrap; gap:8px; align-items:center;}
+  .mini-input{
+    border:1.5px solid var(--border);
+    border-radius:8px;
+    padding:9px 12px;
+    font-family:inherit;
+    font-size:12.5px;
+    color:var(--text);
+    outline:none;
+    width:150px;
+    max-width:100%;
+  }
+  .mini-input:focus{border-color:var(--blue);}
+
+  .flow-log{margin:18px 0 4px; display:flex; flex-direction:column;}
+  .flow-log-line{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.5px;
+    line-height:1.7;
+    padding:9px 0;
+    border-bottom:1px dashed var(--border);
+    opacity:0;
+    transform:translateY(6px);
+    transition:opacity 0.35s ease, transform 0.35s ease;
+  }
+  .flow-log-line.show{opacity:1; transform:translateY(0);}
+  .flow-log-line:last-child{border-bottom:none;}
+  .flow-log-line .fl-tag{
+    flex-shrink:0;
+    font-weight:800;
+    color:#fff;
+    background:var(--blue);
+    border-radius:5px;
+    padding:2px 7px;
+    font-size:10px;
+    margin-top:1px;
+  }
+  .flow-log-line .fl-content{color:var(--text); word-break:break-all;}
+  .flow-log-line .fl-content b{color:var(--navy);}
+  .flow-log-line.fl-error .fl-tag{background:#dc2626;}
+
+  /* ===== Interactive demo section ===== */
+  .demo-section{background:#0b1220;}
+  .demo-section h2, .demo-section p.section-sub{color:#fff;}
+  .demo-section p.section-sub{color:#93a4c3;}
+  .demo-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:22px;
+    align-items:start;
+  }
+  @media(max-width:900px){ .demo-grid{grid-template-columns:1fr;} }
+
+  .demo-panel{
+    background:var(--surface);
+    border-radius:18px;
+    padding:30px 30px 34px;
+  }
+  .demo-panel h4{font-size:15px; color:var(--navy); font-weight:700; margin-bottom:6px;}
+  .demo-panel .hint{font-size:12px; color:var(--text-muted); margin-bottom:22px;}
+
+  .mock-browser{
+    border:1px solid var(--border);
+    border-radius:12px;
+    overflow:hidden;
+  }
+  .mock-browser-bar{
+    background:#f1f5f9;
+    padding:9px 14px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .mock-browser-bar .dot{width:9px;height:9px;border-radius:50%;}
+  .mock-browser-bar .dot.r{background:#f87171;}
+  .mock-browser-bar .dot.y{background:#fbbf24;}
+  .mock-browser-bar .dot.g{background:#4ade80;}
+  .mock-browser-bar .url{
+    margin-left:10px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px;
+    color:var(--text-muted);
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:3px 10px;
+    flex:1;
+  }
+  .mock-browser-body{padding:24px;}
+  .mock-title{font-size:14px; font-weight:700; color:var(--navy); margin-bottom:4px;}
+  .mock-sub{font-size:11.5px; color:var(--text-muted); margin-bottom:18px;}
+
+  .btn-load{
+    width:100%;
+    background:var(--blue);
+    color:#fff;
+    border:none;
+    padding:12px;
+    border-radius:8px;
+    font-family:inherit;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    margin-bottom:18px;
+  }
+  .btn-load:hover{background:#1d4ed8;}
+  .btn-load:disabled{background:#cbd5e1; cursor:default;}
+
+  .purpose-list{display:none; flex-direction:column; gap:10px; margin-bottom:20px;}
+  .purpose-list.show{display:flex;}
+  .purpose-item{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:12px 14px;
+    font-size:12px;
+    color:var(--text);
+  }
+  .purpose-item input{width:16px; height:16px; min-width:16px; margin-top:2px; accent-color:var(--blue);}
+  .purpose-item .req{color:#dc2626; font-weight:700; font-size:10.5px; margin-left:4px;}
+
+  .btn-confirm{
+    width:100%;
+    background:var(--green);
+    color:#fff;
+    border:none;
+    padding:12px;
+    border-radius:8px;
+    font-family:inherit;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    display:none;
+  }
+  .btn-confirm.show{display:block;}
+  .btn-confirm:hover{background:#15803d;}
+  .btn-confirm:disabled{background:#cbd5e1; cursor:default;}
+
+  .btn-reset{
+    width:100%;
+    background:none;
+    border:1px solid var(--border);
+    color:var(--text-muted);
+    padding:9px;
+    border-radius:8px;
+    font-family:inherit;
+    font-size:12px;
+    font-weight:600;
+    cursor:pointer;
+    margin-top:12px;
+  }
+  .btn-reset:hover{border-color:var(--text-muted); color:var(--text);}
+
+  .success-card{
+    display:none;
+    margin-top:18px;
+    background:#ecfdf3;
+    border:1px solid #bbf7d0;
+    border-radius:10px;
+    padding:16px 18px;
+  }
+  .success-card.show{display:block; animation:fadeSlideIn 0.4s ease;}
+  @keyframes fadeSlideIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+  .success-card .ttl{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:var(--green);
+    font-weight:700;
+    font-size:13px;
+    margin-bottom:10px;
+  }
+  .success-card table{width:100%; font-size:11.5px;}
+  .success-card td{padding:4px 0; color:var(--text);}
+  .success-card td.lbl{color:var(--text-muted); width:44%;}
+  .success-card td.val{font-family:'JetBrains Mono', monospace; color:var(--navy); font-weight:600;}
+
+  /* Console log panel */
+  .console-panel{
+    background:#0b1220;
+    border:1px solid #1e293b;
+    border-radius:18px;
+    padding:0;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    height:100%;
+    min-height:420px;
+  }
+  .console-head{
+    background:#111c33;
+    padding:12px 18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom:1px solid #1e293b;
+  }
+  .console-head .lbl{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.5px;
+    color:#94a3b8;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .console-head .lbl .dot{width:7px;height:7px;border-radius:50%;background:var(--green);}
+  .console-body{
+    flex:1;
+    padding:16px 18px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:#cbd5e1;
+    overflow-y:auto;
+    max-height:420px;
+  }
+  .console-line{
+    margin-bottom:9px;
+    line-height:1.6;
+    animation:fadeSlideIn 0.3s ease;
+    white-space:pre-wrap;
+    word-break:break-word;
+  }
+  .console-line .ts{color:#64748b;}
+  .console-line .arrow-out{color:#7dd3fc;}
+  .console-line .arrow-in{color:#86efac;}
+  .console-line .dim{color:#64748b;}
+  .console-empty{color:#475569; font-size:12px;}
+
+  /* ===== Notes / FAQ ===== */
+  .notes-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+  }
+  @media(max-width:800px){ .notes-grid{grid-template-columns:1fr;} }
+  .note-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:22px 24px;
+  }
+  .note-card .icon{
+    width:36px;height:36px;
+    border-radius:9px;
+    background:var(--blue-light);
+    color:var(--blue);
+    display:flex;align-items:center;justify-content:center;
+    font-size:17px;
+    margin-bottom:14px;
+  }
+  .note-card h4{font-size:14.5px; color:var(--navy); font-weight:700; margin-bottom:8px;}
+  .note-card p{font-size:12.5px; color:var(--text-muted); line-height:1.85;}
+
+  .faq-item{
+    border:1px solid var(--border);
+    border-radius:12px;
+    margin-bottom:12px;
+    overflow:hidden;
+  }
+  .faq-q{
+    padding:16px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    cursor:pointer;
+    font-size:13.5px;
+    font-weight:600;
+    color:var(--navy);
+    background:#fafbfd;
+  }
+  .faq-q .chev{transition:transform 0.2s ease; color:var(--text-muted);}
+  .faq-item.open .faq-q .chev{transform:rotate(180deg);}
+  .faq-a{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height 0.3s ease;
+    font-size:12.5px;
+    color:var(--text-muted);
+    line-height:1.85;
+  }
+  .faq-item.open .faq-a{max-height:220px;}
+  .faq-a-inner{padding:0 20px 18px;}
+
+  footer{
+    text-align:center;
+    padding:30px 20px 46px;
+    color:var(--text-muted);
+    font-size:11.5px;
+  }
+
+  /* ===== Client Concerns & Proposed Solutions ===== */
+  .pending-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:#fff7ed;
+    border:1px solid #fed7aa;
+    color:#c2410c;
+    font-size:12px;
+    font-weight:700;
+    padding:7px 16px;
+    border-radius:20px;
+  }
+  .pending-badge .dot{width:7px; height:7px; border-radius:50%; background:#c2410c;}
+  .concerns-head{position:relative; text-align:center; margin-bottom:40px; padding-top:4px;}
+  .concerns-head .pending-badge{position:absolute; top:0; right:4px;}
+  .concerns-head.acc-header{padding-top:32px; margin-bottom:0;}
+  .concerns-head.acc-header .pending-badge{top:26px;}
+  @media(max-width:700px){
+    .concerns-head .pending-badge{position:static; display:inline-flex; margin-bottom:16px;}
+  }
+
+  .concern-block{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-left:4px solid var(--amber);
+    border-radius:16px;
+    padding:38px 42px;
+    margin-bottom:30px;
+  }
+  .concern-block .concern-num{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-size:11.5px;
+    font-weight:700;
+    color:var(--amber);
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    margin-bottom:10px;
+  }
+  .concern-block h3{font-size:19px; color:var(--navy); font-weight:700; margin-bottom:22px; line-height:1.5;}
+
+  .problem-box{
+    background:#fef2f2;
+    border:1px solid #fecaca;
+    border-radius:12px;
+    padding:20px 24px;
+    margin-bottom:28px;
+  }
+  .problem-box .lbl{
+    display:flex; align-items:center; gap:8px;
+    font-weight:700; font-size:12px; color:#dc2626;
+    margin-bottom:12px; text-transform:uppercase; letter-spacing:0.4px;
+  }
+  .problem-box ul{margin-left:18px;}
+  .problem-box li{font-size:13px; color:var(--text); line-height:1.9; margin-bottom:5px;}
+  .problem-box p{font-size:13px; color:var(--text); line-height:1.9;}
+
+  .solution-lbl{
+    display:flex; align-items:center; gap:8px;
+    font-weight:700; font-size:12px; color:var(--green);
+    margin-bottom:18px; text-transform:uppercase; letter-spacing:0.4px;
+  }
+
+  .option-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+    margin-bottom:28px;
+  }
+  @media(max-width:900px){ .option-grid{grid-template-columns:1fr;} }
+  .option-card{
+    border:1.5px solid var(--border);
+    border-radius:14px;
+    padding:20px 20px 22px;
+    background:#fafbfd;
+    position:relative;
+  }
+  .option-card.recommended{
+    border-color:var(--green);
+    background:#f0fdf4;
+  }
+  .option-card .rec-tag{
+    position:absolute;
+    top:-11px; right:16px;
+    background:var(--green);
+    color:#fff;
+    font-size:10px;
+    font-weight:700;
+    padding:3px 10px;
+    border-radius:20px;
+  }
+  .option-card .opt-title{font-size:13.5px; font-weight:700; color:var(--navy); margin-bottom:12px; line-height:1.5;}
+  .option-card ul{margin-left:16px;}
+  .option-card li{font-size:12px; color:var(--text-muted); line-height:1.85; margin-bottom:5px;}
+
+  table.compare-table{
+    width:100%;
+    border-collapse:collapse;
+    margin-bottom:10px;
+    font-size:12px;
+  }
+  table.compare-table th, table.compare-table td{
+    padding:11px 14px;
+    border-bottom:1px solid var(--border);
+    text-align:left;
+    vertical-align:top;
+  }
+  table.compare-table th{
+    background:#f8fafc;
+    font-weight:700;
+    color:var(--navy);
+    border-bottom:2px solid var(--border);
+  }
+  table.compare-table td.dim{font-weight:600; color:var(--text); background:#fafbfd;}
+  table.compare-table th.opt-c{color:var(--green);}
+
+  .solution-list{display:flex; flex-direction:column; gap:14px; margin-bottom:28px;}
+  .solution-item{
+    display:flex;
+    gap:14px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:16px 18px;
+    background:#fafbfd;
+  }
+  .solution-item .num-badge{
+    width:26px; height:26px; min-width:26px;
+    border-radius:50%;
+    background:var(--blue-light);
+    color:var(--blue);
+    font-size:12px; font-weight:800;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .solution-item .ttl{font-size:13px; font-weight:700; color:var(--navy); margin-bottom:4px;}
+  .solution-item p{font-size:12.5px; color:var(--text-muted); line-height:1.8;}
+
+  .path-label{
+    display:flex; align-items:center; gap:8px;
+    font-size:12.5px; font-weight:700; margin-bottom:14px;
+  }
+  .path-label.happy{color:var(--green);}
+  .path-label.down{color:#dc2626;}
+  .path-row{
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:32px;
+  }
+  .path-step{
+    border-radius:10px;
+    padding:10px 14px;
+    font-size:11px;
+    font-weight:600;
+    white-space:nowrap;
+    border:1.5px solid;
+  }
+  .path-step.ok{background:#f0fdf4; border-color:#bbf7d0; color:#166534;}
+  .path-step.fail{background:#fef2f2; border-color:#fecaca; color:#dc2626;}
+  .path-step.wait{background:#fffbeb; border-color:#fde68a; color:#92400e;}
+  .path-arrow{color:#94a3b8; font-size:15px;}
+  .path-loop{
+    font-size:10px;
+    font-weight:600;
+    color:#92400e;
+    background:#fffbeb;
+    border:1px dashed #fbbf24;
+    padding:5px 11px;
+    border-radius:20px;
+    white-space:nowrap;
+  }
+
+  .final-note{
+    background:#eff6ff;
+    border:1px solid #bfdbfe;
+    border-radius:12px;
+    padding:20px 24px;
+    font-size:12.5px;
+    color:var(--text);
+    line-height:1.9;
+    display:flex;
+    gap:14px;
+    align-items:flex-start;
+  }
+  .final-note .icon{font-size:19px;}
+
+  /* ===== Visual-first components ===== */
+  [data-tip]{position:relative; cursor:help;}
+  [data-tip]::after{
+    content:attr(data-tip);
+    position:absolute;
+    bottom:calc(100% + 9px);
+    left:50%;
+    transform:translateX(-50%);
+    background:#0f172a;
+    color:#e2e8f0;
+    font-size:11px;
+    font-weight:500;
+    padding:9px 13px;
+    border-radius:9px;
+    white-space:normal;
+    width:max-content;
+    max-width:230px;
+    line-height:1.65;
+    opacity:0;
+    visibility:hidden;
+    transition:opacity 0.15s ease, transform 0.15s ease;
+    z-index:80;
+    pointer-events:none;
+    text-align:left;
+  }
+  [data-tip]::before{
+    content:"";
+    position:absolute;
+    bottom:calc(100% + 4px);
+    left:50%;
+    transform:translateX(-50%);
+    border:5px solid transparent;
+    border-top-color:#0f172a;
+    opacity:0;
+    visibility:hidden;
+    transition:opacity 0.15s ease;
+    z-index:80;
+  }
+  [data-tip]:hover::after, [data-tip]:hover::before{opacity:1; visibility:visible;}
+
+  .chip-row{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:28px;}
+  .chip{
+    display:inline-flex; align-items:center; gap:7px;
+    background:#fff; border:1px solid var(--border);
+    border-radius:20px; padding:8px 15px;
+    font-size:12px; font-weight:600; color:var(--text);
+  }
+  .chip .ic{font-size:14px;}
+  .chip.danger{background:#fef2f2; border-color:#fecaca; color:#b91c1c;}
+  .chip.warn{background:#fffbeb; border-color:#fde68a; color:#92400e;}
+
+  .expand-toggle{
+    display:inline-flex; align-items:center; gap:7px;
+    background:none; border:1px dashed #c7d2e0;
+    color:var(--blue); font-family:inherit; font-size:11.5px; font-weight:700;
+    padding:8px 16px; border-radius:20px; cursor:pointer;
+    margin-top:4px;
+  }
+  .expand-toggle:hover{border-color:var(--blue); background:var(--blue-light);}
+  .expand-toggle .chev{transition:transform 0.2s ease; font-size:10px;}
+  .expand-toggle.open .chev{transform:rotate(180deg);}
+  .expand-body{
+    max-height:0; overflow:hidden; opacity:0;
+    transition:max-height 0.4s ease, opacity 0.3s ease;
+  }
+  .expand-body.open{max-height:2600px; opacity:1; margin-top:14px;}
+
+  .legend-row{display:flex; flex-wrap:wrap; gap:16px; margin-bottom:18px; font-size:11px; color:var(--text-muted); font-weight:600;}
+  .legend-row span{display:inline-flex; align-items:center; gap:6px;}
+  .legend-dot{width:9px; height:9px; border-radius:50%; display:inline-block;}
+  .legend-dot.ok{background:#22c55e;}
+  .legend-dot.wait{background:#f59e0b;}
+  .legend-dot.fail{background:#ef4444;}
+
+  /* Icon option cards (Concern #1) */
+  .icon-card-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-bottom:8px;}
+  @media(max-width:900px){ .icon-card-grid{grid-template-columns:1fr;} }
+  .icon-card{
+    border:1.5px solid var(--border); border-radius:16px;
+    padding:26px 22px 24px; text-align:center; background:#fff;
+    position:relative;
+  }
+  .icon-card.recommended{border-color:var(--green); background:#f8fffb;}
+  .icon-card .rec-tag{
+    position:absolute; top:-11px; left:50%; transform:translateX(-50%);
+    background:var(--green); color:#fff; font-size:10px; font-weight:700;
+    padding:3px 12px; border-radius:20px; white-space:nowrap;
+  }
+  .icon-card .big-icon{font-size:36px; margin-bottom:8px;}
+  .icon-card .opt-name{font-size:14px; font-weight:700; color:var(--navy); margin-bottom:18px; line-height:1.5;}
+
+  .mini-flow{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    margin-bottom:16px;
+  }
+  .mini-flow .node{
+    font-size:11px; font-weight:700;
+    border-radius:8px; padding:8px 11px;
+  }
+  .mini-flow .node.a{color:var(--blue); background:var(--blue-light);}
+  .mini-flow .node.b{color:var(--teal); background:var(--teal-light);}
+  .mini-flow .arrow-lbl{
+    display:flex; flex-direction:column; align-items:center; gap:1px;
+    color:#94a3b8; font-size:15px; line-height:1;
+  }
+  .mini-flow .arrow-lbl small{font-size:8.5px; font-weight:700; color:var(--text-muted); white-space:nowrap;}
+
+  .badge-row{display:flex; flex-wrap:wrap; justify-content:center; gap:6px; margin-bottom:16px;}
+  .mini-badge{
+    font-size:10px; font-weight:700; padding:5px 11px; border-radius:12px;
+    display:inline-flex; align-items:center; gap:4px; white-space:nowrap;
+  }
+  .mini-badge.good{background:#f0fdf4; color:#166534;}
+  .mini-badge.mid{background:#fffbeb; color:#92400e;}
+  .mini-badge.bad{background:#fef2f2; color:#b91c1c;}
+
+  .detail-list{text-align:left; margin:0 0 0 16px; font-size:12px; color:var(--text-muted); line-height:1.9;}
+  .detail-list .mono{font-size:10.5px;}
+
+  /* Icon timeline (Concern #2) */
+  .timeline-block{margin-bottom:8px;}
+  .timeline-caption{
+    display:flex; align-items:center; gap:8px;
+    font-size:12px; font-weight:700; margin-bottom:14px;
+  }
+  .timeline-caption.happy{color:#166534;}
+  .timeline-caption.down{color:#b91c1c;}
+  .timeline-caption .dot{width:8px; height:8px; border-radius:50%; background:currentColor;}
+
+  .icon-timeline{
+    display:flex; align-items:flex-start; flex-wrap:wrap;
+    gap:2px 4px; margin-bottom:34px;
+  }
+  .icon-node{
+    display:flex; flex-direction:column; align-items:center; gap:7px;
+    width:88px; text-align:center; padding-top:4px;
+  }
+  .icon-node .circle{
+    width:44px; height:44px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:19px; border:2px solid;
+  }
+  .icon-node.ok .circle{background:#f0fdf4; border-color:#bbf7d0; color:#166534;}
+  .icon-node.fail .circle{background:#fef2f2; border-color:#fecaca; color:#b91c1c;}
+  .icon-node.wait .circle{background:#fffbeb; border-color:#fde68a; color:#92400e;}
+  .icon-node .cap{font-size:10px; font-weight:700; color:var(--text); line-height:1.4;}
+  .icon-node.pulse .circle{animation:nodePulse 1.8s ease-in-out infinite;}
+  @keyframes nodePulse{
+    0%{box-shadow:0 0 0 0 rgba(217,119,6,0.45);}
+    70%{box-shadow:0 0 0 9px rgba(217,119,6,0);}
+    100%{box-shadow:0 0 0 0 rgba(217,119,6,0);}
+  }
+  .icon-arrow{color:#cbd5e1; font-size:15px; margin-top:26px; padding:0 1px;}
+
+  .bullets-tight{margin-left:16px; font-size:12px; color:var(--text-muted); line-height:1.9;}
+  .bullets-tight li{margin-bottom:3px;}
+</style>
+</head>
+<body>
+
+<div style="position:fixed; top:0; left:0; right:0; z-index:99999; display:flex; align-items:center; justify-content:center; gap:14px; background:#0a2a5e; padding:6px 20px; font-family:'Prompt',sans-serif; font-size:12px; box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+  <a href="../index.html" style="color:#fff; text-decoration:none;">&#8962; กลับหน้าหลัก</a>
+</div>
+
+<!-- Navbar -->
+<div class="navbar" style="margin-top:32px;">
+  <div class="brand">
+    <div class="badge">N</div>
+    <div>
+      NDPP <span style="color:var(--text-muted); font-weight:400;">×</span> Viriyah
+      <small>Integration Flow Demo</small>
+    </div>
+  </div>
+  <div class="navlinks">
+    <a onclick="scrollToId('overview')">Overview</a>
+    <a onclick="scrollToId('step-1')">Steps</a>
+    <a onclick="scrollToId('demo')">Live Demo</a>
+    <a onclick="scrollToId('notes')">Technical Notes</a>
+    <a onclick="scrollToId('concerns')">Client Concerns</a>
+  </div>
+  <div class="acc-toolbar">
+    <button class="acc-toolbar-btn" onclick="expandAll()">&#9662; ขยายทั้งหมด</button>
+    <button class="acc-toolbar-btn" onclick="collapseAll()">&#9652; ยุบทั้งหมด</button>
+  </div>
+  <div class="live-tag"><span class="live-dot"></span> MOCK DATA — no real API calls</div>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="tag">PDPA Preference Consent Integration</div>
+  <h1>วิธีเชื่อมต่อระบบ <span>NDPP</span> เข้ากับเว็บไซต์ Viriyah</h1>
+  <p>หน้านี้สาธิต Integration Flow ทั้งหมดตั้งแต่การสร้างฟอร์มขอความยินยอมใน NDPP ไปจนถึงการบันทึกผลลัพธ์ พร้อมรายละเอียด API และ Live Demo ที่ทดลองกดได้จริง — ใช้สำหรับ present ให้ทีมเทคนิคของลูกค้า</p>
+</div>
+
+<!-- ===== 1. Integration Coverage by Website ===== -->
+<section id="coverage" class="acc-section">
+  <div class="container">
+    <div class="acc-header" onclick="toggleAccordion(this)">
+      <h2 class="section-title">ภาพรวม Integration รายเว็บไซต์</h2>
+      <span class="acc-chevron">&#9662;</span>
+    </div>
+    <div class="acc-body">
+    <div class="acc-body-inner">
+    <p class="section-sub">Integration Coverage by Website — คลิกแถวที่มีสถานะ "พร้อม demo" เพื่อดูตัวอย่างจริง</p>
+
+    <div class="coverage-wrap">
+      <table class="coverage-table">
+        <thead>
+          <tr>
+            <th>เว็บไซต์ / ระบบ</th>
+            <th class="center">Purpose Consent</th>
+            <th class="center">Cookie Banner</th>
+            <th class="center">Privacy Policy/Notice</th>
+            <th class="center">สถานะ</th>
+            <th>หมายเหตุ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="cov-row clickable" onclick="location.href='../viriyah.com/viriyah-com.html'">
+            <td class="cov-sitename">Viriyah.com</td>
+            <td class="center"><span class="cov-icon yes">&#9989;</span></td>
+            <td class="center"><span class="cov-icon yes">&#9989;</span></td>
+            <td class="center"><span class="cov-icon yes">&#9989;</span></td>
+            <td class="center"><span class="mini-badge good">พร้อม demo</span></td>
+            <td><span class="cov-note" data-tip="มี Drop Lead, E-Sale Purchase, Payment All Product, Payment VMI-Car Product">Drop Lead, E-Sale Purchase, Payment...</span></td>
+          </tr>
+          <tr class="cov-row clickable" onclick="location.href='../Viriyah.co.th/viriyah-co-th.html'">
+            <td class="cov-sitename">Viriyah.co.th</td>
+            <td class="center"><span class="cov-icon yes">&#9989;</span></td>
+            <td class="center"><span class="cov-icon yes">&#9989;</span></td>
+            <td class="center"><span class="cov-icon yes">&#9989;</span></td>
+            <td class="center"><span class="mini-badge good">พร้อม demo</span></td>
+            <td><span class="cov-note" data-tip="มี Drop Lead, Contact Form + ส่วน &quot;Data Protection&quot; แสดงนโยบายคุ้มครองข้อมูล">Drop Lead, Contact Form + Data Protection...</span></td>
+          </tr>
+          <tr class="cov-row clickable" onclick="location.href='../Vinsure/vinsure.html'">
+            <td class="cov-sitename">Vinsure</td>
+            <td class="center"><span class="cov-icon yes">&#9989;</span></td>
+            <td class="center"><span class="cov-icon yes">&#9989;</span></td>
+            <td class="center"><span class="cov-icon yes">&#9989;</span></td>
+            <td class="center"><span class="mini-badge good">พร้อม demo</span></td>
+            <td><span class="cov-note" data-tip="มี Drop Lead, E-Sale Purchase, Submit Claim Form (หลายประเภทเคลม), Contact Form — purpose ที่เป็น marketing ต้องขอ consent เพิ่ม (รอ confirm รายละเอียด)">Drop Lead, Claim Form... (marketing รอ confirm)</span></td>
+          </tr>
+          <tr class="cov-row disabled">
+            <td class="cov-sitename" data-tip="มี Agent Application Form — ตาม diagram ต้นฉบับระบุว่าไม่มีการขอ consent ตามวัตถุประสงค์ที่เขียนไว้ ถ้ามีจะเป็นเรื่องตรวจสอบฉ้อฉลตัวแทนแทน ต้อง confirm กับ owner ระบบก่อน">viriyah.co.th/agency-content</td>
+            <td class="center" data-tip="มี Agent Application Form — ตาม diagram ต้นฉบับระบุว่าไม่มีการขอ consent ตามวัตถุประสงค์ที่เขียนไว้ ถ้ามีจะเป็นเรื่องตรวจสอบฉ้อฉลตัวแทนแทน ต้อง confirm กับ owner ระบบก่อน"><span class="cov-icon pending">&#9203;</span></td>
+            <td class="center" data-tip="มี Agent Application Form — ตาม diagram ต้นฉบับระบุว่าไม่มีการขอ consent ตามวัตถุประสงค์ที่เขียนไว้ ถ้ามีจะเป็นเรื่องตรวจสอบฉ้อฉลตัวแทนแทน ต้อง confirm กับ owner ระบบก่อน"><span class="cov-icon no">&#10060;</span></td>
+            <td class="center" data-tip="มี Agent Application Form — ตาม diagram ต้นฉบับระบุว่าไม่มีการขอ consent ตามวัตถุประสงค์ที่เขียนไว้ ถ้ามีจะเป็นเรื่องตรวจสอบฉ้อฉลตัวแทนแทน ต้อง confirm กับ owner ระบบก่อน"><span class="cov-icon no">&#10060;</span></td>
+            <td class="center" data-tip="มี Agent Application Form — ตาม diagram ต้นฉบับระบุว่าไม่มีการขอ consent ตามวัตถุประสงค์ที่เขียนไว้ ถ้ามีจะเป็นเรื่องตรวจสอบฉ้อฉลตัวแทนแทน ต้อง confirm กับ owner ระบบก่อน"><span class="mini-badge mid">รอ confirm</span></td>
+            <td data-tip="มี Agent Application Form — ตาม diagram ต้นฉบับระบุว่าไม่มีการขอ consent ตามวัตถุประสงค์ที่เขียนไว้ ถ้ามีจะเป็นเรื่องตรวจสอบฉ้อฉลตัวแทนแทน ต้อง confirm กับ owner ระบบก่อน"><span class="cov-note">Agent Application Form — รอ confirm เรื่อง consent</span></td>
+          </tr>
+          <tr class="cov-row disabled">
+            <td class="cov-sitename" data-tip="As-is มีฟังก์ชัน privacy policy แต่ยังไม่เปิดใช้ / To-Be จะเก็บ consent ตั้งแต่หน้าแรก (source: IIV vendor)">V-Inspection</td>
+            <td class="center" data-tip="As-is มีฟังก์ชัน privacy policy แต่ยังไม่เปิดใช้ / To-Be จะเก็บ consent ตั้งแต่หน้าแรก (source: IIV vendor)"><span class="cov-icon pending">&#128284;</span></td>
+            <td class="center" data-tip="As-is มีฟังก์ชัน privacy policy แต่ยังไม่เปิดใช้ / To-Be จะเก็บ consent ตั้งแต่หน้าแรก (source: IIV vendor)"><span class="cov-icon no">&#10060;</span></td>
+            <td class="center" data-tip="As-is มีฟังก์ชัน privacy policy แต่ยังไม่เปิดใช้ / To-Be จะเก็บ consent ตั้งแต่หน้าแรก (source: IIV vendor)"><span class="cov-icon pending">&#9888;</span></td>
+            <td class="center" data-tip="As-is มีฟังก์ชัน privacy policy แต่ยังไม่เปิดใช้ / To-Be จะเก็บ consent ตั้งแต่หน้าแรก (source: IIV vendor)"><span class="mini-badge mid">To-Be</span></td>
+            <td data-tip="As-is มีฟังก์ชัน privacy policy แต่ยังไม่เปิดใช้ / To-Be จะเก็บ consent ตั้งแต่หน้าแรก (source: IIV vendor)"><span class="cov-note">มีฟังก์ชัน privacy policy แต่ปิดอยู่ (As-is)</span></td>
+          </tr>
+          <tr class="cov-row clickable" onclick="location.href='../Viriyah%20Privileges/viriyah-privileges.html'">
+            <td class="cov-sitename">Viriyah Privileges</td>
+            <td class="center"><span class="cov-icon no">&#10060;</span></td>
+            <td class="center"><span class="cov-icon yes">&#9989;</span></td>
+            <td class="center"><span class="cov-icon no">&#10060;</span></td>
+            <td class="center"><span class="mini-badge good">พร้อม demo</span></td>
+            <td><span class="cov-note">ใช้ Cookie Banner อย่างเดียว</span></td>
+          </tr>
+          <tr class="cov-row clickable" onclick="location.href='../recruit.viriyah.co.th/recruit-viriyah-co-th.html'">
+            <td class="cov-sitename">recruit.viriyah.co.th</td>
+            <td class="center"><span class="cov-icon no">&#10060;</span></td>
+            <td class="center"><span class="cov-icon yes">&#9989;</span></td>
+            <td class="center"><span class="cov-icon yes">&#9989;</span></td>
+            <td class="center"><span class="mini-badge good">พร้อม demo</span></td>
+            <td><span class="cov-note" data-tip="ไม่มี Purpose เพราะเป็นฐานสัญญา (contract) อยู่แล้ว ไม่ต้องขอ consent เพิ่ม">ไม่มี Purpose — เป็นฐานสัญญา (contract) อยู่แล้ว</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 2. ทำความเข้าใจกลไกของแต่ละประเภท Integration ===== -->
+<section id="mechanisms" class="acc-section">
+  <div class="container">
+    <div class="acc-header" onclick="toggleAccordion(this)">
+      <h2 class="section-title">ทำความเข้าใจกลไกของแต่ละประเภท Integration</h2>
+      <span class="acc-chevron">&#9662;</span>
+    </div>
+    <div class="acc-body">
+    <div class="acc-body-inner">
+    <p class="section-sub">Integration บนเว็บไซต์ Viriyah มีอยู่ 3 กลไก ซับซ้อนไม่เท่ากัน</p>
+
+    <div class="icon-card-grid">
+      <div class="icon-card">
+        <div class="big-icon">&#127850;</div>
+        <div class="opt-name">Cookie Banner</div>
+        <div class="complexity-dots"><span class="dot on"></span><span class="dot"></span><span class="dot"></span></div>
+        <div class="badge-row"><span class="mini-badge good">ความซับซ้อนต่ำ</span></div>
+        <p style="text-align:center; font-size:11.5px; color:var(--text-muted); margin-top:10px; line-height:1.7;">แค่ฝัง script/link เข้าไปในหน้าเว็บ<br>ไม่มีการเรียก API</p>
+      </div>
+      <div class="icon-card">
+        <div class="big-icon">&#128220;</div>
+        <div class="opt-name">Privacy Policy /<br>Notice</div>
+        <div class="complexity-dots"><span class="dot on"></span><span class="dot on"></span><span class="dot"></span></div>
+        <div class="badge-row"><span class="mini-badge mid">ความซับซ้อนกลาง</span></div>
+        <p style="text-align:center; font-size:11.5px; color:var(--text-muted); margin-top:10px; line-height:1.7;">มี 2 แบบ: link ธรรมดา หรือ<br>เรียก API ดึงเนื้อหามาแสดงแบบ dynamic</p>
+      </div>
+      <div class="icon-card recommended">
+        <span class="rec-tag">เจาะลึกต่อจากนี้</span>
+        <div class="big-icon">&#128272;</div>
+        <div class="opt-name">Purpose Consent</div>
+        <div class="complexity-dots"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span></div>
+        <div class="badge-row"><span class="mini-badge bad">ความซับซ้อนสูงสุด</span></div>
+        <p style="text-align:center; font-size:11.5px; color:var(--text-muted); margin-top:10px; line-height:1.7;">เรียก API ไป-กลับหลายรอบ<br>ระหว่าง Viriyah &harr; NDPP</p>
+      </div>
+    </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 3. สถาปัตยกรรมของ Purpose Consent (เดิมชื่อ System Overview) ===== -->
+<section id="overview" class="acc-section">
+  <div class="container">
+    <div class="acc-header" onclick="toggleAccordion(this)">
+      <h2 class="section-title">สถาปัตยกรรมของ Purpose Consent</h2>
+      <span class="acc-chevron">&#9662;</span>
+    </div>
+    <div class="acc-body">
+    <div class="acc-body-inner">
+    <p class="section-sub">แผนภาพแสดงระบบที่เกี่ยวข้องและจุดเชื่อมต่อ (API) — ด้านล่างคือ Process Flow แบบ 5 ขั้นตอน คลิกที่ Step ใดก็ได้เพื่อเลื่อนไปดูรายละเอียด</p>
+
+    <div class="sys-overview-wrap">
+      <div class="sys-overview-cap"><span class="ic">&#128225;</span>ภาพรวมระบบ <span style="font-weight:600; text-transform:none; letter-spacing:0; color:var(--green);">(เลขเขียว = จับคู่กับ Step ด้านล่าง)</span></div>
+      <div class="sys-overview">
+        <div class="ov-card">
+          <div class="ov-icon">&#128100;</div>
+          <div class="ov-name">ผู้ใช้งาน<small>Data Subject</small></div>
+          <div class="ov-desc">กรอกข้อมูลบนเว็บไซต์ Viriyah</div>
+        </div>
+
+        <div class="ov-arrow">&#8646;</div>
+
+        <div class="ov-card" data-pair="2">
+          <span class="pair-badge corner">2</span>
+          <div class="ov-icon viriyah">&#127970;</div>
+          <div class="ov-name">Viriyah<small>เว็บไซต์ฝั่งลูกค้า</small></div>
+          <div class="ov-desc">หน้าเว็บที่ผู้ใช้เห็นและกรอกข้อมูล</div>
+        </div>
+
+        <div class="ov-link" data-pair="3 4">
+          <div class="ov-link-arrow">&#8646;</div>
+          <div class="ov-link-badges"><span class="pair-badge mini">3</span><span class="pair-badge mini">4</span></div>
+          <div class="ov-link-pill">REST API</div>
+          <div class="ov-link-sub">HTTPS</div>
+        </div>
+
+        <div class="ov-col">
+          <div class="ov-card" data-pair="1">
+            <span class="pair-badge corner">1</span>
+            <div class="ov-icon ndpp">&#128274;</div>
+            <div class="ov-name">NDPP<small>Consent Platform</small></div>
+            <div class="ov-desc">จัดการเรื่อง consent ทั้งหมด</div>
+          </div>
+          <div class="ov-db-wrap">
+            <div class="ov-db-line"></div>
+            <div class="ov-db" data-pair="5">
+              <span class="pair-badge corner">5</span>
+              <span class="ic">&#128190;</span> ฐานข้อมูล Consent
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sys-overview-cap"><span class="ic">&#128203;</span>Process Flow — 5 ขั้นตอน</div>
+    <div class="flow-diagram">
+      <div class="step-node ndpp" data-pair="1" onclick="scrollToId('step-1')">
+        <div class="num">1</div>
+        <div class="ttl">สร้าง Consent Form บน NDPP</div>
+        <div class="desc">แอดมิน NDPP กำหนด Activity+Purpose แล้วได้รับ Form + Key</div>
+      </div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="step-node" data-pair="2" onclick="scrollToId('step-2')">
+        <div class="num">2</div>
+        <div class="ttl">ฝัง Key บนเว็บ Viriyah</div>
+        <div class="desc">ทีม Dev นำ Key ไปฝังในหน้าเว็บที่ต้องการ</div>
+      </div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="step-node" data-pair="3" onclick="scrollToId('step-3')">
+        <div class="num">3</div>
+        <div class="ttl">เรียก API 3.1<br>Get Preference Consent</div>
+        <div class="desc">ลูกค้ากดปุ่ม → ดึงชุด Purpose มาแสดง</div>
+      </div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="step-node" data-pair="4" onclick="scrollToId('step-4')">
+        <div class="num">4</div>
+        <div class="ttl">เรียก API 3.2<br>Save Preference Consent</div>
+        <div class="desc">ลูกค้ายืนยัน → บันทึก Data Subject + Consent</div>
+      </div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="step-node ndpp" data-pair="5" onclick="scrollToId('step-5')">
+        <div class="num">5</div>
+        <div class="ttl">NDPP บันทึกผล</div>
+        <div class="desc">จัดเก็บ Transaction สำหรับตรวจสอบย้อนหลัง</div>
+      </div>
+    </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Step details ===== -->
+<section id="step-details" class="acc-section">
+  <div class="container">
+    <div class="acc-header" onclick="toggleAccordion(this)">
+      <h2 class="section-title">รายละเอียด API แต่ละ Step (Step 1–5)</h2>
+      <span class="acc-chevron">&#9662;</span>
+    </div>
+    <div class="acc-body">
+    <div class="acc-body-inner">
+
+    <!-- Step 1 -->
+    <div class="step-detail" id="step-1">
+      <div class="step-detail-head">
+        <div class="num">1</div>
+        <div>
+          <h3>สร้าง Consent Form บน NDPP</h3>
+          <p>ขั้นตอนตั้งค่าฝั่งแอดมิน ก่อนเริ่มการเชื่อมต่อจริง — ยังไม่มีการเรียก API จากเว็บไซต์</p>
+        </div>
+      </div>
+      <div class="swimlane">
+        <div class="lane viriyah">
+          <div class="lane-title" data-tip="ยังไม่มีการดำเนินการฝั่งเว็บไซต์ในขั้นตอนนี้ — รอรับ Key จากทีม NDPP Console"><span class="dot"></span> Viriyah</div>
+          <ul class="bullets-tight"><li>&#8987; รอรับ Key จาก NDPP</li></ul>
+        </div>
+        <div class="lane ndpp">
+          <div class="lane-title" data-tip="แอดมินเข้าสู่ระบบ NDPP Console → สร้าง Consent Form ใหม่ → กำหนดรายการ Purpose ที่ต้องการขอความยินยอม (ระบุว่าข้อใด Mandatory) → ระบบออก Form พร้อม Key เฉพาะสำหรับ Viriyah"><span class="dot"></span> NDPP</div>
+          <ul class="bullets-tight">
+            <li>&#128203; สร้าง Consent Form ใหม่</li>
+            <li>&#9989; กำหนด Purpose + Mandatory</li>
+            <li>&#128273; ออก <b>Form</b> + <b>Key</b> ให้ Viriyah</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step-detail" id="step-2">
+      <div class="step-detail-head">
+        <div class="num">2</div>
+        <div>
+          <h3>Viriyah นำ Key ไปฝังในหน้าเว็บ</h3>
+          <p>ขั้นตอน Implementation ฝั่ง Dev — ยังไม่มีการเรียก API</p>
+        </div>
+      </div>
+      <div class="swimlane">
+        <div class="lane viriyah">
+          <div class="lane-title" data-tip="ทีมพัฒนานำ Key ที่ได้รับไปฝังไว้ในหน้าเว็บที่ต้องการขอความยินยอม เช่น หน้า Lead Form, หน้าชำระเงิน หรือหน้าสมัครสมาชิก (เก็บไว้ใน config/env ฝั่ง frontend หรือ backend ตามความเหมาะสม)"><span class="dot"></span> Viriyah</div>
+          <ul class="bullets-tight">
+            <li>&#128190; ฝัง <b>Key</b> ในหน้าเว็บ</li>
+            <li>&#128273; Lead Form / ชำระเงิน / สมัครสมาชิก</li>
+          </ul>
+        </div>
+        <div class="lane ndpp">
+          <div class="lane-title" data-tip="รอรับการเรียกใช้งานผ่าน Key ที่ออกให้ไว้ ยังไม่มี transaction เกิดขึ้น"><span class="dot"></span> NDPP</div>
+          <ul class="bullets-tight"><li>&#8987; รอ Transaction แรกเข้ามา</li></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step-detail" id="step-3">
+      <div class="step-detail-head">
+        <div class="num">3</div>
+        <div>
+          <h3>เรียก API 3.1 — Get Preference Consent</h3>
+          <p>เมื่อลูกค้ากดปุ่ม/เปิดฟอร์มบนเว็บไซต์ Viriyah</p>
+        </div>
+      </div>
+      <div class="swimlane">
+        <div class="lane viriyah">
+          <div class="lane-title" data-tip="เรียก API 3.1 โดยส่ง key และ token_key เพื่อขอชุด Purpose ปัจจุบันของฟอร์มนั้น แล้วนำมา render เป็น checkbox ให้ลูกค้าเลือก"><span class="dot"></span> Viriyah</div>
+          <ul class="bullets-tight">
+            <li>&#128225; เรียก API 3.1 (<b>key</b> + <b>token_key</b>)</li>
+            <li>&#9745; Render Purpose เป็น checkbox</li>
+          </ul>
+        </div>
+        <div class="lane ndpp">
+          <div class="lane-title" data-tip="ตรวจสอบความถูกต้องของ key/token_key → ส่งคืนชุด Purpose Options ล่าสุดที่ผูกกับ Form นั้น พร้อมข้อมูล service/data subject เบื้องต้น"><span class="dot"></span> NDPP</div>
+          <ul class="bullets-tight">
+            <li>&#128272; ตรวจสอบ key/token_key</li>
+            <li>&#128228; คืน Purpose Options ล่าสุด</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="api-block">
+        <div class="api-line">
+          <span class="method-badge get">GET</span>
+          <span class="endpoint-text">http://172.21.20.248/api/AdminPreferenceConsentForm/PreferenceFormToken</span>
+          <span class="live-tag"><span class="dot"></span>LIVE API</span>
+        </div>
+
+        <table class="param-table">
+          <thead><tr><th>Parameter</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td class="param-name">Key</td><td><span class="req-tag mandatory">Mandatory</span></td><td>รหัส Consent Form ที่ได้จาก NDPP Console (คงที่ต่อฟอร์ม) — ส่งเป็น query string</td></tr>
+          </tbody>
+        </table>
+
+        <div class="key-input-row">
+          <span class="key-input-base">?Key=</span>
+          <input type="text" id="key3Input" class="key-input" value="HRFckZ09CBZFQHlpJa2upA%3d%3d" placeholder="ใส่ค่า key ที่ต้องการทดสอบ" oninput="updateKey3Preview()">
+        </div>
+        <div class="key-full-url" id="key3FullUrl">http://172.21.20.248/api/AdminPreferenceConsentForm/PreferenceFormToken?Key=HRFckZ09CBZFQHlpJa2upA%3d%3d</div>
+
+        <button class="expand-toggle" onclick="toggleExpand(this,'codegrid3')">&#128196; ดูตัวอย่าง Request / Response (ของจริงจาก DropLead — viriyah.com) <span class="chev">&#9662;</span></button>
+        <div class="expand-body" id="codegrid3"><div class="code-grid" style="margin-top:14px;">
+          <div class="code-card">
+            <div class="code-head">Example Request<button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre data-raw="GET http://172.21.20.248/api/AdminPreferenceConsentForm/PreferenceFormToken?Key=HRFckZ09CBZFQHlpJa2upA%3d%3d
+Accept: application/json">GET http://172.21.20.248/api/AdminPreferenceConsentForm/PreferenceFormToken?Key=HRFckZ09CBZFQHlpJa2upA%3d%3d
+Accept: application/json</pre>
+          </div>
+          <div class="code-card">
+            <div class="code-head">Example Response (200)<button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre id="resp3-code"></pre>
+          </div>
+        </div></div>
+
+        <div class="try-row">
+          <button class="btn-try" id="tryBtn3" onclick="tryApi(3)">
+            <span class="spinner"></span>
+            <span class="btn-label">Try it — ยิง API 3.1 จริง</span>
+          </button>
+          <span class="try-status" id="tryStatus3"></span>
+        </div>
+        <div class="key-carry-note ok" id="s3KeyStatus" style="display:none;">&#9989; Key นี้ถูกเก็บไว้ใช้ต่อในขั้นตอนที่ 4 แล้ว</div>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step-detail" id="step-4">
+      <div class="step-detail-head">
+        <div class="num">4</div>
+        <div>
+          <h3>เรียก API 3.2 — Add Data Subject &amp; Save Preference Consent</h3>
+          <p>เมื่อลูกค้าติ๊กยินยอมและกดยืนยันบนฟอร์ม</p>
+        </div>
+      </div>
+      <div class="swimlane">
+        <div class="lane viriyah">
+          <div class="lane-title" data-tip="รวบรวมค่า Purpose ที่ลูกค้าเลือก แล้วเรียก API 3.2 พร้อม key, token_key และ purpose_option เพื่อสร้าง Data Subject และบันทึกผลความยินยอม"><span class="dot"></span> Viriyah</div>
+          <ul class="bullets-tight">
+            <li>&#128203; รวบรวม Purpose ที่เลือก</li>
+            <li>&#128225; เรียก API 3.2</li>
+          </ul>
+        </div>
+        <div class="lane ndpp">
+          <div class="lane-title" data-tip="สร้าง/อัปเดต Data Subject ในระบบ → บันทึกผลความยินยอมพร้อม timestamp และ Purpose Version ที่ใช้ ณ ขณะนั้น → ส่งคืน transaction สำเร็จ"><span class="dot"></span> NDPP</div>
+          <ul class="bullets-tight">
+            <li>&#128100; สร้าง/อัปเดต Data Subject</li>
+            <li>&#128190; บันทึก Consent + timestamp</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="api-block">
+        <div class="api-line">
+          <span class="method-badge put">PUT</span>
+          <span class="endpoint-text">https://172.21.20.248/api/AdminPreferenceConsentForm/PreferenceFormConsent</span>
+          <span class="live-tag"><span class="dot"></span>LIVE API</span>
+        </div>
+
+        <table class="param-table">
+          <thead><tr><th>Parameter</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td class="param-name">key</td><td><span class="req-tag mandatory">Mandatory</span></td><td>รหัส Consent Form เดียวกับที่ใช้ใน API 3.1</td></tr>
+            <tr><td class="param-name">token_key</td><td><span class="req-tag mandatory">Mandatory</span></td><td>JWT (HS256) เซ็นฝั่ง client จาก UID/Firstname/Lastname/Email/Mobile/DataSubjectType</td></tr>
+            <tr><td class="param-name">purpose_option</td><td><span class="req-tag mandatory">Mandatory</span></td><td>อาเรย์ของ Purpose ที่เลือก เช่น [{"PurposeOption": 1}]</td></tr>
+          </tbody>
+        </table>
+
+        <div class="mini-form">
+          <div class="mini-form-row">
+            <input type="text" id="s4Firstname" class="mini-input" placeholder="ชื่อ" value="Demo">
+            <input type="text" id="s4Lastname" class="mini-input" placeholder="นามสกุล" value="NDPPTest">
+            <input type="text" id="s4Mobile" class="mini-input" placeholder="เบอร์โทร" value="0800000000">
+            <button class="btn-try" id="s4SubmitBtn" onclick="runStep4Flow()" disabled>
+              <span class="spinner"></span>
+              <span class="btn-label">ยืนยันและบันทึก Consent</span>
+            </button>
+          </div>
+          <div class="key-carry-note warn" id="s4KeyNote">&#9888; กรุณาทดสอบขั้นตอนที่ 3 ก่อน เพื่อให้ได้ key สำหรับใช้ต่อในขั้นตอนนี้</div>
+        </div>
+
+        <button class="expand-toggle" onclick="toggleExpand(this,'codegrid4')">&#128196; ดูตัวอย่าง Request / Response (ของจริงจาก DropLead — viriyah.com) <span class="chev">&#9662;</span></button>
+        <div class="expand-body" id="codegrid4"><div class="code-grid" style="margin-top:14px;">
+          <div class="code-card">
+            <div class="code-head">Example Request Body<button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre id="req4-code"></pre>
+          </div>
+          <div class="code-card">
+            <div class="code-head">Example Response (200)<button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre id="resp4-code"></pre>
+          </div>
+        </div></div>
+
+        <div class="flow-log" id="flowLog4"></div>
+        <span class="try-status" id="tryStatus4"></span>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:8px;">&#9888; การกด "ยืนยันและบันทึก Consent" จะบันทึกข้อมูล consent จริงลงระบบ NDPP ด้วยข้อมูลที่กรอกด้านบน</div>
+      </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="step-detail" id="step-5">
+      <div class="step-detail-head">
+        <div class="num">5</div>
+        <div>
+          <h3>NDPP บันทึกผล Consent ลงระบบ</h3>
+          <p>ขั้นตอนสุดท้าย — จัดเก็บถาวรสำหรับการตรวจสอบย้อนหลังตาม PDPA</p>
+        </div>
+      </div>
+      <div class="swimlane">
+        <div class="lane viriyah">
+          <div class="lane-title" data-tip="ได้รับ transaction_id กลับมาแสดงผลสำเร็จให้ลูกค้าเห็น และสามารถเก็บ log ไว้ฝั่งตนเองเพิ่มเติมได้ตามต้องการ"><span class="dot"></span> Viriyah</div>
+          <ul class="bullets-tight">
+            <li>&#9989; รับ <b>transaction_id</b></li>
+            <li>&#128221; แสดงผลสำเร็จ + เก็บ log</li>
+          </ul>
+        </div>
+        <div class="lane ndpp">
+          <div class="lane-title" data-tip="บันทึกผล consent ลงฐานข้อมูลกลาง พร้อม Purpose Version ที่ใช้ ณ ขณะนั้น วันเวลาที่ยื่นคำขอ (submission date) และวันเวลาที่ทำรายการ (transaction date) เพื่อใช้เป็นหลักฐานตรวจสอบย้อนหลัง"><span class="dot"></span> NDPP</div>
+          <ul class="bullets-tight">
+            <li>&#128190; บันทึกลงฐานข้อมูลกลาง</li>
+            <li>&#128220; เก็บหลักฐานตรวจสอบย้อนหลัง</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Interactive Demo ===== -->
+<section id="demo" class="acc-section demo-section">
+  <div class="container">
+    <div class="acc-header" onclick="toggleAccordion(this)">
+      <h2 class="section-title">Live Demo — หน้าจอผู้ใช้จริง <span class="live-tag"><span class="dot"></span>LIVE API</span></h2>
+      <span class="acc-chevron">&#9662;</span>
+    </div>
+    <div class="acc-body">
+    <div class="acc-body-inner">
+    <p class="section-sub">ฝั่งซ้ายคือหน้าจอที่ลูกค้าจะเห็นจริงบนเว็บไซต์ Viriyah ฝั่งขวาคือ Log การสื่อสารระหว่างระบบแบบ Real-time — เชื่อมต่อ API จริงของฟอร์ม DropLead (viriyah.com), การกดยืนยันจะบันทึกข้อมูล demo จริงลงระบบ NDPP</p>
+
+    <div class="demo-grid">
+      <div class="demo-panel">
+        <h4>หน้าฟอร์มความยินยอม (เชื่อมต่อ NDPP จริง)</h4>
+        <div class="hint">กด "โหลดฟอร์มความยินยอม" เพื่อยิง API 3.1 จริง จากนั้นเลือกยินยอมแล้วกด "ยืนยันความยินยอม" เพื่อยิง API 3.2 จริง</div>
+
+        <div class="mock-browser">
+          <div class="mock-browser-bar">
+            <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+            <span class="url">https://www.viriyah.co.th/preference-consent</span>
+          </div>
+          <div class="mock-browser-body">
+            <div class="mock-title">ความยินยอมในการใช้ข้อมูลส่วนบุคคล</div>
+            <div class="mock-sub">โปรดเลือกวัตถุประสงค์ที่ท่านยินยอมให้บริษัทดำเนินการ</div>
+
+            <button class="btn-load" id="btnLoadForm" onclick="demoLoadForm()">โหลดฟอร์มความยินยอม</button>
+
+            <div class="purpose-list" id="purposeList"></div>
+
+            <button class="btn-confirm" id="btnConfirm" onclick="demoConfirm()">ยืนยันความยินยอม</button>
+            <button class="btn-reset" onclick="demoReset()">&#8635; รีเซ็ตการสาธิต</button>
+
+            <div class="success-card" id="successCard">
+              <div class="ttl">&#10003; บันทึกความยินยอมสำเร็จ (Live API)</div>
+              <table>
+                <tr><td class="lbl">Status</td><td class="val" id="succTxn">—</td></tr>
+                <tr><td class="lbl">Service ID</td><td class="val" id="succVer">—</td></tr>
+                <tr><td class="lbl">Data Subject</td><td class="val" id="succSub">—</td></tr>
+                <tr><td class="lbl">Purpose Version</td><td class="val" id="succDate">—</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="console-panel">
+        <div class="console-head">
+          <span class="lbl"><span class="dot"></span> integration.log</span>
+          <button class="copy-btn" onclick="clearConsole()">Clear</button>
+        </div>
+        <div class="console-body" id="consoleBody">
+          <div class="console-empty">// รอการทำงาน... กด "โหลดฟอร์มความยินยอม" ทางฝั่งซ้ายเพื่อเริ่มสาธิต</div>
+        </div>
+      </div>
+    </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Technical Notes ===== -->
+<section id="notes" class="acc-section">
+  <div class="container">
+    <div class="acc-header" onclick="toggleAccordion(this)">
+      <h2 class="section-title">Technical Notes สำหรับทีมไอทีลูกค้า</h2>
+      <span class="acc-chevron">&#9662;</span>
+    </div>
+    <div class="acc-body">
+    <div class="acc-body-inner">
+    <p class="section-sub">ประเด็นสำคัญที่ควรทราบก่อนเริ่ม Implementation จริง</p>
+
+    <div class="notes-grid" style="margin-bottom:36px;">
+      <div class="note-card">
+        <div class="icon">&#128273;</div>
+        <h4>key และ token_key คืออะไร</h4>
+        <p><b>key</b> คือรหัสอ้างอิง Consent Form ที่ได้รับจาก NDPP Console ตอนสร้างฟอร์ม มีค่าคงที่ต่อฟอร์มหนึ่งใบ ส่วน <b>token_key</b> คือโทเคนที่สร้างขึ้นเฉพาะแต่ละรายการ/ผู้ใช้งาน ใช้ยืนยันตัวตนของ transaction นั้นๆ ไม่ควรใช้ซ้ำข้ามรายการ</p>
+      </div>
+      <div class="note-card">
+        <div class="icon">&#9888;</div>
+        <h4>ห้าม Cache Purpose ฝั่ง Client</h4>
+        <p>ต้องเรียก API 3.1 ใหม่ทุกครั้งที่เปิดฟอร์ม ห้ามเก็บ purpose_options ไว้ใช้ซ้ำเกินอายุ session เนื่องจากแอดมิน NDPP อาจแก้ไขรายการ Purpose ได้ตลอดเวลา การ cache อาจทำให้ลูกค้าเห็นข้อมูลที่ไม่เป็นปัจจุบัน</p>
+      </div>
+      <div class="note-card">
+        <div class="icon">&#9889;</div>
+        <h4>Error Handling / Edge Cases</h4>
+        <p>ควรสอบถามทีม NDPP เรื่อง retry policy เมื่อ API ตอบกลับช้าหรือ timeout, พฤติกรรมเมื่อ key/token_key หมดอายุหรือไม่ถูกต้อง, และควรออกแบบ fallback UI ไว้รองรับกรณีเรียก API ไม่สำเร็จ</p>
+      </div>
+      <div class="note-card">
+        <div class="icon">&#128274;</div>
+        <h4>ความปลอดภัยของการเชื่อมต่อ</h4>
+        <p>การเรียก API ทั้งหมดต้องผ่าน HTTPS เท่านั้น ไม่ควรฝัง key/token ไว้ใน client-side ที่มองเห็นได้ง่ายเกินจำเป็น และควร log การทำรายการไว้ฝั่ง Viriyah เพื่อสอบทานย้อนหลังร่วมกับ NDPP ได้</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">ถ้า purpose_option ที่ส่งไปไม่ครบตามที่ API 3.1 ส่งมา จะเกิดอะไรขึ้น? <span class="chev">&#9662;</span></div>
+        <div class="faq-a"><div class="faq-a-inner">ควรยืนยันกับทีม NDPP ว่าระบบจะปฏิเสธคำขอ (reject ทั้งหมด) หรือบันทึกเฉพาะรายการที่ส่งมา — เป็นจุดที่ควรทดสอบร่วมกันก่อนขึ้นระบบจริง</div></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Purpose Version ใช้ทำอะไร? <span class="chev">&#9662;</span></div>
+        <div class="faq-a"><div class="faq-a-inner">ใช้อ้างอิงว่าลูกค้าให้ความยินยอมภายใต้เนื้อหา/เวอร์ชันของ Purpose ชุดใด เพื่อรองรับกรณีที่แอดมินแก้ไขข้อความ Purpose ในภายหลัง และต้องพิสูจน์ย้อนหลังว่าลูกค้ายินยอมกับข้อความฉบับใด</div></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">ต้อง implement ฝั่ง Frontend หรือ Backend ก่อน? <span class="chev">&#9662;</span></div>
+        <div class="faq-a"><div class="faq-a-inner">แนะนำให้เรียก API 3.1 และ 3.2 ผ่าน Backend/Server-side ของ Viriyah เพื่อไม่ให้ key ถูก expose ตรงๆ บน client และสามารถควบคุม logging/error handling ได้ดีกว่า</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Client Concerns & Proposed Solutions ===== -->
+<section id="concerns" class="acc-section" style="background:#fafbfd;">
+  <div class="container">
+    <div class="concerns-head acc-header" onclick="toggleAccordion(this)">
+      <div class="pending-badge"><span class="dot"></span> Proposed &mdash; Pending Discussion</div>
+      <h2 class="section-title">ประเด็นที่ลูกค้ากังวล และแนวทางแก้ไข</h2>
+      <span class="acc-chevron">&#9662;</span>
+    </div>
+    <div class="acc-body">
+    <div class="acc-body-inner">
+    <p class="section-sub">2 ประเด็นหลักจากทีมไอทีลูกค้า พร้อมแนวทางแก้ไขเบื้องต้น</p>
+
+    <!-- Concern 1 -->
+    <div class="concern-block">
+      <div class="concern-num">Concern #1</div>
+      <h3>Latency จากการเรียก API 3.1 (Get Preference Consent) บ่อยเกินไป</h3>
+
+      <div class="chip-row">
+        <span class="chip danger" data-tip="กลัวเรียก API 3.1 ทุกครั้งที่โหลดฟอร์ม ทำให้หน้าเว็บช้า">&#9201; <span class="ic"></span>Latency กังวล</span>
+        <span class="chip" data-tip="purpose/consent form แทบไม่เปลี่ยน ยกเว้นตอนอัปเดต version">&#128260; Purpose เปลี่ยนไม่บ่อย</span>
+        <span class="chip warn" data-tip="Cache แบบไม่มีเงื่อนไขเสี่ยงข้อมูลไม่ update ทันที">&#9888; Cache เฉยๆ = เสี่ยง</span>
+      </div>
+
+      <div class="icon-card-grid">
+        <div class="icon-card">
+          <div class="big-icon">&#9200;</div>
+          <div class="opt-name">Option A<br>Scheduled Sync</div>
+          <div class="mini-flow">
+            <span class="node a">Viriyah</span>
+            <span class="arrow-lbl">&#8594;<small>ทุก 24 ชม.</small></span>
+            <span class="node b">NDPP</span>
+          </div>
+          <div class="badge-row">
+            <span class="mini-badge mid">&#128993; Latency กลาง</span>
+            <span class="mini-badge good">&#128994; Dev effort ต่ำ</span>
+            <span class="mini-badge bad">&#128308; Real-time ต่ำ</span>
+          </div>
+          <button class="expand-toggle" onclick="toggleExpand(this,'detA')">ดูรายละเอียดเพิ่มเติม <span class="chev">&#9662;</span></button>
+          <div class="expand-body" id="detA">
+            <ul class="detail-list">
+              <li>Viriyah ทำ job/cron เช็คการเปลี่ยนแปลงของ purpose เป็นรอบ</li>
+              <li>NDPP เพิ่ม lightweight endpoint <span class="mono">GET /preference-consent/version?key=xxx</span> คืนแค่ version/last_updated</li>
+              <li>ถ้า version เปลี่ยน ค่อยเรียก API 3.1 เต็มรูปแบบเพื่อรีเฟรช cache</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="icon-card">
+          <div class="big-icon">&#128276;</div>
+          <div class="opt-name">Option B<br>NDPP Push (Webhook)</div>
+          <div class="mini-flow">
+            <span class="node b">NDPP</span>
+            <span class="arrow-lbl">&#8594;<small>&#9889; ทันที</small></span>
+            <span class="node a">Viriyah</span>
+          </div>
+          <div class="badge-row">
+            <span class="mini-badge good">&#128994; Latency ต่ำ</span>
+            <span class="mini-badge mid">&#128993; Dev effort กลาง</span>
+            <span class="mini-badge good">&#128994; Real-time สูง</span>
+          </div>
+          <button class="expand-toggle" onclick="toggleExpand(this,'detB')">ดูรายละเอียดเพิ่มเติม <span class="chev">&#9662;</span></button>
+          <div class="expand-body" id="detB">
+            <ul class="detail-list">
+              <li>Admin ฝั่ง NDPP แก้ไข purpose/form → NDPP trigger webhook แจ้ง Viriyah ทันที</li>
+              <li>Viriyah รับ webhook แล้วอัปเดต cache ทันที ไม่ต้องรอรอบ polling</li>
+              <li>ข้อพิจารณา: ต้องเปิด endpoint รับ webhook + มี retry ถ้าส่งไม่สำเร็จ</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="icon-card recommended">
+          <span class="rec-tag">แนวทางกลาง</span>
+          <div class="big-icon">&#128260;</div>
+          <div class="opt-name">Option C<br>Hybrid</div>
+          <div class="mini-flow">
+            <span class="node a">Viriyah</span>
+            <span class="arrow-lbl">&#8596;<small>&#9889;+&#9201;</small></span>
+            <span class="node b">NDPP</span>
+          </div>
+          <div class="badge-row">
+            <span class="mini-badge good">&#128994; Latency ต่ำ</span>
+            <span class="mini-badge bad">&#128308; Dev effort สูง</span>
+            <span class="mini-badge good">&#128994; Fallback พร้อม</span>
+          </div>
+          <button class="expand-toggle" onclick="toggleExpand(this,'detC')">ดูรายละเอียดเพิ่มเติม <span class="chev">&#9662;</span></button>
+          <div class="expand-body" id="detC">
+            <ul class="detail-list">
+              <li>ใช้ Push (Option B) เป็นหลักสำหรับ update แบบ real-time</li>
+              <li>ใช้ Scheduled Sync (Option A) เป็น fallback เผื่อ webhook หลุด/ส่งไม่สำเร็จ</li>
+              <li>เช่น sync ทุก 24 ชม. เพื่อ reconcile ข้อมูลอีกครั้ง</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Concern 2 -->
+    <div class="concern-block">
+      <div class="concern-num">Concern #2</div>
+      <h3>NDPP Down ระหว่างที่ลูกค้าทำ Consent</h3>
+
+      <div class="chip-row">
+        <span class="chip danger" data-tip="ดึง purpose option มาแสดงไม่ได้ (API 3.1 fail) → ฟอร์มโหลดไม่ขึ้น">&#10060; API 3.1 fail = ฟอร์มไม่ขึ้น</span>
+        <span class="chip danger" data-tip="บันทึกความยินยอมไม่ได้ (API 3.2 fail) → กดยืนยันแล้วแต่ consent ไม่ถูกบันทึก">&#10060; API 3.2 fail = Consent หาย</span>
+        <span class="chip warn" data-tip="Consent ที่ควรสำเร็จกลายเป็น fail/ค้าง เป็นความเสี่ยงด้าน compliance เพราะ PDPA ต้องพิสูจน์ได้ว่ามีการขอ/บันทึก consent จริง">&#9888; ความเสี่ยง PDPA Compliance</span>
+      </div>
+
+      <div class="legend-row">
+        <span><span class="legend-dot ok"></span>สำเร็จ</span>
+        <span><span class="legend-dot wait"></span>กำลังกู้คืน/รอ</span>
+        <span><span class="legend-dot fail"></span>ล้มเหลว</span>
+      </div>
+
+      <div class="timeline-block">
+        <div class="timeline-caption happy"><span class="dot"></span>Happy Path</div>
+        <div class="icon-timeline">
+          <div class="icon-node ok" data-tip="ลูกค้าเปิดฟอร์ม"><div class="circle">&#128100;</div><div class="cap">เปิดฟอร์ม</div></div>
+          <span class="icon-arrow">&#8594;</span>
+          <div class="icon-node ok" data-tip="API 3.1 สำเร็จ"><div class="circle">&#9989;</div><div class="cap">API 3.1 OK</div></div>
+          <span class="icon-arrow">&#8594;</span>
+          <div class="icon-node ok" data-tip="แสดงฟอร์มให้ลูกค้ากรอก"><div class="circle">&#128221;</div><div class="cap">แสดงฟอร์ม</div></div>
+          <span class="icon-arrow">&#8594;</span>
+          <div class="icon-node ok" data-tip="ลูกค้ายืนยัน consent"><div class="circle">&#128077;</div><div class="cap">ยืนยัน</div></div>
+          <span class="icon-arrow">&#8594;</span>
+          <div class="icon-node ok" data-tip="API 3.2 สำเร็จ"><div class="circle">&#9989;</div><div class="cap">API 3.2 OK</div></div>
+          <span class="icon-arrow">&#8594;</span>
+          <div class="icon-node ok" data-tip="บันทึก Consent สำเร็จ"><div class="circle">&#128190;</div><div class="cap">บันทึกสำเร็จ</div></div>
+        </div>
+      </div>
+
+      <div class="timeline-block">
+        <div class="timeline-caption down"><span class="dot"></span>NDPP Down Path</div>
+        <div class="icon-timeline">
+          <div class="icon-node ok" data-tip="ลูกค้าเปิดฟอร์ม"><div class="circle">&#128100;</div><div class="cap">เปิดฟอร์ม</div></div>
+          <span class="icon-arrow">&#8594;</span>
+          <div class="icon-node fail" data-tip="API 3.1 ล้มเหลว — NDPP down"><div class="circle">&#10060;</div><div class="cap">API 3.1 Fail</div></div>
+          <span class="icon-arrow">&#8594;</span>
+          <div class="icon-node wait pulse" data-tip="Fallback ใช้ Cache purpose ล่าสุดที่เคยเก็บไว้ พร้อม flag ว่าอาจไม่ใช่เวอร์ชันล่าสุด"><div class="circle">&#128190;</div><div class="cap">Buffer/Cache</div></div>
+          <span class="icon-arrow">&#8594;</span>
+          <div class="icon-node ok" data-tip="แสดงฟอร์มจาก cache"><div class="circle">&#128221;</div><div class="cap">แสดงฟอร์ม</div></div>
+          <span class="icon-arrow">&#8594;</span>
+          <div class="icon-node ok" data-tip="ลูกค้ายืนยัน consent"><div class="circle">&#128077;</div><div class="cap">ยืนยัน</div></div>
+          <span class="icon-arrow">&#8594;</span>
+          <div class="icon-node fail" data-tip="API 3.2 ล้มเหลว — เก็บ transaction เข้า buffer/queue พร้อม retry แบบ exponential backoff"><div class="circle">&#10060;</div><div class="cap">API 3.2 Fail</div></div>
+          <span class="icon-arrow">&#8635;</span>
+          <div class="icon-node wait" data-tip="NDPP กลับมาออนไลน์"><div class="circle">&#128268;</div><div class="cap">NDPP กลับมา</div></div>
+          <span class="icon-arrow">&#8594;</span>
+          <div class="icon-node wait pulse" data-tip="เรียก Recovery API พิเศษ (idempotency key + original timestamp) เพื่อกู้ transaction ที่ตกหล่นโดยไม่ซ้ำซ้อน"><div class="circle">&#128260;</div><div class="cap">Recovery API</div></div>
+          <span class="icon-arrow">&#8594;</span>
+          <div class="icon-node ok" data-tip="บันทึก Consent สำเร็จ (ล่าช้า)"><div class="circle">&#128190;</div><div class="cap">บันทึกสำเร็จ (ล่าช้า)</div></div>
+        </div>
+      </div>
+
+      <button class="expand-toggle" onclick="toggleExpand(this,'detSol')">ดูรายละเอียด Solution ทั้งหมด <span class="chev">&#9662;</span></button>
+      <div class="expand-body" id="detSol">
+        <ul class="bullets-tight" style="margin-top:10px;">
+          <li><b>1. Fallback to Cache</b> — กรณี API 3.1 fail ใช้ cached purpose ล่าสุด (ตาม Option A/B/C) แสดงชั่วคราว พร้อม flag "ข้อมูลอาจไม่ใช่เวอร์ชันล่าสุด"</li>
+          <li><b>2. Client-side Buffer</b> — กรณี API 3.2 fail เก็บ transaction ที่ยิงไม่สำเร็จไว้ใน buffer/queue ชั่วคราว พร้อม timestamp และ payload</li>
+          <li><b>3. Retry Mechanism</b> — ตั้ง retry policy (exponential backoff) ให้ระบบส่ง transaction ค้างซ้ำเป็นระยะจนกว่า NDPP จะกลับมาออนไลน์</li>
+          <li><b>4. NDPP-side Recovery API</b> — endpoint เฉพาะ เช่น <span class="mono">POST /preference-consent/recover</span> รับ original timestamp (เวลาที่ user กดจริง) เพื่อ audit trail และเช็ค duplicate ด้วย idempotency key</li>
+          <li><b>5. Monitoring / Alert</b> — แจ้งเตือนทั้งสองฝั่งเมื่อ buffer มี transaction ค้างเกินเวลาที่กำหนด เพื่อให้ทีม manual-check ได้ทัน</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="final-note">
+      <span class="icon">&#8505;</span>
+      <div><b>หมายเหตุ:</b> ทุกแนวทางในหน้านี้เป็นข้อเสนอเบื้องต้น ยังไม่ใช่ข้อสรุปสุดท้าย ต้องหารือร่วมกับทีมลูกค้าก่อน implement จริง</div>
+    </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Internal demo for technical presentation only — ส่วน "Try it" และ "Live Demo" เชื่อมต่อ API จริงของระบบ NDPP (ใช้ Consent Form เดียวกับ DropLead — viriyah.com) การยืนยัน consent จะสร้างข้อมูลจริงในระบบด้วยข้อมูล demo
+</footer>
+
+<script>
+  function scrollToId(id){
+    const el = document.getElementById(id);
+    if(!el) return;
+    const accSection = el.closest('.acc-section');
+    if(accSection){
+      const header = accSection.querySelector('.acc-header');
+      if(header && !header.classList.contains('open')) toggleAccordion(header, true);
+    }
+    el.scrollIntoView({behavior:'smooth', block:'start'});
+    if(el.classList.contains('step-detail')){
+      el.classList.remove('flash');
+      void el.offsetWidth;
+      el.classList.add('flash');
+    }
+  }
+
+  /* ===== Accordion (collapsible sections) =====
+     Multiple sections can be open at once (not an exclusive accordion) so the
+     "ขยายทั้งหมด" toolbar button can genuinely open every topic at once for
+     rehearsal, while during a real presentation each section can still be
+     opened/closed independently in step with the talking points. */
+  function toggleAccordion(header, forceOpen){
+    const body = header.nextElementSibling;
+    if(!body) return;
+    const willOpen = typeof forceOpen === 'boolean' ? forceOpen : !header.classList.contains('open');
+    if(willOpen === header.classList.contains('open')) return;
+
+    if(willOpen){
+      header.classList.add('open');
+      body.classList.add('open');
+      body.style.maxHeight = body.scrollHeight + 'px';
+      const onEnd = (e) => {
+        if(e.target === body && e.propertyName === 'max-height'){
+          if(body.classList.contains('open')) body.style.maxHeight = 'none';
+          body.removeEventListener('transitionend', onEnd);
+        }
+      };
+      body.addEventListener('transitionend', onEnd);
+    }else{
+      if(body.style.maxHeight === 'none' || body.style.maxHeight === ''){
+        body.style.maxHeight = body.scrollHeight + 'px';
+        void body.offsetHeight;
+      }
+      header.classList.remove('open');
+      body.classList.remove('open');
+      body.style.maxHeight = '0px';
+    }
+  }
+
+  function expandAll(){
+    document.querySelectorAll('.acc-header').forEach(h => toggleAccordion(h, true));
+  }
+  function collapseAll(){
+    document.querySelectorAll('.acc-header').forEach(h => toggleAccordion(h, false));
+  }
+
+  /* ===== Pair-highlight: link System Overview nodes <-> Process Flow steps =====
+     data-pair can hold multiple space-separated numbers (e.g. the REST API
+     line is data-pair="3 4" since API 3.1 and 3.2 both run over it). Hovering
+     an element highlights the union of every group it belongs to — so hovering
+     the REST API line highlights step-3 + step-4 together, but hovering step-3
+     alone highlights only the REST API line (not step-4), as requested.
+     Uses addEventListener only — does not touch/replace the existing inline
+     onclick="scrollToId(...)" on .step-node, so both handlers run independently. */
+  function initPairHighlight(){
+    const groups = {};
+    const elTokens = new Map();
+    document.querySelectorAll('[data-pair]').forEach(el => {
+      const tokens = el.dataset.pair.split(/\s+/).filter(Boolean);
+      elTokens.set(el, tokens);
+      tokens.forEach(n => { (groups[n] = groups[n] || []).push(el); });
+    });
+    elTokens.forEach((tokens, el) => {
+      const union = new Set();
+      tokens.forEach(n => (groups[n] || []).forEach(g => union.add(g)));
+      const targets = Array.from(union);
+      el.addEventListener('mouseenter', () => targets.forEach(t => t.classList.add('pair-highlight')));
+      el.addEventListener('mouseleave', () => targets.forEach(t => t.classList.remove('pair-highlight')));
+      el.addEventListener('click', () => {
+        targets.forEach(t => {
+          t.classList.add('pair-flash');
+          setTimeout(() => t.classList.remove('pair-flash'), 900);
+        });
+      });
+    });
+  }
+  initPairHighlight();
+
+  function syntaxHighlight(obj){
+    let json = JSON.stringify(obj, null, 2);
+    json = json.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function(match){
+      let cls = 'num';
+      if(/^"/.test(match)){
+        cls = /:$/.test(match) ? 'key' : 'str';
+      }else if(/true|false/.test(match)){
+        cls = 'bool';
+      }else if(/null/.test(match)){
+        cls = 'null';
+      }
+      return '<span class="' + cls + '">' + match + '</span>';
+    });
+  }
+
+  /* ===== Live NDPP API config — เดียวกับ viriyah.com/DropLead02.html ===== */
+  const CONSENT_KEY = "HRFckZ09CBZFQHlpJa2upA%3d%3d";
+  const GET_API_URL = `http://172.21.20.248/api/AdminPreferenceConsentForm/PreferenceFormToken?Key=${CONSENT_KEY}`;
+  const SAVE_API_URL = "https://172.21.20.248/api/AdminPreferenceConsentForm/PreferenceFormConsent";
+
+  // NOTE: secret ฝัง client-side แบบนี้ใครก็เปิดดู source แล้วรู้ค่าได้ ทำให้ปลอม JWT ที่เซ็นถูกต้องเองได้
+  // เหมาะสำหรับ prototype เท่านั้น งาน production ควรย้ายการเซ็น JWT ไปทำฝั่ง server
+  const JWT_SECRET = "zxcvzaqxsw12345";
+  const DEMO_PERSON = { firstname:"Demo", lastname:"NDPPTest", mobile:"0800000000", email:"demo@viriyah-ndpp-test.co.th" };
+
+  function base64UrlEncodeBytes(bytes){
+    let binary = "";
+    bytes.forEach(b => binary += String.fromCharCode(b));
+    return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+  function base64UrlEncodeString(str){
+    return base64UrlEncodeBytes(new TextEncoder().encode(str));
+  }
+  async function signJWT(payload, secret){
+    const header = { alg: "HS256", typ: "JWT" };
+    const signingInput = `${base64UrlEncodeString(JSON.stringify(header))}.${base64UrlEncodeString(JSON.stringify(payload))}`;
+    const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+    const signatureBuffer = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(signingInput));
+    return `${signingInput}.${base64UrlEncodeBytes(new Uint8Array(signatureBuffer))}`;
+  }
+  async function sha256Hex(str){
+    const hashBuffer = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+  async function buildDemoJWT(){
+    const { firstname, lastname, mobile, email } = DEMO_PERSON;
+    const uid = await sha256Hex(`${firstname}-${lastname}-${mobile}`);
+    return signJWT({ UID: uid, Firstname: firstname, Lastname: lastname, Email: email, Mobile: mobile, DataSubjectType: "Customer" }, JWT_SECRET);
+  }
+
+  /* key ที่ทดสอบสำเร็จล่าสุดใน Step 3 — Step 4 จะดึงค่านี้มาใช้ต่อ (ไม่ใช้ CONSENT_KEY คงที่ด้านบน
+     เพราะ CONSENT_KEY เป็นค่าที่ Live Demo section ใช้อยู่แยกกัน ไม่เกี่ยวข้องกับ 2 step นี้) */
+  let sharedConsentKey = null;
+
+  /* Step 3: กล่อง Example Response เริ่มต้นเป็น placeholder (ไม่ใช่ตัวอย่าง static) รอผู้ใช้กด Try it จริง */
+  showRespPlaceholder(3);
+
+  const REQ4_EXAMPLE = {
+    key: CONSENT_KEY,
+    token_key: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOiJiM2MxZmQxZjZlMDc1NDkyMTk4MjczNTI1ZmE3YTliMmNiOTIxZjU0ODVmNTliNTBmMmI2MTI3OTAwYWRiNDFkIiwiRmlyc3RuYW1lIjoiRGVtbyIsIkxhc3RuYW1lIjoiTkRQUFRlc3QiLCJFbWFpbCI6ImRlbW9AdmlyaXlhaC1uZHBwLXRlc3QuY28udGgiLCJNb2JpbGUiOiIwODAwMDAwMDAwIiwiRGF0YVN1YmplY3RUeXBlIjoiQ3VzdG9tZXIifQ.treIPoyQIpSFIcjTfLfFcH89FoW1bZ46Xi7CyOuTXM0",
+    purpose_option: [ { PurposeOption: 1 } ]
+  };
+  document.getElementById('req4-code').innerHTML = syntaxHighlight(REQ4_EXAMPLE);
+
+  const RESP4_EXAMPLE = { status:"Successfully updated.", service_id:"151", service_title_en:"เพื่อการดำเนินกิจกรรมทางการตลาด", service_title_th:"เพื่อการดำเนินกิจกรรมทางการตลาด", ds_name:"Demo", ds_lastname:"NDPPTest", version:"5" };
+  document.getElementById('resp4-code').innerHTML = syntaxHighlight(RESP4_EXAMPLE);
+
+  /* ===== Response box states (placeholder / loading / error) — ใช้ร่วมกันทั้ง Step 3 และ Step 4 ===== */
+  function showRespPlaceholder(step){
+    document.getElementById('resp' + step + '-code').innerHTML =
+      '<div class="resp-state">&#128273; กดปุ่ม Try it เพื่อดูผลลัพธ์จริงจาก key ที่กรอก</div>';
+  }
+  function showRespLoading(step){
+    document.getElementById('resp' + step + '-code').innerHTML =
+      '<div class="resp-state">' +
+      '<div class="resp-skeleton-line" style="width:70%"></div>' +
+      '<div class="resp-skeleton-line" style="width:92%"></div>' +
+      '<div class="resp-skeleton-line" style="width:55%"></div>' +
+      '<div style="margin-top:6px;">&#8987; กำลังเรียก API จริง...</div>' +
+      '</div>';
+  }
+  function showRespError(step, statusCode, message){
+    document.getElementById('resp' + step + '-code').innerHTML =
+      `<div class="resp-error"><b>&#10060; Error${statusCode ? ' ' + statusCode : ''}</b><br>${message}</div>`;
+  }
+
+  /* ===== Step 3: ช่อง key แก้ไขได้ — compose URL แบบ real-time ===== */
+  function updateKey3Preview(){
+    const key = document.getElementById('key3Input').value.trim();
+    document.getElementById('key3FullUrl').textContent =
+      `http://172.21.20.248/api/AdminPreferenceConsentForm/PreferenceFormToken?Key=${key || '(ยังไม่ได้กรอก key)'}`;
+  }
+
+  async function tryApi(step){
+    const btn = document.getElementById('tryBtn' + step);
+    const status = document.getElementById('tryStatus' + step);
+    if(btn.classList.contains('loading')) return;
+
+    const keyInput = document.getElementById('key3Input');
+    const key = keyInput.value.trim();
+    if(!key){
+      status.textContent = '✗ กรุณากรอก key ก่อนกดทดสอบ';
+      status.style.color = '#dc2626';
+      return;
+    }
+
+    btn.classList.add('loading');
+    btn.disabled = true;
+    status.textContent = '';
+    showRespLoading(3);
+    const t0 = performance.now();
+    try{
+      const url = `http://172.21.20.248/api/AdminPreferenceConsentForm/PreferenceFormToken?Key=${key}`;
+      const res = await fetch(url, { method: "GET" });
+      const ms = Math.round(performance.now() - t0);
+      let data;
+      try{ data = await res.json(); }catch(parseErr){ throw new Error("HTTP " + res.status + " — response ไม่ใช่ JSON ที่ถูกต้อง"); }
+      if(!res.ok) throw Object.assign(new Error(data && data.message ? data.message : ("HTTP " + res.status)), { status: res.status });
+
+      document.getElementById('resp3-code').innerHTML = syntaxHighlight(data);
+      const count = (data.purpose_option || []).length;
+      status.textContent = `✓ ได้รับ purpose_option ${count} รายการ (200 OK, ~${ms}ms)`;
+      status.style.color = 'var(--green)';
+
+      // ยิงสำเร็จ → เก็บ key นี้ไว้ให้ Step 4 ใช้ต่อ
+      sharedConsentKey = key;
+      const s3Status = document.getElementById('s3KeyStatus');
+      s3Status.style.display = 'block';
+      updateStep4KeyState();
+    }catch(error){
+      const ms = Math.round(performance.now() - t0);
+      showRespError(3, error.status, error.message);
+      status.textContent = `✗ เรียก API ไม่สำเร็จ${error.status ? ' (HTTP ' + error.status + ')' : ''}: ${error.message} (~${ms}ms)`;
+      status.style.color = '#dc2626';
+    }finally{
+      btn.classList.remove('loading');
+      btn.disabled = false;
+    }
+  }
+
+  /* ===== Step 4: mini-form + step-by-step flow log ===== */
+  function updateStep4KeyState(){
+    const note = document.getElementById('s4KeyNote');
+    const btn = document.getElementById('s4SubmitBtn');
+    if(sharedConsentKey){
+      note.className = 'key-carry-note ok';
+      note.innerHTML = `&#9989; ใช้ key เดียวกับขั้นตอนที่ 3: <span class="mono">${sharedConsentKey}</span>`;
+      btn.disabled = false;
+    }else{
+      note.className = 'key-carry-note warn';
+      note.innerHTML = '&#9888; กรุณาทดสอบขั้นตอนที่ 3 ก่อน เพื่อให้ได้ key สำหรับใช้ต่อในขั้นตอนนี้';
+      btn.disabled = true;
+    }
+  }
+  updateStep4KeyState();
+
+  function addLogLine(container, tag, html, isError){
+    return new Promise(resolve => {
+      const line = document.createElement('div');
+      line.className = 'flow-log-line' + (isError ? ' fl-error' : '');
+      line.innerHTML = `<span class="fl-tag">${tag}</span><span class="fl-content">${html}</span>`;
+      container.appendChild(line);
+      requestAnimationFrame(() => requestAnimationFrame(() => line.classList.add('show')));
+      setTimeout(resolve, 550);
+    });
+  }
+
+  async function runStep4Flow(){
+    if(!sharedConsentKey){ updateStep4KeyState(); return; }
+    const btn = document.getElementById('s4SubmitBtn');
+    if(btn.classList.contains('loading')) return;
+    btn.classList.add('loading');
+    btn.disabled = true;
+
+    const firstname = document.getElementById('s4Firstname').value.trim() || 'Demo';
+    const lastname = document.getElementById('s4Lastname').value.trim() || 'NDPPTest';
+    const mobile = document.getElementById('s4Mobile').value.trim() || '0800000000';
+
+    const log = document.getElementById('flowLog4');
+    log.innerHTML = '';
+    const status = document.getElementById('tryStatus4');
+    status.textContent = '';
+    showRespLoading(4);
+
+    await addLogLine(log, 'A', `รับข้อมูล: <b>${firstname} ${lastname}</b> เบอร์โทร <b>${mobile}</b>`);
+
+    const combined = `${firstname}-${lastname}-${mobile}`;
+    await addLogLine(log, 'B', `รวม string: <b>${combined}</b>`);
+
+    // NOTE: ปรับ hash algorithm ตรงนี้ให้ตรงกับที่ backend จริงใช้ — ตอนนี้ default เป็น SHA-256
+    const uid = await sha256Hex(combined);
+    await addLogLine(log, 'C', `SHA-256(string) → UID: <b>${uid}</b>`);
+
+    const token = await signJWT({ UID: uid, Firstname: firstname, Lastname: lastname, Email: DEMO_PERSON.email, Mobile: mobile, DataSubjectType: "Customer" }, JWT_SECRET);
+    const reqBody = { purpose_option: [ { PurposeOption: 1 } ], key: sharedConsentKey, token_key: token };
+    document.getElementById('req4-code').innerHTML = syntaxHighlight(reqBody);
+    await addLogLine(log, 'D', `ยิง <b>PUT PreferenceFormConsent</b> — ใช้ key เดียวกับขั้นตอนที่ 3: <b>${sharedConsentKey}</b>`);
+
+    const t0 = performance.now();
+    try{
+      const res = await fetch(SAVE_API_URL, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(reqBody) });
+      const ms = Math.round(performance.now() - t0);
+      let data;
+      try{ data = await res.json(); }catch(parseErr){ throw new Error("HTTP " + res.status + " — response ไม่ใช่ JSON ที่ถูกต้อง"); }
+      if(!res.ok) throw Object.assign(new Error(data && data.message ? data.message : ("HTTP " + res.status)), { status: res.status });
+
+      document.getElementById('resp4-code').innerHTML = syntaxHighlight(data);
+      await addLogLine(log, 'E', `สำเร็จ: <b>${data.status || 'บันทึกสำเร็จ'}</b> (200 OK, ~${ms}ms)`);
+      status.textContent = `✓ ${data.status || 'บันทึกสำเร็จ'} (200 OK, ~${ms}ms)`;
+      status.style.color = 'var(--green)';
+    }catch(error){
+      const ms = Math.round(performance.now() - t0);
+      showRespError(4, error.status, error.message);
+      await addLogLine(log, 'E', `ล้มเหลว${error.status ? ' (HTTP ' + error.status + ')' : ''}: ${error.message} (~${ms}ms)`, true);
+      status.textContent = `✗ เรียก API ไม่สำเร็จ: ${error.message}`;
+      status.style.color = '#dc2626';
+    }finally{
+      btn.classList.remove('loading');
+      btn.disabled = false;
+    }
+  }
+
+  function copyCode(btn){
+    const pre = btn.closest('.code-card').querySelector('pre');
+    const text = pre.dataset.raw || pre.textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const original = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = original, 1200);
+    });
+  }
+
+  function toggleFaq(el){
+    el.classList.toggle('open');
+  }
+
+  function toggleExpand(btn, targetId){
+    btn.classList.toggle('open');
+    document.getElementById(targetId).classList.toggle('open');
+  }
+
+  /* ===== Interactive demo logic ===== */
+  function nowStamp(){
+    const d = new Date();
+    const p = n => String(n).padStart(2,'0');
+    return p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
+  }
+
+  function logLine(direction, text){
+    const body = document.getElementById('consoleBody');
+    const empty = body.querySelector('.console-empty');
+    if(empty) empty.remove();
+    const line = document.createElement('div');
+    line.className = 'console-line';
+    const arrowCls = direction === 'out' ? 'arrow-out' : 'arrow-in';
+    line.innerHTML = '<span class="ts">[' + nowStamp() + ']</span> <span class="' + arrowCls + '">' + text + '</span>';
+    body.appendChild(line);
+    body.scrollTop = body.scrollHeight;
+  }
+
+  async function demoLoadForm(){
+    const btn = document.getElementById('btnLoadForm');
+    btn.disabled = true;
+    btn.textContent = 'กำลังโหลด...';
+    logLine('out', '[Viriyah] &#8594; [NDPP] : GET PreferenceFormToken?Key=***');
+
+    try{
+      const res = await fetch(GET_API_URL, { method: "GET" });
+      const data = await res.json();
+      if(!res.ok) throw new Error("HTTP " + res.status);
+
+      const purposes = data.purpose_option || [];
+      logLine('in', '[NDPP] &#8594; [Viriyah] : 200 OK — purpose_option (' + purposes.length + ' รายการ)');
+
+      const list = document.getElementById('purposeList');
+      list.innerHTML = purposes.map(p => `
+        <label class="purpose-item">
+          <input type="checkbox" data-purpose-id="${p.purpose_id}" ${p.is_required ? 'checked disabled' : ''}>
+          <span>${p.purpose_th}${p.is_required ? '<span class="req">Required</span>' : ''}</span>
+        </label>
+      `).join('');
+      list.classList.add('show');
+      document.getElementById('btnConfirm').classList.add('show');
+
+      btn.textContent = '✓ โหลดฟอร์มแล้ว';
+    }catch(error){
+      logLine('in', '[NDPP] &#8594; [Viriyah] : ✗ Error — ' + error.message);
+      btn.disabled = false;
+      btn.textContent = 'โหลดฟอร์มความยินยอม';
+    }
+  }
+
+  async function demoConfirm(){
+    const btn = document.getElementById('btnConfirm');
+    if(btn.disabled) return;
+    btn.disabled = true;
+    btn.textContent = 'กำลังบันทึก...';
+
+    const checkboxes = document.querySelectorAll('#purposeList input[type="checkbox"]');
+    const selectedPurposes = Array.from(checkboxes).filter(cb => cb.checked).map(cb => ({ PurposeOption: Number(cb.dataset.purposeId) }));
+
+    logLine('out', '[Viriyah] &#8594; [NDPP] : PUT PreferenceFormConsent (purpose_option: ' + selectedPurposes.length + '/' + checkboxes.length + ' selected)');
+
+    try{
+      const token = await buildDemoJWT();
+      const res = await fetch(SAVE_API_URL, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ purpose_option: selectedPurposes, key: CONSENT_KEY, token_key: token })
+      });
+      const data = await res.json();
+      if(!res.ok) throw new Error("HTTP " + res.status);
+
+      logLine('in', '[NDPP] &#8594; [Viriyah] : 200 OK — ' + (data.status || 'Successfully updated.'));
+
+      document.getElementById('succTxn').textContent = data.status || '—';
+      document.getElementById('succVer').textContent = data.service_id || '—';
+      document.getElementById('succSub').textContent = [data.ds_name, data.ds_lastname].filter(Boolean).join(' ') || '—';
+      document.getElementById('succDate').textContent = data.version || '—';
+      document.getElementById('successCard').classList.add('show');
+
+      btn.textContent = '✓ ยืนยันความยินยอมแล้ว';
+    }catch(error){
+      logLine('in', '[NDPP] &#8594; [Viriyah] : ✗ Error — ' + error.message);
+      btn.disabled = false;
+      btn.textContent = 'ยืนยันความยินยอม';
+    }
+  }
+
+  function demoReset(){
+    document.getElementById('btnLoadForm').disabled = false;
+    document.getElementById('btnLoadForm').textContent = 'โหลดฟอร์มความยินยอม';
+    const list = document.getElementById('purposeList');
+    list.classList.remove('show');
+    list.innerHTML = '';
+    const confirmBtn = document.getElementById('btnConfirm');
+    confirmBtn.classList.remove('show');
+    confirmBtn.disabled = false;
+    confirmBtn.textContent = 'ยืนยันความยินยอม';
+    document.getElementById('successCard').classList.remove('show');
+    clearConsole();
+  }
+
+  function clearConsole(){
+    document.getElementById('consoleBody').innerHTML = '<div class="console-empty">// รอการทำงาน... กด "โหลดฟอร์มความยินยอม" ทางฝั่งซ้ายเพื่อเริ่มสาธิต</div>';
+  }
+</script>
+
+</body>
+</html>

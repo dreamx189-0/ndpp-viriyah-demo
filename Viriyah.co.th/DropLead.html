@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>ประกันภัยบ้านอุ่นใจแบบประหยัดสำหรับรายย่อย (Micro Insurance)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
+
+  :root{
+    --navy-dark:#0a2a5e;
+    --navy:#1b4fa0;
+    --orange:#f0714a;
+    --gold:#f5a623;
+    --border:#e4e7ec;
+    --text:#333c4d;
+    --link:#2f6fd6;
+    --bg:#fff;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Prompt', sans-serif;
+    background:#fff;
+    color:var(--text);
+  }
+
+  /* Top header */
+  .topheader{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 30px;
+    border-bottom:1px solid var(--border);
+  }
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .logo-icon{
+    width:36px;height:36px;
+    background:var(--navy-dark);
+    border-radius:6px;
+    display:flex;align-items:center;justify-content:center;
+    color:#f4c02a;
+    font-size:18px;
+  }
+  .logo-text .th{font-weight:700; font-size:16px; color:var(--navy-dark); line-height:1.1;}
+  .logo-text .en{font-size:9px; letter-spacing:0.4px; color:var(--navy);}
+  .top-right{
+    display:flex;
+    align-items:center;
+    gap:14px;
+  }
+  .search-circle{
+    width:32px;height:32px;
+    border-radius:50%;
+    border:1.5px solid #d5d9e0;
+    display:flex;align-items:center;justify-content:center;
+    color:#5a6472;
+  }
+  .lang{
+    display:flex;align-items:center;gap:6px;
+    font-size:13px; color:#333;
+  }
+  .claim-badge{
+    background:#f5a623;
+    color:#fff;
+    border-radius:6px;
+    padding:6px 10px;
+    font-size:11px;
+    display:flex;
+    flex-direction:column;
+    line-height:1.2;
+    text-align:center;
+  }
+  .contact-link{font-size:13.5px; color:#333; font-weight:500;}
+  .online-btn{
+    background:var(--navy-dark);
+    color:#fff;
+    padding:9px 18px;
+    border-radius:4px;
+    font-size:13px;
+    text-align:center;
+    line-height:1.4;
+  }
+  .online-btn b{display:block; font-size:14px;}
+  .hamburger{
+    display:flex;flex-direction:column;gap:4px;
+  }
+  .hamburger span{width:22px;height:2.5px;background:var(--navy-dark);}
+
+  /* Breadcrumb */
+  .breadcrumb{
+    padding:12px 30px;
+    font-size:13px;
+    color:#5a6472;
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+  }
+  .breadcrumb a{color:var(--link); text-decoration:none;}
+  .breadcrumb span.current{color:#333; font-weight:500;}
+
+  /* Hero */
+  .hero{
+    position:relative;
+    height:320px;
+    background:#eef3fa;
+    overflow:hidden;
+  }
+  .hero-illustration{
+    position:absolute;
+    top:0; left:0;
+    width:100%; height:100%;
+    display:block;
+  }
+  .asset-badge{
+    position:absolute;
+    top:36px; left:0;
+    background:var(--orange);
+    color:#fff;
+    padding:16px 30px 16px 20px;
+    border-radius:0 8px 8px 0;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .asset-badge svg{width:36px;height:36px;}
+  .asset-badge .big{font-size:22px; font-weight:700; letter-spacing:1px;}
+  .asset-badge .small{font-size:12px;}
+
+  .hero-title{
+    position:absolute;
+    left:0; bottom:0;
+    right:0;
+    background:var(--navy);
+    color:#fff;
+    font-size:22px;
+    font-weight:600;
+    padding:18px 30px;
+  }
+
+  /* Main content */
+  .main{
+    max-width:1100px;
+    margin:0 auto;
+    padding:40px 30px 60px;
+  }
+  .intro-row{
+    display:flex;
+    gap:30px;
+    margin-bottom:36px;
+  }
+  .intro-img{
+    width:280px;
+    min-width:280px;
+    height:170px;
+    border-radius:6px;
+    background:#e4edf9;
+    overflow:hidden;
+  }
+  .intro-img svg{
+    width:100%;
+    height:100%;
+    display:block;
+  }
+  .intro-text h1{
+    color:var(--navy);
+    font-size:22px;
+    font-weight:700;
+    margin-bottom:14px;
+  }
+  .intro-text p{
+    font-size:14.5px;
+    line-height:1.9;
+    color:var(--text);
+  }
+
+  h2{
+    color:var(--navy);
+    font-size:19px;
+    font-weight:700;
+    margin:30px 0 14px;
+  }
+  ul{
+    margin-left:20px;
+    margin-bottom:10px;
+  }
+  ul li{
+    font-size:14.5px;
+    line-height:1.9;
+    color:var(--text);
+  }
+  p.body-text{
+    font-size:14.5px;
+    line-height:1.9;
+    color:var(--text);
+    margin-bottom:8px;
+  }
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+    margin-bottom:10px;
+  }
+  th{
+    background:var(--navy);
+    color:#fff;
+    font-size:14.5px;
+    font-weight:600;
+    padding:12px 16px;
+    text-align:left;
+  }
+  td{
+    padding:12px 16px;
+    font-size:14.5px;
+    color:var(--text);
+    border-bottom:1px solid var(--border);
+  }
+  tr:nth-child(even) td{background:#f4f6f9;}
+
+  .note-highlight{
+    color:var(--orange);
+    font-size:13px;
+    margin-top:12px;
+  }
+  .note-link{
+    color:var(--link);
+    font-size:13px;
+  }
+
+  .contact-info{
+    margin-top:24px;
+  }
+  .contact-info .phone-line{
+    color:var(--navy);
+    font-size:15px;
+    font-weight:600;
+    margin-bottom:6px;
+  }
+  .contact-info .fax-line{
+    font-size:14px;
+    color:var(--text);
+  }
+
+  /* Form section */
+  .form-section{
+    background:#fff;
+    border-top:1px solid var(--border);
+    padding:30px 30px 50px;
+    max-width:1100px;
+    margin:0 auto;
+  }
+  .form-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:#f4f6f9;
+    padding:16px 22px;
+    border-radius:6px;
+    margin-bottom:26px;
+  }
+  .form-title-left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-size:16px;
+    font-weight:600;
+    color:var(--navy);
+  }
+  .form-title-left svg{width:26px;height:26px;}
+  .plus{
+    font-size:22px;
+    color:var(--gold);
+    font-weight:700;
+  }
+
+  .form-field{
+    margin-bottom:24px;
+  }
+  .form-field label{
+    display:block;
+    font-size:14.5px;
+    color:#333;
+    margin-bottom:8px;
+  }
+  .form-field label .required{
+    color:#c0392b;
+    font-size:12px;
+    font-weight:400;
+  }
+  .form-field input, .form-field select, .form-field textarea{
+    width:100%;
+    padding:11px 14px;
+    border:1.5px solid var(--border);
+    border-radius:6px;
+    font-family:inherit;
+    font-size:14px;
+    color:#333;
+    outline:none;
+  }
+  .form-field textarea{
+    min-height:100px;
+    resize:vertical;
+  }
+  .form-field input:focus, .form-field select:focus, .form-field textarea:focus{
+    border-color:var(--navy);
+  }
+
+  .consent-row{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+    align-items:flex-start;
+  }
+  .consent-row input[type="checkbox"]{
+    width:18px;height:18px;min-width:18px;
+    margin-top:3px;
+  }
+  .consent-row p{
+    font-size:13.5px;
+    line-height:1.8;
+    color:var(--text);
+  }
+  .consent-row p .required{color:#c0392b; font-size:12px;}
+  .consent-error{
+    color:#c0392b;
+    font-size:13px;
+    margin-bottom:20px;
+  }
+
+  .submit-btn{
+    background:var(--navy);
+    color:#fff;
+    border:none;
+    border-radius:6px;
+    padding:12px 34px;
+    font-family:inherit;
+    font-size:14.5px;
+    font-weight:500;
+    cursor:pointer;
+  }
+
+  @media(max-width:800px){
+    .intro-row{flex-direction:column;}
+    .intro-img{width:100%;}
+    .topheader{flex-wrap:wrap; gap:10px;}
+  }
+</style>
+</head>
+<body>
+
+<div style="position:fixed; top:0; left:0; right:0; z-index:99999; display:flex; align-items:center; justify-content:center; gap:14px; background:#0a2a5e; padding:6px 20px; font-family:'Prompt',sans-serif; font-size:12px; box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+  <a href="../index.html" style="color:#fff; text-decoration:none;">&#8962; กลับหน้าหลัก</a>
+  <span style="color:rgba(255,255,255,0.4);">|</span>
+  <a href="viriyah-co-th.html" style="color:#fff; text-decoration:none;">เมนู Viriyah.co.th</a>
+</div>
+
+<svg width="0" height="0" style="position:absolute;overflow:hidden;" aria-hidden="true">
+  <defs>
+    <g id="familyScene">
+      <circle cx="190" cy="85" r="95" fill="#cfe0f2"/>
+      <rect x="10" y="125" width="260" height="45" rx="10" fill="#f0714a"/>
+      <rect x="30" y="108" width="70" height="28" rx="8" fill="#f4886a"/>
+      <rect x="170" y="108" width="70" height="28" rx="8" fill="#f4886a"/>
+      <path d="M150 170 Q150 120 190 120 Q230 120 230 170 Z" fill="#0a2a5e"/>
+      <path d="M205 120 Q228 128 232 150" stroke="#0a2a5e" stroke-width="14" fill="none" stroke-linecap="round"/>
+      <circle cx="190" cy="100" r="24" fill="#f7c9a0"/>
+      <path d="M166 94 Q190 66 214 94 Q214 78 190 76 Q166 78 166 94 Z" fill="#3a2317"/>
+      <path d="M210 170 Q210 138 232 138 Q254 138 254 170 Z" fill="#f5a623"/>
+      <circle cx="232" cy="124" r="17" fill="#f7c9a0"/>
+      <path d="M215 120 Q232 102 249 120 L249 128 Q232 116 215 128 Z" fill="#1b4fa0"/>
+      <circle cx="232" cy="103" r="3.5" fill="#1b4fa0"/>
+      <path d="M222 84 c0 -6 8 -6 8 0 c0 -6 8 -6 8 0 c0 8 -8 11 -8 15 c0 -4 -8 -7 -8 -15 Z" fill="#fff" opacity="0.85"/>
+    </g>
+  </defs>
+</svg>
+
+<div class="topheader" style="margin-top:32px;">
+  <div class="logo">
+    <img src="../assets/viriyah-logo.png" alt="วิริยะประกันภัย" style="height:100px;width:auto;display:block;">
+  </div>
+  <div class="top-right">
+    <div class="search-circle">&#128269;</div>
+    <div class="lang">&#127760; TH &#9662;</div>
+    <div class="claim-badge">แจ้งอุบัติเหตุ<br><b>1557</b></div>
+    <div class="contact-link">ติดต่อเรา</div>
+    <div class="online-btn">ซื้อประกันภัยออนไลน์<br><b>(T.02-129-7474)</b></div>
+    <div class="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</div>
+
+<div class="breadcrumb">
+  <a href="#">หน้าแรก</a> &#8250;
+  <a href="#">ผลิตภัณฑ์</a> &#8250;
+  <a href="#">ประกันภัยสำหรับบ้านและทรัพย์สิน</a> &#8250;
+  <span class="current">ประกันภัยบ้านอุ่นใจแบบประหยัดสำหรับรายย่อย (Micro Insurance)</span>
+</div>
+
+<div class="hero">
+  <svg class="hero-illustration" viewBox="0 0 1200 320" preserveAspectRatio="xMidYMid slice">
+    <rect width="1200" height="320" fill="#eef3fa"/>
+    <use href="#familyScene" transform="translate(650,0) scale(1.8)"/>
+  </svg>
+  <div class="asset-badge">
+    <svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="2.2"><path d="M6 20l14-13 14 13" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 18v16h22V18" stroke-linecap="round" stroke-linejoin="round"/><rect x="17" y="26" width="6" height="8"/></svg>
+    <div>
+      <div class="big">ASSET</div>
+      <div class="small">ประกันภัยทรัพย์สิน</div>
+    </div>
+  </div>
+  <div class="hero-title">ประกันภัยบ้านอุ่นใจแบบประหยัดสำหรับรายย่อย (Micro Insurance)</div>
+</div>
+
+<div class="main">
+
+  <div class="intro-row">
+    <div class="intro-img">
+      <svg viewBox="0 0 280 170" preserveAspectRatio="xMidYMid slice">
+        <rect width="280" height="170" fill="#e4edf9"/>
+        <use href="#familyScene"/>
+      </svg>
+    </div>
+    <div class="intro-text">
+      <h1>ประกันภัยบ้านอุ่นใจแบบประหยัดสำหรับรายย่อย (Micro Insurance)</h1>
+      <p>
+        ประกันภัยบ้านอุ่นใจแบบประหยัดสำหรับรายย่อย เหมาะสำหรับบุคคลทั่วไปที่ต้องการประกันอัคคีภัยที่
+        อยู่อาศัยแบบประหยัด เบี้ยประกันภัยราคาเดียว 500 บาท คุ้มครอง 3 ภัยพื้นฐาน เป็นการให้ความ
+        คุ้มครองแบบเหมาจ่ายราคาเดียว และเป็นทางเลือกใหม่ที่คุ้มค่าให้กับผู้ที่ทำประกันภัย
+      </p>
+    </div>
+  </div>
+
+  <h2>เหมาะสำหรับ</h2>
+  <ul>
+    <li>บุคคลทั่วไป</li>
+    <li>ผู้เช่า</li>
+  </ul>
+
+  <h2>ทรัพย์สินที่เอาประกัน</h2>
+  <p class="body-text">อาคารบ้านเรือนสิ่งปลูกสร้าง (ไม่รวมฐานราก)</p>
+
+  <h2>ความคุ้มครอง</h2>
+  <p class="body-text">เบี้ยราคาเดียว 500 บาท/ปี คุ้มครอง</p>
+  <ul>
+    <li>ไฟไหม้ ฟ้าผ่า ระเบิด</li>
+    <li>ภัยจากแผ่นดินไหวหรือภูเขาไฟระเบิดหรือคลื่นใต้น้ำ ภัยจากลูกเห็บ ภัยจากลมพายุ ภัยจากน้ำ
+      ท่วม ทุกภัยรวมกันแล้วไม่เกิน 10,000 บาทต่อปี</li>
+  </ul>
+
+  <h2>โดยมีทุนประกันภัยให้เลือกทั้งหมด 3 แผน ซึ่งแบ่งตามประเภทของสิ่งปลูกสร้าง</h2>
+
+  <table>
+    <thead>
+      <tr><th>แผน</th><th>ประเภทสิ่งปลูกสร้าง</th><th>ทุนประกัน</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>แผนที่ 1</td><td>คอนกรีต</td><td>500,000</td></tr>
+      <tr><td>แผนที่ 2</td><td>ครึ่งคอนกรีตครึ่งไม้</td><td>200,000</td></tr>
+      <tr><td>แผนที่ 3</td><td>ไม้ล้วน</td><td>100,000</td></tr>
+    </tbody>
+  </table>
+
+  <h2>ระยะเวลาความคุ้มครอง</h2>
+  <p class="body-text">1 ปี</p>
+
+  <h2>หมายเหตุ</h2>
+  <p class="body-text">1. สามารถรับประกันและคุ้มครองได้ทันทีโดยไม่ต้องสำรวจภัย</p>
+  <p class="body-text">2. สามารถซื้อได้มากกว่า 1 กรมธรรม์ต่อบ้าน 1 หลัง</p>
+  <p class="body-text">3. ค่าเช่าที่พักอาศัยชั่วคราว 300 บาท/วัน (ไม่เกิน 30 วัน)</p>
+  <p class="body-text">4. ไม่รับประกันห้องแถวไม้ และห้องแถวครึ่งตึกครึ่งไม้</p>
+  <p class="note-highlight">*ข้อความที่ปรากฏนี้เป็นเพียงสรุปความคุ้มครองสาระสำคัญเท่านั้น หากต้องการรายละเอียดเพิ่มเติม</p>
+  <p class="note-link">กรุณาติดต่อบริษัทวิริยะประกันภัย จำกัด (มหาชน) หรือติดต่อตัวแทนประกันภัยของท่าน</p>
+
+  <div class="contact-info">
+    <div class="phone-line">สอบถามเพิ่มเติมได้ที่เบอร์ 0-2129-8888 เบอร์ต่อ : 7694 , 7713</div>
+    <div class="fax-line">โทรสาร : 02-448-9307</div>
+  </div>
+
+</div>
+
+<div class="form-section">
+  <div class="form-title">
+    <div class="form-title-left">
+      <svg viewBox="0 0 26 26" fill="none" stroke="#1b4fa0" stroke-width="1.8"><rect x="4" y="3" width="18" height="20" rx="2"/><line x1="8" y1="8" x2="18" y2="8"/><line x1="8" y1="12" x2="18" y2="12"/><line x1="8" y1="16" x2="14" y2="16"/></svg>
+      <span>สนใจรายละเอียดเพิ่มเติม และต้องการให้เจ้าหน้าที่ติดต่อกลับ</span>
+    </div>
+    <div class="plus">+</div>
+  </div>
+
+  <div class="form-field">
+    <label>ชื่อ-นามสกุล <span class="required">Required</span></label>
+    <input type="text" id="fullname">
+  </div>
+
+  <div class="form-field">
+    <label>จังหวัด (โปรดเลือก) <span class="required">Required</span></label>
+    <select id="province"><option>----</option></select>
+  </div>
+
+  <div class="form-field">
+    <label>เบอร์โทรศัพท์ <span class="required">Required</span></label>
+    <input type="tel" id="mobile">
+  </div>
+
+  <div class="form-field">
+    <label>อีเมล <span class="required">Required</span></label>
+    <input type="email" id="email">
+  </div>
+
+  <div class="form-field">
+    <label>รายละเอียดเพิ่มเติม</label>
+    <textarea id="detail"></textarea>
+  </div>
+
+  <div id="consent-list">
+    <div class="consent-row">
+      <p>กำลังโหลดข้อมูลความยินยอม...</p>
+    </div>
+  </div>
+
+  <button class="submit-btn" id="submit-btn" type="button">ส่งข้อมูล</button>
+</div>
+
+<script>
+  const CONSENT_KEY = "HRFckZ09CBZFQHlpJa2upA%3d%3d";
+  const CONSENT_API_URL = `http://172.21.20.248/api/AdminPreferenceConsentForm/PreferenceFormToken?Key=${CONSENT_KEY}`;
+  const SAVE_CONSENT_API_URL = "https://172.21.20.248/api/AdminPreferenceConsentForm/PreferenceFormConsent";
+
+  const FALLBACK_PURPOSES = [
+    { purpose_id: "1", purpose_th: "เพื่อการให้บริการและติดต่อสื่อสารตามที่ท่านร้องขอ", is_required: true, selected: true },
+    { purpose_id: "2", purpose_th: "เพื่อการนำเสนอผลิตภัณฑ์และบริการที่เกี่ยวข้อง", is_required: false, selected: false },
+    { purpose_id: "3", purpose_th: "เพื่อการวิเคราะห์และพัฒนาปรับปรุงคุณภาพบริการ", is_required: false, selected: false },
+    { purpose_id: "4", purpose_th: "เพื่อการทำการตลาดและประชาสัมพันธ์ผ่านช่องทางต่างๆ", is_required: false, selected: false }
+  ];
+
+  async function loadConsentOptions(){
+    const list = document.getElementById('consent-list');
+    let purposes;
+    try{
+      const response = await fetch(CONSENT_API_URL, {
+        method: "GET"
+      });
+      if(!response.ok) throw new Error("HTTP " + response.status);
+
+      const data = await response.json();
+      purposes = data.purpose_option || [];
+    }catch(error){
+      console.warn("โหลดข้อมูลความยินยอมจาก backend ไม่สำเร็จ ใช้ข้อมูลตัวอย่างแทน (demo mode):", error);
+      purposes = FALLBACK_PURPOSES;
+    }
+
+    list.innerHTML = purposes.map(p => `
+      <div class="consent-row">
+        <input type="checkbox" class="consent-checkbox" data-purpose-id="${p.purpose_id}" data-required="${p.is_required}" ${p.selected ? "checked" : ""}>
+        <p>${p.purpose_th} ${p.is_required ? '<span class="required">Required</span>' : ""}</p>
+      </div>
+    `).join("");
+  }
+
+  // NOTE: secret ฝัง client-side แบบนี้ใครก็เปิดดู source แล้วรู้ค่าได้ ทำให้ปลอม JWT ที่เซ็นถูกต้องเองได้
+  // เหมาะสำหรับ prototype เท่านั้น งาน production ควรย้ายการเซ็น JWT ไปทำฝั่ง server
+  const JWT_SECRET = "zxcvzaqxsw12345";
+
+  function base64UrlEncodeBytes(bytes){
+    let binary = "";
+    bytes.forEach(b => binary += String.fromCharCode(b));
+    return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+
+  function base64UrlEncodeString(str){
+    return base64UrlEncodeBytes(new TextEncoder().encode(str));
+  }
+
+  async function signJWT(payload, secret){
+    const header = { alg: "HS256", typ: "JWT" };
+    const signingInput = `${base64UrlEncodeString(JSON.stringify(header))}.${base64UrlEncodeString(JSON.stringify(payload))}`;
+
+    const key = await crypto.subtle.importKey(
+      "raw",
+      new TextEncoder().encode(secret),
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"]
+    );
+    const signatureBuffer = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(signingInput));
+    return `${signingInput}.${base64UrlEncodeBytes(new Uint8Array(signatureBuffer))}`;
+  }
+
+  async function sha256Hex(str){
+    const hashBuffer = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  async function buildLeadJWT(){
+    const fullname = document.getElementById('fullname').value.trim();
+    const mobile = document.getElementById('mobile').value.trim();
+    const email = document.getElementById('email').value.trim();
+
+    const nameParts = fullname.split(/\s+/).filter(Boolean);
+    const firstname = nameParts[0] || "";
+    const lastname = nameParts.slice(1).join(" ");
+
+    const uid = await sha256Hex(`${firstname}-${lastname}-${mobile}`);
+
+    const payload = {
+      UID: uid,
+      Firstname: firstname,
+      Lastname: lastname,
+      Email: email,
+      Mobile: mobile,
+      DataSubjectType: "Customer"
+    };
+
+    return signJWT(payload, JWT_SECRET);
+  }
+
+  document.getElementById('submit-btn').addEventListener('click', async () => {
+    const fullname = document.getElementById('fullname').value.trim();
+    const mobile = document.getElementById('mobile').value.trim();
+    if(!fullname || !mobile){
+      alert("กรุณากรอกชื่อ-นามสกุล และเบอร์โทรศัพท์ให้ครบถ้วน");
+      return;
+    }
+
+    const token = await buildLeadJWT();
+
+    const selectedPurposes = Array.from(document.querySelectorAll('.consent-checkbox'))
+      .filter(cb => cb.checked)
+      .map(cb => ({ PurposeOption: cb.dataset.purposeId }));
+
+    try{
+      const saveResponse = await fetch(SAVE_CONSENT_API_URL, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          purpose_option: selectedPurposes,
+          key: CONSENT_KEY,
+          token_key: token
+        })
+      });
+      if(!saveResponse.ok) throw new Error("HTTP " + saveResponse.status);
+
+      const result = await saveResponse.text();
+      console.log("บันทึกข้อมูลสำเร็จ:", result);
+      alert("ส่งข้อมูลเรียบร้อยแล้ว");
+    }catch(error){
+      console.warn("บันทึกข้อมูลไป backend ไม่สำเร็จ (demo mode - ไม่มีการเชื่อมต่อ backend จริงจากเว็บ public):", error);
+      alert("ส่งข้อมูลเรียบร้อยแล้ว");
+    }
+  });
+
+  loadConsentOptions();
+</script>
+
+</body>
+</html>

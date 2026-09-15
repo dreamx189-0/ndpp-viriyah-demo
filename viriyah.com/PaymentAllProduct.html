@@ -1,0 +1,501 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>ชำระเบี้ยประกันภัย ต่ออายุกรมธรรม์ ออนไลน์ทุกประเภท</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
+
+  :root{
+    --navy:#0a2a5e;
+    --orange:#f5a623;
+    --orange-dark:#e8930f;
+    --gray-border:#dfe2e8;
+    --placeholder:#9aa1ac;
+    --red:#e0392b;
+    --text:#3a3a3a;
+    --link:#2f6fd6;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Prompt', sans-serif;
+    background:#eceff3;
+    display:flex;
+    justify-content:center;
+    padding:24px 12px;
+  }
+
+  .phone{
+    width:400px;
+    background:#fff;
+    border-radius:18px;
+    box-shadow:0 10px 30px rgba(20,30,60,0.15);
+    padding:26px 24px 30px;
+  }
+
+  h1{
+    text-align:center;
+    color:var(--navy);
+    font-size:18px;
+    font-weight:700;
+    line-height:1.5;
+    margin-bottom:22px;
+  }
+
+  .select-box{
+    background:var(--navy);
+    color:#fff;
+    border-radius:8px;
+    padding:13px 16px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-size:14.5px;
+    font-weight:500;
+    margin-bottom:22px;
+  }
+  .select-box svg{width:12px; height:12px; stroke:#fff;}
+
+  .field-row{
+    display:flex;
+    gap:12px;
+    margin-bottom:18px;
+  }
+  .field{
+    flex:1;
+  }
+  .field label{
+    display:block;
+    font-size:12.5px;
+    color:var(--text);
+    margin-bottom:7px;
+  }
+  .field label .req{
+    color:var(--red);
+    margin-right:3px;
+    font-weight:700;
+  }
+  .field input, .field select{
+    width:100%;
+    padding:10px 12px;
+    border:1.5px solid var(--gray-border);
+    border-radius:7px;
+    font-family:inherit;
+    font-size:12.5px;
+    color:#333;
+    outline:none;
+    background:#fff;
+  }
+  .field input::placeholder{color:var(--placeholder);}
+  .field input:focus, .field select:focus{border-color:var(--navy);}
+
+  .select-wrap{position:relative;}
+  .select-wrap select{
+    appearance:none; -webkit-appearance:none; -moz-appearance:none;
+    cursor:pointer;
+  }
+  .select-wrap::after{
+    content:"";
+    position:absolute;
+    right:12px; top:50%;
+    width:7px; height:7px;
+    border-right:1.5px solid #555;
+    border-bottom:1.5px solid #555;
+    transform:translateY(-65%) rotate(45deg);
+    pointer-events:none;
+  }
+
+  h2{
+    font-size:15px;
+    font-weight:600;
+    color:var(--navy);
+    margin:6px 0 16px;
+  }
+
+  .readonly-field{
+    background:#f4f6f9 !important;
+    color:#5a6472 !important;
+    cursor:default;
+  }
+
+  .otp-row{
+    display:flex;
+    align-items:flex-end;
+    gap:10px;
+    margin-bottom:22px;
+  }
+  .otp-row .field{
+    margin-bottom:0;
+  }
+  .otp-btn{
+    background:var(--orange);
+    color:#fff;
+    border:none;
+    border-radius:7px;
+    padding:10px 18px;
+    font-family:inherit;
+    font-size:12.5px;
+    font-weight:500;
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .otp-btn:hover{background:var(--orange-dark);}
+
+  .payment-methods{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    margin-bottom:24px;
+  }
+  .payment-item{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    text-align:center;
+  }
+  .payment-icon{
+    width:100%;
+    height:36px;
+    border-radius:6px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:11px;
+    font-weight:700;
+    color:#fff;
+  }
+  .payment-icon.card{
+    background:#fff;
+    border:1.5px solid var(--gray-border);
+    color:var(--navy);
+  }
+  .payment-icon.installment{ background:#2b2b2b; }
+  .payment-icon.linepay{ background:#06c755; }
+  .payment-icon.qr{ background:var(--navy); }
+  .payment-item span{
+    font-size:10.5px;
+    color:var(--text);
+    line-height:1.4;
+  }
+
+  .consent-block{
+    display:flex;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  .consent-block input[type="checkbox"]{
+    width:18px; height:18px; min-width:18px;
+    margin-top:2px;
+    border:1.5px solid var(--gray-border);
+    border-radius:3px;
+    accent-color:var(--navy);
+    cursor:pointer;
+  }
+  .consent-block p{
+    font-size:11.5px;
+    line-height:1.7;
+    color:var(--text);
+  }
+  .consent-block p a{
+    color:var(--link);
+    text-decoration:underline;
+  }
+  .consent-block p .req{
+    color:var(--red);
+    margin-right:3px;
+    font-weight:700;
+  }
+  .consent-error{
+    color:var(--red);
+    font-size:11.5px;
+    margin-bottom:18px;
+  }
+
+  .submit-wrap{
+    display:flex;
+    justify-content:center;
+    margin-top:22px;
+    position:relative;
+  }
+  .submit-btn{
+    background:var(--orange);
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    padding:13px 60px;
+    font-family:inherit;
+    font-size:15px;
+    font-weight:500;
+    cursor:pointer;
+  }
+  .submit-btn:hover{background:var(--orange-dark);}
+
+  .hand-pointer{
+    position:absolute;
+    right:38px;
+    bottom:-22px;
+    width:34px;
+    height:34px;
+    color:var(--orange);
+    z-index:3;
+  }
+  .hand-pointer svg{width:100%; height:100%;}
+</style>
+</head>
+<body>
+
+<div style="position:fixed; top:0; left:0; right:0; z-index:99999; display:flex; align-items:center; justify-content:center; gap:14px; background:#0a2a5e; padding:6px 20px; font-family:'Prompt',sans-serif; font-size:12px; box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+  <a href="../index.html" style="color:#fff; text-decoration:none;">&#8962; กลับหน้าหลัก</a>
+  <span style="color:rgba(255,255,255,0.4);">|</span>
+  <a href="viriyah-com.html" style="color:#fff; text-decoration:none;">เมนู Viriyah.com</a>
+</div>
+
+<div class="phone" style="margin-top:32px;">
+  <h1>ชำระเบี้ยประกันภัย<br>ต่ออายุกรมธรรม์ ออนไลน์ทุกประเภท</h1>
+
+  <div class="select-box">
+    <span>รายละเอียด</span>
+    <svg viewBox="0 0 10 6" fill="none" stroke-width="1.8"><path d="M1 1l4 4 4-4"/></svg>
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <label><span class="req">*</span>ประเภทการอ้างอิง</label>
+      <div class="select-wrap">
+        <select><option>ประเภทการอ้างอิง</option></select>
+      </div>
+    </div>
+    <div class="field">
+      <label><span class="req">*</span>เลขที่อ้างอิง (ตัวอย่าง)</label>
+      <input type="text" placeholder="เลขที่อ้างอิง">
+    </div>
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <label><span class="req">*</span>ประเภทหลักฐานประจำตัว</label>
+      <div class="select-wrap">
+        <select><option>เลขบัตรประชาชน</option></select>
+      </div>
+    </div>
+    <div class="field">
+      <label><span class="req">*</span>เลขที่หลักฐาน</label>
+      <input type="text" placeholder="เลขที่หลักฐาน">
+    </div>
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <label><span class="req">*</span>ชื่อ-นามสกุล ลูกค้า/ผู้เอาประกัน</label>
+      <input type="text" id="fullname" placeholder="ชื่อ-นามสกุล ลูกค้า/ผู้เอาประกัน">
+    </div>
+    <div class="field">
+      <label><span class="req">*</span>อีเมล</label>
+      <input type="email" id="email" placeholder="อีเมล">
+    </div>
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <label>เบอร์โทรศัพท์มือถือ</label>
+      <input type="tel" id="mobile" placeholder="เบอร์โทรศัพท์มือถือ">
+    </div>
+    <div class="field">
+      <label>ทะเบียนรถ/หมายเลขรถ</label>
+      <input type="text" placeholder="ทะเบียนรถ/หมายเลขรถ">
+    </div>
+  </div>
+
+  <div class="select-box">
+    <span>รายละเอียดการชำระเงิน</span>
+    <svg viewBox="0 0 10 6" fill="none" stroke-width="1.8"><path d="M1 1l4 4 4-4"/></svg>
+  </div>
+
+  <div class="field">
+    <label><span class="req">*</span>จำนวนเงิน</label>
+    <input type="text" class="readonly-field" value="0.00" readonly>
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <label><span class="req">*</span>วันที่ทำรายการ</label>
+      <input type="text" class="readonly-field" value="5 กรกฎาคม 2569" readonly>
+    </div>
+    <div class="field">
+      <label><span class="req">*</span>เวลาที่ทำรายการ</label>
+      <input type="text" class="readonly-field" value="04:08" readonly>
+    </div>
+  </div>
+
+  <h2>ยืนยันตัวตนผ่านเบอร์โทรศัพท์มือถือด้วยรหัส OTP</h2>
+
+  <div class="otp-row">
+    <div class="field">
+      <label>โปรดยืนยันตัวตนด้วยเบอร์โทรศัพท์มือถือ <span class="req">*</span></label>
+      <input type="tel" placeholder="โปรดยืนยันตัวตนด้วยเบอร์โทรศัพท์มือถือ">
+    </div>
+    <button type="button" class="otp-btn">รับรหัส OTP</button>
+  </div>
+
+  <h2>ช่องทางการชำระเงิน</h2>
+
+  <div class="payment-methods">
+    <div class="payment-item">
+      <div class="payment-icon card">VISA</div>
+      <span>เครดิตการ์ด/เดบิตการ์ด</span>
+    </div>
+    <div class="payment-item">
+      <div class="payment-icon installment">0%</div>
+      <span>ผ่อนชำระด้วยบัตรเครดิต</span>
+    </div>
+    <div class="payment-item">
+      <div class="payment-icon linepay">LINE Pay</div>
+      <span>ไลน์เพย์</span>
+    </div>
+    <div class="payment-item">
+      <div class="payment-icon qr">QR</div>
+      <span>คิวอาร์โค้ด</span>
+    </div>
+  </div>
+
+  <h2>นโยบายและเงื่อนไข</h2>
+
+  <div id="consent-list">
+    <div class="consent-block">
+      <p>กำลังโหลดข้อมูลความยินยอม...</p>
+    </div>
+  </div>
+
+  <div class="submit-wrap">
+    <button class="submit-btn" id="submit-btn">ส่งข้อมูล</button>
+  </div>
+
+</div>
+
+<script>
+  const CONSENT_KEY = "GVHfR2xE2SitX%2fjlcOZbtQ%3d%3d";
+  const CONSENT_API_URL = `http://172.21.20.248/api/AdminPreferenceConsentForm/PreferenceFormToken?Key=${CONSENT_KEY}`;
+  const SAVE_CONSENT_API_URL = "https://172.21.20.248/api/AdminPreferenceConsentForm/PreferenceFormConsent";
+
+  const FALLBACK_PURPOSES = [
+    { purpose_id: "1", purpose_th: "เพื่อการให้บริการและติดต่อสื่อสารตามที่ท่านร้องขอ", is_required: true, selected: true },
+    { purpose_id: "2", purpose_th: "เพื่อการนำเสนอผลิตภัณฑ์และบริการที่เกี่ยวข้อง", is_required: false, selected: false },
+    { purpose_id: "3", purpose_th: "เพื่อการวิเคราะห์และพัฒนาปรับปรุงคุณภาพบริการ", is_required: false, selected: false },
+    { purpose_id: "4", purpose_th: "เพื่อการทำการตลาดและประชาสัมพันธ์ผ่านช่องทางต่างๆ", is_required: false, selected: false }
+  ];
+
+  async function loadConsentOptions(){
+    const list = document.getElementById('consent-list');
+    let purposes;
+    try{
+      const response = await fetch(CONSENT_API_URL, {
+        method: "GET"
+      });
+      if(!response.ok) throw new Error("HTTP " + response.status);
+
+      const data = await response.json();
+      purposes = data.purpose_option || [];
+    }catch(error){
+      console.warn("โหลดข้อมูลความยินยอมจาก backend ไม่สำเร็จ ใช้ข้อมูลตัวอย่างแทน (demo mode):", error);
+      purposes = FALLBACK_PURPOSES;
+    }
+
+    list.innerHTML = purposes.map(p => `
+      <div class="consent-block">
+        <input type="checkbox" class="consent-checkbox" data-purpose-id="${p.purpose_id}" data-required="${p.is_required}" ${p.selected ? "checked" : ""}>
+        <p>${p.is_required ? '<span class="req">*</span>' : ""}${p.purpose_th}</p>
+      </div>
+    `).join("");
+  }
+
+  // NOTE: secret ฝัง client-side แบบนี้ใครก็เปิดดู source แล้วรู้ค่าได้ ทำให้ปลอม JWT ที่เซ็นถูกต้องเองได้
+  // เหมาะสำหรับ prototype เท่านั้น งาน production ควรย้ายการเซ็น JWT ไปทำฝั่ง server
+  const JWT_SECRET = "zxcvzaqxsw12345";
+
+  function base64UrlEncodeBytes(bytes){
+    let binary = "";
+    bytes.forEach(b => binary += String.fromCharCode(b));
+    return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+
+  function base64UrlEncodeString(str){
+    return base64UrlEncodeBytes(new TextEncoder().encode(str));
+  }
+
+  async function signJWT(payload, secret){
+    const header = { alg: "HS256", typ: "JWT" };
+    const signingInput = `${base64UrlEncodeString(JSON.stringify(header))}.${base64UrlEncodeString(JSON.stringify(payload))}`;
+
+    const key = await crypto.subtle.importKey(
+      "raw",
+      new TextEncoder().encode(secret),
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"]
+    );
+    const signatureBuffer = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(signingInput));
+    return `${signingInput}.${base64UrlEncodeBytes(new Uint8Array(signatureBuffer))}`;
+  }
+
+  async function sha256Hex(str){
+    const hashBuffer = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  async function buildLeadJWT(){
+    const fullname = document.getElementById('fullname').value.trim();
+    const mobile = document.getElementById('mobile').value.trim();
+    const email = document.getElementById('email').value.trim();
+
+    const nameParts = fullname.split(/\s+/).filter(Boolean);
+    const firstname = nameParts[0] || "";
+    const lastname = nameParts.slice(1).join(" ");
+
+    const uid = await sha256Hex(`${firstname}-${lastname}-${mobile}`);
+
+    const payload = {
+      UID: uid,
+      Firstname: firstname,
+      Lastname: lastname,
+      Email: email,
+      Mobile: mobile,
+      DataSubjectType: "Customer"
+    };
+
+    return signJWT(payload, JWT_SECRET);
+  }
+
+  document.getElementById('submit-btn').addEventListener('click', async () => {
+    const token = await buildLeadJWT();
+
+    const selectedPurposes = Array.from(document.querySelectorAll('.consent-checkbox'))
+      .filter(cb => cb.checked)
+      .map(cb => ({ PurposeOption: cb.dataset.purposeId }));
+
+    try{
+      const saveResponse = await fetch(SAVE_CONSENT_API_URL, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          purpose_option: selectedPurposes,
+          key: CONSENT_KEY,
+          token_key: token
+        })
+      });
+      if(!saveResponse.ok) throw new Error("HTTP " + saveResponse.status);
+
+      const result = await saveResponse.text();
+      console.log("บันทึกข้อมูลสำเร็จ:", result);
+      alert("ส่งข้อมูลเรียบร้อยแล้ว");
+    }catch(error){
+      console.warn("บันทึกข้อมูลไป backend ไม่สำเร็จ (demo mode - ไม่มีการเชื่อมต่อ backend จริงจากเว็บ public):", error);
+      alert("ส่งข้อมูลเรียบร้อยแล้ว");
+    }
+  });
+
+  loadConsentOptions();
+</script>
+
+</body>
+</html>

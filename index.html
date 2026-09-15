@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Web Demo การ Integration - วิริยะประกันภัย</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
+
+  :root{
+    --navy-dark:#0a2a5e;
+    --navy:#1b4fa0;
+    --blue-light:#5aa8e8;
+    --orange:#f5a623;
+    --text-dark:#1b2b4a;
+    --gray:#5a6472;
+    --border:#e4e7ec;
+    --bg:#f4f6f9;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Prompt', sans-serif;
+    background:var(--bg);
+    color:var(--text-dark);
+  }
+
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    padding:18px 40px;
+    background:#fff;
+    border-bottom:1px solid var(--border);
+  }
+  .logo-icon{
+    width:44px;height:44px;
+    background:var(--navy-dark);
+    border-radius:6px;
+    display:flex;align-items:center;justify-content:center;
+    color:#f4c02a;
+    font-size:22px;
+  }
+  .logo-text .th{
+    font-weight:700;
+    font-size:19px;
+    color:var(--navy-dark);
+    line-height:1.1;
+  }
+  .logo-text .en{
+    font-size:11px;
+    letter-spacing:0.5px;
+    color:var(--navy);
+    font-weight:500;
+  }
+  .bottom-line{height:4px; background:linear-gradient(90deg,#0a2a5e,#1b4fa0);}
+
+  .hero{
+    text-align:center;
+    padding:56px 20px 40px;
+  }
+  .hero h1{
+    color:var(--navy-dark);
+    font-size:34px;
+    font-weight:700;
+    margin-bottom:12px;
+  }
+  .hero p{
+    color:var(--gray);
+    font-size:15.5px;
+  }
+
+  .grid-wrap{
+    max-width:1200px;
+    margin:0 auto;
+    padding:0 40px 70px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+    gap:24px;
+  }
+
+  .sys-card{
+    background:#fff;
+    border-radius:14px;
+    box-shadow:0 8px 24px rgba(20,40,80,0.08);
+    padding:28px 24px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    gap:14px;
+    text-decoration:none;
+    color:inherit;
+    position:relative;
+    transition:transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .sys-card.active{
+    cursor:pointer;
+    border:2px solid var(--navy);
+  }
+  .sys-card.active:hover{
+    transform:translateY(-4px);
+    box-shadow:0 14px 30px rgba(20,40,80,0.16);
+  }
+  .sys-card.disabled{
+    opacity:0.5;
+    filter:grayscale(0.4);
+    cursor:not-allowed;
+    border:2px dashed var(--border);
+  }
+
+  .sys-num{
+    width:38px;height:38px;
+    border-radius:50%;
+    background:var(--navy-dark);
+    color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;
+    font-size:15px;
+  }
+  .sys-card.disabled .sys-num{ background:#b7bcc6; }
+
+  .sys-name{
+    font-size:16.5px;
+    font-weight:600;
+    color:var(--navy-dark);
+  }
+  .sys-card.disabled .sys-name{ color:var(--gray); }
+
+  .sys-badge{
+    font-size:12px;
+    font-weight:600;
+    padding:4px 12px;
+    border-radius:20px;
+  }
+  .sys-badge.ready{
+    background:#e7f3ff;
+    color:var(--navy);
+  }
+  .sys-badge.soon{
+    background:#eceff3;
+    color:var(--gray);
+  }
+
+  .footer-note{
+    text-align:center;
+    color:#9aa1ac;
+    font-size:13px;
+    padding-bottom:40px;
+  }
+
+  @media(max-width:600px){
+    .hero h1{font-size:26px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <img src="assets/viriyah-logo.png" alt="วิริยะประกันภัย" style="height:100px;width:auto;display:block;">
+</header>
+<div class="bottom-line"></div>
+
+<div class="hero">
+  <h1>Web Demo การ Integration</h1>
+  <p>เลือกระบบที่ต้องการดูตัวอย่างการเชื่อมต่อข้อมูล (Data Subject / Preference Consent)</p>
+</div>
+
+<div class="grid-wrap">
+  <a class="sys-card active" href="viriyah.com/viriyah-com.html">
+    <div class="sys-num">1</div>
+    <div class="sys-name">Viriyah.com</div>
+    <div class="sys-badge ready">พร้อมใช้งาน</div>
+  </a>
+
+  <a class="sys-card active" href="Viriyah.co.th/viriyah-co-th.html">
+    <div class="sys-num">2</div>
+    <div class="sys-name">Viriyah.co.th</div>
+    <div class="sys-badge ready">พร้อมใช้งาน</div>
+  </a>
+
+  <a class="sys-card active" href="Vinsure/vinsure.html">
+    <div class="sys-num">3</div>
+    <div class="sys-name">Vinsure</div>
+    <div class="sys-badge ready">พร้อมใช้งาน</div>
+  </a>
+
+  <a class="sys-card active" href="viriyah.co.th_agency_content/agency-content.html">
+    <div class="sys-num">4</div>
+    <div class="sys-name">viriyah.co.th/agency-content</div>
+    <div class="sys-badge ready">พร้อมใช้งาน</div>
+  </a>
+
+  <a class="sys-card active" href="recruit.viriyah.co.th/recruit-viriyah-co-th.html">
+    <div class="sys-num">5</div>
+    <div class="sys-name">recruit.viriyah.co.th</div>
+    <div class="sys-badge ready">พร้อมใช้งาน</div>
+  </a>
+
+  <a class="sys-card active" href="Viriyah%20Privileges/viriyah-privileges.html">
+    <div class="sys-num">6</div>
+    <div class="sys-name">Viriyah Privileges</div>
+    <div class="sys-badge ready">พร้อมใช้งาน</div>
+  </a>
+
+  <a class="sys-card active" href="https://172.21.20.248/subjectrightrequest/datasubjectchecktracking" target="_blank" rel="noopener">
+    <div class="sys-num">7</div>
+    <div class="sys-name">ระบบถอนความยินยอม</div>
+    <div class="sys-badge ready">พร้อมใช้งาน</div>
+  </a>
+
+  <a class="sys-card active" href="NDPP-Integration-Demo/IntegrationFlowDemo.html">
+    <div class="sys-num">8</div>
+    <div class="sys-name">NDPP Integration Flow Demo</div>
+    <div class="sys-badge ready">พร้อมใช้งาน</div>
+  </a>
+</div>
+
+<div class="footer-note">Netka System</div>
+
+</body>
+</html>

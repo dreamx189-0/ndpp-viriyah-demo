@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>ข้อมูลส่วนบุคคล - วิริยะประกันภัย</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
+
+  :root{
+    --navy:#0a2a5e;
+    --card-navy:#2b4a75;
+    --card-navy-hover:#365a8c;
+    --gold:#c99a3f;
+    --border:#e4e7ec;
+    --text:#333;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Prompt', sans-serif;
+    background:#fff;
+    color:var(--text);
+  }
+
+  /* Nav bar */
+  nav{
+    display:flex;
+    align-items:stretch;
+    border-bottom:1px solid var(--border);
+  }
+  .nav-item{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:22px 30px;
+    font-size:15px;
+    color:#2b3345;
+    border-right:1px solid var(--border);
+    white-space:nowrap;
+    text-align:center;
+    line-height:1.4;
+  }
+  .nav-item.wrap{
+    max-width:150px;
+    white-space:normal;
+  }
+  .nav-icons{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    padding:0 24px;
+    flex:1;
+    justify-content:flex-end;
+  }
+  .search-circle{
+    width:34px;height:34px;
+    border-radius:50%;
+    border:1.5px solid #d5d9e0;
+    display:flex;align-items:center;justify-content:center;
+    color:#5a6472;
+  }
+  .lang{
+    display:flex;align-items:center;gap:6px;
+    font-size:14px; color:#333;
+  }
+  .sep{color:#d5d9e0;}
+  .claim-badge{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:13px;
+    color:#333;
+  }
+  .claim-pill{
+    background:var(--navy);
+    color:#fff;
+    padding:6px 12px;
+    border-radius:6px;
+    font-size:12px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    line-height:1.2;
+  }
+  .claim-pill .num{font-weight:700; font-size:14px;}
+  .contact-tab{
+    background:var(--gold);
+    color:#fff;
+    padding:22px 40px;
+    font-size:15px;
+    font-weight:500;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  /* Content */
+  .content{
+    max-width:1000px;
+    margin:0 auto;
+    padding:60px 30px;
+    display:flex;
+    flex-direction:column;
+    gap:24px;
+  }
+
+  .link-card{
+    background:var(--card-navy);
+    color:#fff;
+    border-radius:8px;
+    padding:26px 30px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    cursor:pointer;
+    text-decoration:none;
+    transition:background 0.15s ease;
+  }
+  .link-card:hover{
+    background:var(--card-navy-hover);
+  }
+  .link-card .label{
+    font-size:20px;
+    font-weight:600;
+    line-height:1.5;
+    max-width:800px;
+  }
+  .link-card .arrow{
+    font-size:24px;
+    font-weight:700;
+    flex:none;
+    margin-left:20px;
+  }
+
+  @media(max-width:900px){
+    nav{flex-wrap:wrap;}
+    .nav-icons{flex-wrap:wrap; padding:14px 20px;}
+    .link-card{flex-direction:column; align-items:flex-start; gap:14px;}
+    .link-card .arrow{margin-left:0;}
+  }
+</style>
+</head>
+<body>
+
+<div style="position:fixed; top:0; left:0; right:0; z-index:99999; display:flex; align-items:center; justify-content:center; gap:14px; background:#0a2a5e; padding:6px 20px; font-family:'Prompt',sans-serif; font-size:12px; box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+  <a href="../index.html" style="color:#fff; text-decoration:none;">&#8962; กลับหน้าหลัก</a>
+  <span style="color:rgba(255,255,255,0.4);">|</span>
+  <a href="viriyah-co-th.html" style="color:#fff; text-decoration:none;">เมนู Viriyah.co.th</a>
+</div>
+
+<nav style="margin-top:32px;">
+  <div class="nav-item">ผลิตภัณฑ์</div>
+  <div class="nav-item">จุดบริการ</div>
+  <div class="nav-item">บริการลูกค้า</div>
+  <div class="nav-item wrap">สำหรับตัวแทน / นายหน้า</div>
+  <div class="nav-item wrap">สำหรับนายหน้านิติบุคคล</div>
+  <div class="nav-icons">
+    <div class="search-circle">&#128269;</div>
+    <div class="lang">&#127760; TH &#9662;</div>
+    <span class="sep">|</span>
+    <div class="claim-badge">
+      แจ้งอุบัติเหตุ
+      <div class="claim-pill">วิริยะประกันภัย<span class="num">1557</span></div>
+    </div>
+  </div>
+  <div class="contact-tab">ติดต่อเรา</div>
+</nav>
+
+<div class="content">
+
+  <a class="link-card" href="DataProtection03.html">
+    <div class="label">การแจ้งรายละเอียด นโยบายและประกาศการคุ้มครอง<br>ข้อมูลส่วนบุคคล</div>
+    <div class="arrow">&#187;</div>
+  </a>
+
+  <a class="link-card" href="DataProtection02.html">
+    <div class="label">การใช้สิทธิของเจ้าของข้อมูลส่วนบุคคล</div>
+    <div class="arrow">&#187;</div>
+  </a>
+
+  <a class="link-card" href="#">
+    <div class="label">การแจ้งเบาะแสหรือข้อร้องเรียน – การละเมิดข้อมูลส่วน<br>บุคคล</div>
+    <div class="arrow">&#187;</div>
+  </a>
+
+</div>
+
+</body>
+</html>

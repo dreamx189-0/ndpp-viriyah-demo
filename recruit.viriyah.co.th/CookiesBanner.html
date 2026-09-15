@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>วิริยะประกันภัย - ร่วมงานกับเรา</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root{
+    --brand-blue:#0a3d8f;
+    --dark-navy:#0e2350;
+    --text-dark:#22314f;
+    --text-muted:#8a93a6;
+    --border:#e4e8ef;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Noto Sans Thai","Segoe UI",sans-serif;
+    background:#c9cdd6;
+    display:flex;
+    justify-content:center;
+    padding:24px 0;
+  }
+  .browser{
+    width:900px;
+    background:#fff;
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+  }
+
+  /* Browser chrome */
+  .browser-bar{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:8px 14px;
+    background:#f1f3f4;
+    border-bottom:1px solid #ddd;
+  }
+  .nav-arrows{
+    display:flex;
+    gap:10px;
+    color:#888;
+    font-size:14px;
+  }
+  .url-bar{
+    flex:1;
+    background:#fff;
+    border-radius:16px;
+    padding:6px 14px;
+    font-size:11.5px;
+    color:#555;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .url-bar .lock{color:#5a9c5a;}
+  .browser-icons{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:13px;
+    color:#666;
+  }
+
+  /* Translate popup */
+  .translate-popup-wrap{
+    position:relative;
+  }
+  .translate-popup{
+    position:absolute;
+    top:0;
+    left:50%;
+    transform:translateX(-30%);
+    width:200px;
+    background:#fff;
+    border-radius:8px;
+    box-shadow:0 4px 16px rgba(0,0,0,0.2);
+    z-index:10;
+    font-size:11.5px;
+  }
+  .tp-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:10px 12px;
+    border-bottom:1px solid #eee;
+  }
+  .tp-tab{
+    color:#888;
+    padding-bottom:4px;
+  }
+  .tp-tab.active{
+    color:#1a73e8;
+    font-weight:700;
+    border-bottom:2px solid #1a73e8;
+  }
+  .tp-footer{
+    padding:8px 12px;
+    color:#888;
+    font-size:10.5px;
+  }
+
+  /* Page content */
+  .page-content{
+    position:relative;
+  }
+
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 24px;
+    border-bottom:1px solid #eee;
+  }
+  .topbar-left{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .logo-badge{
+    width:28px;
+    height:28px;
+    background:var(--brand-blue);
+    border-radius:8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:14px;
+    color:#ffcb3d;
+  }
+  .brand-text .th{
+    font-weight:800;
+    font-size:12.5px;
+    color:var(--brand-blue);
+  }
+  .brand-text .en{
+    font-size:7px;
+    letter-spacing:0.3px;
+    color:var(--brand-blue);
+    font-weight:700;
+  }
+  .topbar-right{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    font-size:11.5px;
+    color:var(--text-dark);
+  }
+  .topbar-right a{
+    color:var(--text-dark);
+    text-decoration:none;
+  }
+  .btn-login{
+    background:var(--brand-blue);
+    color:#fff;
+    padding:6px 14px;
+    border-radius:5px;
+    font-size:11px;
+    font-weight:700;
+  }
+
+  /* Hero */
+  .hero{
+    position:relative;
+    height:260px;
+    display:flex;
+  }
+  .hero-photo{
+    width:60%;
+    background:linear-gradient(160deg,#8ca3c2,#5c7295 60%,#3d5170);
+    position:relative;
+    overflow:hidden;
+  }
+  .hero-photo .building{
+    position:absolute;
+    bottom:0;
+    left:15%;
+    width:40%;
+    height:70%;
+    background:linear-gradient(180deg,#4a6fa5,#2e4a78);
+    border-radius:2px 2px 0 0;
+  }
+  .hero-photo .building::before{
+    content:"";
+    position:absolute;
+    top:8px;
+    left:8px;
+    right:8px;
+    bottom:8px;
+    background-image:
+      linear-gradient(90deg, rgba(255,255,255,0.15) 1px, transparent 1px),
+      linear-gradient(0deg, rgba(255,255,255,0.15) 1px, transparent 1px);
+    background-size:14px 14px;
+  }
+  .hero-blue{
+    width:40%;
+    background:linear-gradient(135deg,#123a8c,#0a2560);
+    display:flex;
+    align-items:center;
+    padding:0 30px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero-blue::after{
+    content:"";
+    position:absolute;
+    right:-30px;
+    bottom:-30px;
+    width:160px;
+    height:160px;
+    background:radial-gradient(circle,rgba(255,255,255,0.06),transparent 70%);
+  }
+  .hero-blue p{
+    color:#fff;
+    font-size:13.5px;
+    font-weight:700;
+    line-height:1.6;
+    margin:0;
+  }
+
+  .hero-overlay{
+    position:absolute;
+    top:0; left:0; right:0; bottom:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    pointer-events:none;
+  }
+  .hero-overlay h1{
+    color:#fff;
+    font-size:24px;
+    font-weight:800;
+    margin:0 0 16px;
+    text-shadow:0 2px 8px rgba(0,0,0,0.3);
+  }
+  .search-bar{
+    pointer-events:auto;
+    background:rgba(255,255,255,0.9);
+    border-radius:22px;
+    padding:9px 18px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:11.5px;
+    color:#888;
+    width:280px;
+  }
+
+  /* Cookie banner */
+  .cookie-banner{
+    background:#2b2f38;
+    color:#fff;
+    text-align:center;
+    padding:14px 30px 18px;
+  }
+  .cookie-banner .title{
+    font-size:12px;
+    font-weight:700;
+    margin-bottom:6px;
+  }
+  .cookie-banner p{
+    font-size:10.5px;
+    color:#c7cad1;
+    line-height:1.7;
+    margin:0 0 12px;
+  }
+  .cookie-banner a{
+    color:#f5a623;
+    text-decoration:none;
+  }
+  .btn-accept{
+    background:transparent;
+    border:1px solid #fff;
+    color:#fff;
+    padding:7px 22px;
+    border-radius:5px;
+    font-size:11px;
+    font-family:inherit;
+  }
+</style>
+</head>
+<body>
+
+<div class="browser">
+
+  <!-- Browser chrome -->
+  <div class="browser-bar">
+    <div class="nav-arrows">
+      <span>←</span><span>→</span><span>⟳</span>
+    </div>
+    <div class="translate-popup-wrap">
+      <div class="url-bar">
+        <span class="lock">🔒</span>
+        recruit.viriyah.co.th/Default.aspx?ReturnUrl=%2f
+      </div>
+      <div class="translate-popup">
+        <div class="tp-header">
+          <span class="tp-tab active">Thai</span>
+          <span class="tp-tab">English</span>
+          <span style="color:#888;">⋮ ✕</span>
+        </div>
+        <div class="tp-footer">Google Translate</div>
+      </div>
+    </div>
+    <div class="browser-icons">
+      <span>⬇️</span><span>★</span><span>🧩</span><span>🟢</span><span>🟣</span><span>🟠</span><span>🔵</span><span>⋮</span>
+    </div>
+  </div>
+
+  <!-- Page content -->
+  <div class="page-content">
+
+    <!-- Top Bar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <img src="../assets/viriyah-logo.png" alt="วิริยะประกันภัย" style="height:100px;width:auto;display:block;">
+      </div>
+      <div class="topbar-right">
+        <a href="#">ค้นหางาน</a>
+        <a href="#">🌐 ภาษาไทย ▾</a>
+        <span class="btn-login">เข้าสู่ระบบ</span>
+      </div>
+    </div>
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-photo">
+        <div class="building"></div>
+      </div>
+      <div class="hero-blue">
+        <p>ร่วมเป็นส่วนหนึ่งแห่งความสำเร็จ<br>กับวิริยะประกันภัย</p>
+      </div>
+      <div class="hero-overlay">
+        <h1>ร่วมงานกับเรา?</h1>
+        <div class="search-bar">🔍 ค้นหางาน (ตัวอย่าง โปรแกรมเมอร์)</div>
+      </div>
+    </div>
+
+    <!-- Cookie banner -->
+    <div class="cookie-banner">
+      <div class="title">เว็บไซต์นี้มีการใช้คุกกี้</div>
+      <p>
+        เพื่อเพิ่มประสิทธิภาพการบริหาร ท่านสามารถเลือกใช้เว็บไซต์นี้ต่อเป็น "คุกกี้" ในอุปกรณ์ของท่านใช้หรือไม่<br>
+        ท่านสามารถอ่านและทำความเข้าใจนโยบายการใช้คุกกี้และนโยบายการคุ้มครองข้อมูลส่วนบุคคลได้ที่ <a href="#">[นโยบายการใช้คุกกี้ และ นโยบายการคุ้มครองส่วนบุคคล]</a>
+      </p>
+      <button class="btn-accept">ยอมรับ</button>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>

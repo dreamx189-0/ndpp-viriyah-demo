@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Viriyah.com - Web Demo การ Integration</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
+
+  :root{
+    --navy-dark:#0a2a5e;
+    --navy:#1b4fa0;
+    --orange:#f5a623;
+    --text-dark:#1b2b4a;
+    --gray:#5a6472;
+    --border:#e4e7ec;
+    --bg:#f4f6f9;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Prompt', sans-serif;
+    background:var(--bg);
+    color:var(--text-dark);
+  }
+
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 40px;
+    background:#fff;
+    border-bottom:1px solid var(--border);
+  }
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .logo-icon{
+    width:44px;height:44px;
+    background:var(--navy-dark);
+    border-radius:6px;
+    display:flex;align-items:center;justify-content:center;
+    color:#f4c02a;
+    font-size:22px;
+  }
+  .logo-text .th{
+    font-weight:700;
+    font-size:19px;
+    color:var(--navy-dark);
+    line-height:1.1;
+  }
+  .logo-text .en{
+    font-size:11px;
+    letter-spacing:0.5px;
+    color:var(--navy);
+    font-weight:500;
+  }
+  .home-link{
+    color:var(--navy);
+    text-decoration:none;
+    font-size:14px;
+    font-weight:500;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .bottom-line{height:4px; background:linear-gradient(90deg,#0a2a5e,#1b4fa0);}
+
+  .hero{
+    text-align:center;
+    padding:44px 20px 36px;
+  }
+  .hero .breadcrumb{
+    color:var(--gray);
+    font-size:13.5px;
+    margin-bottom:10px;
+  }
+  .hero .breadcrumb a{ color:var(--navy); text-decoration:none; }
+  .hero h1{
+    color:var(--navy-dark);
+    font-size:30px;
+    font-weight:700;
+    margin-bottom:10px;
+  }
+  .hero p{
+    color:var(--gray);
+    font-size:15px;
+  }
+
+  .grid-wrap{
+    max-width:1000px;
+    margin:0 auto;
+    padding:0 40px 40px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+    gap:22px;
+  }
+
+  .flow-card{
+    background:#fff;
+    border-radius:14px;
+    box-shadow:0 8px 24px rgba(20,40,80,0.08);
+    padding:26px 24px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    text-decoration:none;
+    color:inherit;
+    transition:transform 0.15s ease, box-shadow 0.15s ease;
+    border:2px solid transparent;
+  }
+  .flow-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 14px 30px rgba(20,40,80,0.16);
+    border-color:var(--navy);
+  }
+  .flow-title{
+    font-size:17px;
+    font-weight:600;
+    color:var(--navy-dark);
+  }
+  .flow-desc{
+    font-size:13.5px;
+    color:var(--gray);
+    line-height:1.6;
+  }
+  .flow-steps{
+    font-size:12px;
+    color:var(--navy);
+    font-weight:500;
+    margin-top:4px;
+  }
+
+  .extra-section{
+    max-width:1000px;
+    margin:0 auto;
+    padding:0 40px 60px;
+  }
+  .extra-section h2{
+    font-size:15px;
+    color:var(--navy-dark);
+    margin-bottom:14px;
+  }
+  .extra-links{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+  }
+  .extra-links a{
+    background:#fff;
+    border:1.5px solid var(--border);
+    border-radius:8px;
+    padding:10px 18px;
+    font-size:13.5px;
+    color:var(--navy);
+    text-decoration:none;
+  }
+  .extra-links a:hover{ border-color:var(--navy); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <img src="../assets/viriyah-logo.png" alt="วิริยะประกันภัย" style="height:100px;width:auto;display:block;">
+  </div>
+  <a class="home-link" href="../index.html">&#8962; กลับหน้าหลัก</a>
+</header>
+<div class="bottom-line"></div>
+
+<div class="hero">
+  <div class="breadcrumb"><a href="../index.html">Web Demo การ Integration</a> &#8250; Viriyah.com</div>
+  <h1>Viriyah.com</h1>
+  <p>เลือก flow ที่ต้องการดูตัวอย่างการเชื่อมต่อข้อมูล (Data Subject / Preference Consent)</p>
+</div>
+
+<div class="grid-wrap">
+  <a class="flow-card" href="DropLead01.html">
+    <div class="flow-title">Drop Lead</div>
+    <div class="flow-desc">ปุ่ม "ติดต่อเจ้าหน้าที่" บนหน้าแผนประกันรถยนต์ นำไปสู่ฟอร์มติดต่อกลับ พร้อมขอความยินยอม (PDPA)</div>
+    <div class="flow-steps">DropLead01 &#8594; DropLead02</div>
+  </a>
+
+  <a class="flow-card" href="E_SalePurchase01.html">
+    <div class="flow-title">E-Purchase (พ.ร.บ. รถยนต์)</div>
+    <div class="flow-desc">เลือกแผน พ.ร.บ. แล้วกรอกข้อมูลผู้สั่งซื้อ พร้อมขอความยินยอม (PDPA) ก่อนชำระเงิน</div>
+    <div class="flow-steps">E_SalePurchase01 &#8594; E_SalePurchase02</div>
+  </a>
+
+  <a class="flow-card" href="PaymentAllProduct.html">
+    <div class="flow-title">Payment (ทุกผลิตภัณฑ์)</div>
+    <div class="flow-desc">ชำระเบี้ยประกันภัย / ต่ออายุกรมธรรม์ออนไลน์ทุกประเภท พร้อมขอความยินยอม (PDPA)</div>
+    <div class="flow-steps">PaymentAllProduct</div>
+  </a>
+
+  <a class="flow-card" href="PaymentVMI_CarProduct01.html">
+    <div class="flow-title">Payment VMI (รถยนต์ภาคสมัครใจ)</div>
+    <div class="flow-desc">ค้นหากรมธรรม์ด้วยทะเบียนรถ/เลขกรมธรรม์ ยืนยันตัวตนแบบจำลอง แล้วขอความยินยอม (PDPA) ก่อนชำระเงิน</div>
+    <div class="flow-steps">PaymentVMI_CarProduct01</div>
+  </a>
+</div>
+
+<div class="extra-section">
+  <h2>เอกสารอ้างอิงเพิ่มเติม</h2>
+  <div class="extra-links">
+    <a href="https://172.21.20.248/policy/policyview?type=policyou&key=Cr14Y%2fDJkWjTrSLgA7fdmw%3d%3d">นโยบายการคุ้มครองข้อมูลส่วนบุคคล</a>
+    <a href="CookieBanner.html">Cookie Banner</a>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>วิริยะประกันภัย - การตั้งค่าความเป็นส่วนตัว</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
+
+  :root{
+    --brand-blue:#0a3d8f;
+    --brand-blue-dark:#082f6f;
+    --text-dark:#22314f;
+    --text-muted:#7b8494;
+    --border:#e4e8ef;
+    --bg-page:#f4f6fa;
+    --green:#1abc8a;
+    --toggle-blue:#2f6fed;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Prompt', sans-serif;
+    background:#c9cdd6;
+    display:flex;
+    justify-content:center;
+    padding:24px 0;
+  }
+  .phone{
+    width:340px;
+    background:var(--bg-page);
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,0.15);
+    position:relative;
+    min-height:600px;
+  }
+
+  /* Top bar */
+  .topbar{
+    background:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 18px;
+    border-bottom:1px solid #eee;
+  }
+  .topbar-left{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .logo-badge{
+    width:26px;
+    height:26px;
+    background:var(--brand-blue);
+    border-radius:7px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:13px;
+    color:#ffcb3d;
+  }
+  .brand-text .th{
+    font-weight:800;
+    font-size:11.5px;
+    color:var(--brand-blue);
+  }
+  .brand-text .en{
+    font-size:6.5px;
+    letter-spacing:0.3px;
+    color:var(--brand-blue);
+    font-weight:700;
+  }
+  .divider-v{
+    width:1px;
+    height:18px;
+    background:#ddd;
+    margin:0 5px;
+  }
+  .care-badge{
+    display:flex;
+    align-items:center;
+    gap:4px;
+    font-size:10px;
+  }
+  .care-badge .heart{color:#5da8d6;font-size:11px;}
+  .care-badge b{
+    color:var(--brand-blue);
+    font-weight:800;
+    font-size:10px;
+    display:block;
+  }
+  .care-badge small{
+    font-size:5.5px;
+    color:#9aa4b5;
+    display:block;
+  }
+  .topbar-right{
+    color:var(--brand-blue);
+    font-size:15px;
+  }
+
+  /* Heading behind modal */
+  .heading{
+    text-align:center;
+    padding:22px 20px 16px;
+  }
+  .heading h1{
+    font-size:16px;
+    font-weight:800;
+    color:var(--text-dark);
+    margin:0;
+    line-height:1.5;
+  }
+
+  .bg-bottom{
+    height:200px;
+    background:linear-gradient(160deg,#dfe6f3,#c3d0e8);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:44px;
+  }
+
+  .fab-cookie{
+    position:absolute;
+    left:18px;
+    bottom:18px;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:#c9d8f2;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:16px;
+  }
+  .fab-chat{
+    position:absolute;
+    right:18px;
+    bottom:18px;
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    background:var(--brand-blue-dark);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:22px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.25);
+  }
+
+  /* Modal */
+  .modal-overlay{
+    position:absolute;
+    top:0; left:0; right:0; bottom:0;
+    background:rgba(20,30,50,0.45);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:60px 16px;
+  }
+  .modal{
+    background:#fff;
+    border-radius:14px;
+    width:100%;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+    overflow:hidden;
+  }
+  .modal-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:16px 18px;
+    border-bottom:1px solid var(--border);
+  }
+  .modal-header h2{
+    font-size:14px;
+    font-weight:800;
+    color:var(--text-dark);
+    margin:0;
+  }
+  .close-x{
+    font-size:18px;
+    color:var(--text-dark);
+    cursor:pointer;
+  }
+
+  .modal-body{
+    padding:12px 18px 4px;
+  }
+  .pref-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 0;
+    border-bottom:1px solid #f0f2f6;
+  }
+  .pref-row:last-child{
+    border-bottom:none;
+  }
+  .pref-left{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:12px;
+    color:var(--text-dark);
+  }
+  .plus{
+    color:var(--text-muted);
+    font-size:13px;
+    font-weight:700;
+  }
+  .toggle{
+    width:38px;
+    height:21px;
+    border-radius:11px;
+    position:relative;
+    flex-shrink:0;
+  }
+  .toggle.on{
+    background:var(--toggle-blue);
+  }
+  .toggle.on::after{
+    content:"";
+    position:absolute;
+    top:2px;
+    right:2px;
+    width:17px;
+    height:17px;
+    background:#fff;
+    border-radius:50%;
+  }
+  .toggle.off{
+    background:#dbe0e8;
+  }
+  .toggle.off::after{
+    content:"";
+    position:absolute;
+    top:2px;
+    left:2px;
+    width:17px;
+    height:17px;
+    background:#fff;
+    border-radius:50%;
+  }
+
+  .modal-actions{
+    display:flex;
+    gap:10px;
+    padding:18px;
+    position:relative;
+  }
+  .btn-accept{
+    flex:1;
+    background:var(--green);
+    color:#fff;
+    border:none;
+    padding:11px;
+    border-radius:8px;
+    font-size:11.5px;
+    font-weight:700;
+    font-family:inherit;
+  }
+  .btn-confirm{
+    flex:1;
+    background:var(--brand-blue);
+    color:#fff;
+    border:none;
+    padding:11px;
+    border-radius:8px;
+    font-size:11.5px;
+    font-weight:700;
+    font-family:inherit;
+  }
+  .hand-point.right{
+    position:absolute;
+    right:14px;
+    bottom:-16px;
+    font-size:24px;
+    transform:rotate(-8deg);
+  }
+</style>
+</head>
+<body>
+
+<div style="position:fixed; top:0; left:0; right:0; z-index:99999; display:flex; align-items:center; justify-content:center; gap:14px; background:#0a2a5e; padding:6px 20px; font-family:'Prompt',sans-serif; font-size:12px; box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+  <a href="../index.html" style="color:#fff; text-decoration:none;">&#8962; กลับหน้าหลัก</a>
+  <span style="color:rgba(255,255,255,0.4);">|</span>
+  <a href="vinsure.html" style="color:#fff; text-decoration:none;">เมนู Vinsure</a>
+</div>
+<div class="phone" style="margin-top:32px;">
+
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <img src="../assets/viriyah-logo.png" alt="วิริยะประกันภัย" style="height:26px;width:auto;display:block;">
+      <div class="divider-v"></div>
+      <div class="care-badge">
+        <span class="heart">♡</span>
+        <div>
+          <b>CARE</b>
+          <small>ดูแลกันมากกว่าที่คุณคิด</small>
+        </div>
+      </div>
+    </div>
+    <div class="topbar-right">📞</div>
+  </div>
+
+  <!-- Heading behind -->
+  <div class="heading">
+    <h1>คุณกำลังมองหาประกัน<br>ประเภทไหน?</h1>
+  </div>
+
+  <div class="bg-bottom">🧑‍🤝‍🧑</div>
+  <div class="fab-cookie">🍪</div>
+  <div class="fab-chat">🎧</div>
+
+  <!-- Modal -->
+  <div class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>การตั้งค่าความเป็นส่วนตัว</h2>
+        <span class="close-x">×</span>
+      </div>
+      <div class="modal-body">
+        <div class="pref-row">
+          <div class="pref-left"><span class="plus">+</span>คุกกี้ที่จำเป็น</div>
+          <div class="toggle on"></div>
+        </div>
+        <div class="pref-row">
+          <div class="pref-left"><span class="plus">+</span>คุกกี้เพื่อการวิเคราะห์</div>
+          <div class="toggle off"></div>
+        </div>
+        <div class="pref-row">
+          <div class="pref-left"><span class="plus">+</span>คุกกี้อื่นๆ</div>
+          <div class="toggle off"></div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-accept">Accept All</button>
+        <button class="btn-confirm">Confirm My Choices</button>
+        <span class="hand-point right"></span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

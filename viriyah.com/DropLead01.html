@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>วิริยะประกันภัย - แผนประกันรถยนต์</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
+
+  :root{
+    --navy-dark:#0a2a5e;
+    --navy:#1b4fa0;
+    --blue:#2f7ed8;
+    --blue-light:#5aa8e8;
+    --text-dark:#1b2b4a;
+    --gray:#5a6472;
+    --border:#e4e7ec;
+    --bg:#f4f6f9;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Prompt', sans-serif;
+    background:var(--bg);
+    color:var(--text-dark);
+  }
+
+  /* Header */
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 40px;
+    background:#fff;
+    border-bottom:1px solid var(--border);
+  }
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .logo-icon{
+    width:44px;height:44px;
+    background:var(--navy-dark);
+    border-radius:6px;
+    display:flex;align-items:center;justify-content:center;
+    color:#f4c02a;
+    font-size:22px;
+  }
+  .logo-text .th{
+    font-weight:700;
+    font-size:19px;
+    color:var(--navy-dark);
+    line-height:1.1;
+  }
+  .logo-text .en{
+    font-size:11px;
+    letter-spacing:0.5px;
+    color:var(--navy);
+    font-weight:500;
+  }
+  nav{
+    display:flex;
+    gap:28px;
+    font-size:14.5px;
+    font-weight:500;
+    color:#2b3a55;
+  }
+  nav a{text-decoration:none; color:inherit; white-space:nowrap;}
+  .header-right{
+    display:flex;
+    align-items:center;
+    gap:22px;
+    font-size:14px;
+  }
+  .phone{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:#2b3a55;
+  }
+  .phone b{color:var(--navy-dark); font-size:17px;}
+  .claim{color:#2b3a55;}
+  .claim b{color:var(--navy-dark); font-size:17px;}
+  .icon-circle{
+    width:34px;height:34px;
+    border-radius:50%;
+    border:1.5px solid #c7ccd6;
+    display:flex;align-items:center;justify-content:center;
+    color:#5a6472;
+  }
+  .en-btn{
+    border:1.5px solid #c7ccd6;
+    border-radius:6px;
+    padding:5px 10px;
+    font-weight:600;
+    font-size:13px;
+    color:#2b3a55;
+  }
+  .bottom-line{height:4px; background:linear-gradient(90deg,#0a2a5e,#1b4fa0);}
+
+  /* Carousel section */
+  .carousel-wrap{
+    max-width:1440px;
+    margin:40px auto;
+    padding:0 60px;
+    position:relative;
+    display:flex;
+    align-items:center;
+    gap:24px;
+  }
+  .arrow-btn{
+    width:44px;height:44px;
+    min-width:44px;
+    border-radius:6px;
+    background:#5b6478;
+    color:#fff;
+    border:none;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    font-size:20px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.15);
+  }
+  .cards{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:24px;
+    flex:1;
+  }
+
+  .card{
+    background:#fff;
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 6px 20px rgba(20,40,80,0.08);
+    display:flex;
+    flex-direction:column;
+  }
+  .card-header{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:20px 22px;
+    color:#fff;
+  }
+  .card.dark .card-header{background:var(--navy-dark);}
+  .card.mid .card-header{background:var(--navy);}
+  .card.light .card-header{background:var(--blue-light);}
+
+  .car-icon{
+    width:40px;height:40px;
+    flex:none;
+  }
+  .card-title{
+    font-size:19px;
+    font-weight:600;
+    line-height:1.3;
+  }
+  .card-title small{
+    display:block;
+    font-size:13px;
+    font-weight:400;
+    opacity:0.9;
+  }
+
+  .card-body{
+    padding:24px 22px 20px;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+  }
+  .price{
+    text-align:center;
+    font-size:26px;
+    font-weight:600;
+    margin-bottom:16px;
+  }
+  .card.dark .price{color:var(--navy-dark);}
+  .card.mid .price{color:var(--navy);}
+  .card.light .price{color:var(--blue-light);}
+
+  .cta-btn{
+    display:block;
+    width:100%;
+    padding:11px;
+    border:none;
+    border-radius:6px;
+    color:#fff;
+    font-family:inherit;
+    font-size:15px;
+    font-weight:500;
+    cursor:pointer;
+    margin-bottom:18px;
+    text-align:center;
+    text-decoration:none;
+  }
+  .card.dark .cta-btn{background:var(--navy-dark);}
+  .card.mid .cta-btn{background:var(--navy);}
+  .card.light .cta-btn{background:var(--blue-light);}
+
+  .divider{
+    border:none;
+    border-top:1px solid var(--border);
+    margin-bottom:14px;
+  }
+
+  .spec-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    font-size:14.5px;
+    color:var(--text-dark);
+    padding:8px 0;
+  }
+  .spec-row span:first-child{color:#4a5468;}
+  .spec-row span:last-child{font-weight:600;}
+
+  .more-link{
+    color:var(--blue);
+    font-size:14px;
+    text-decoration:underline;
+    margin:4px 0 18px;
+    display:inline-block;
+  }
+
+  .icon-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    row-gap:16px;
+    margin-bottom:20px;
+  }
+  .icon-item{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    text-align:center;
+  }
+  .icon-item svg{
+    width:30px;height:30px;
+    stroke:var(--navy);
+  }
+  .icon-item span{
+    font-size:12px;
+    color:#4a5468;
+  }
+
+  .cta-btn.bottom{margin-top:auto; margin-bottom:0;}
+
+  @media(max-width:1100px){
+    .cards{grid-template-columns:1fr;}
+    nav{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<div style="position:fixed; top:0; left:0; right:0; z-index:99999; display:flex; align-items:center; justify-content:center; gap:14px; background:#0a2a5e; padding:6px 20px; font-family:'Prompt',sans-serif; font-size:12px; box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+  <a href="../index.html" style="color:#fff; text-decoration:none;">&#8962; กลับหน้าหลัก</a>
+  <span style="color:rgba(255,255,255,0.4);">|</span>
+  <a href="viriyah-com.html" style="color:#fff; text-decoration:none;">เมนู Viriyah.com</a>
+</div>
+
+<header style="margin-top:32px;">
+  <div class="logo">
+    <img src="../assets/viriyah-logo.png" alt="วิริยะประกันภัย" style="height:100px;width:auto;display:block;">
+  </div>
+  <nav>
+    <a href="#">ซื้อประกันรถยนต์ &#9662;</a>
+    <a href="#">ซื้อประกันรถจักรยานยนต์ &#9662;</a>
+    <a href="#">ซื้อประกันอื่นๆ &#9662;</a>
+    <a href="#">ติดต่อเรา &#9662;</a>
+  </nav>
+  <div class="header-right">
+    <div class="phone">&#128222; ซื้อประกัน <b>0 2129 7474</b></div>
+    <div class="claim">เคลม <b>1557</b></div>
+    <div class="icon-circle">&#128100;</div>
+    <div class="en-btn">EN</div>
+  </div>
+</header>
+<div class="bottom-line"></div>
+
+<div class="carousel-wrap">
+  <button class="arrow-btn">&#10094;</button>
+
+  <div class="cards">
+    <!-- Card 1 -->
+    <div class="card dark">
+      <div class="card-header">
+        <svg class="car-icon" viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="2.5"><path d="M8 40 L12 26 Q14 20 22 20 H42 Q50 20 52 26 L56 40" stroke-linecap="round" stroke-linejoin="round"/><rect x="6" y="40" width="52" height="10" rx="3"/><circle cx="18" cy="50" r="5" fill="#fff" stroke="none"/><circle cx="46" cy="50" r="5" fill="#fff" stroke="none"/></svg>
+        <div class="card-title">รถเก๋ง<small>กระบะ 4 ประตู</small></div>
+      </div>
+      <div class="card-body">
+        <div class="price">เริ่มต้น 15,000 บาท</div>
+        <a class="cta-btn" href="DropLead02.html">ติดต่อเจ้าหน้าที่</a>
+        <hr class="divider">
+        <div class="spec-row"><span>ทุนประกัน</span><span>ตามทุนประกัน</span></div>
+        <div class="spec-row"><span>แผนการซ่อม</span><span>ซ่อมอู่</span></div>
+        <div class="spec-row"><span>ค่าเสียหายส่วนแรก</span><span>-</span></div>
+        <div class="spec-row"><span>ค่าเสียหายจากน้ำท่วม</span><span>ตามทุนประกัน</span></div>
+        <a class="more-link" href="#">ดูรายละเอียดเพิ่มเติม</a>
+
+        <div class="icon-grid">
+          <div class="icon-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M8 13l3 3 5-6"/></svg><span>ทรัพย์สิน</span></div>
+          <div class="icon-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span>ชีวิต/ร่างกาย</span></div>
+          <div class="icon-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M4 17l2-8h12l2 8"/><circle cx="8" cy="17" r="1.5"/><circle cx="16" cy="17" r="1.5"/><path d="M9 9l2-3h2l2 3"/></svg><span>อุบัติเหตุ</span></div>
+          <div class="icon-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="12" cy="8" r="3.5"/><path d="M6 21v-2a6 6 0 0112 0v2"/><path d="M9 3l1 2M15 3l-1 2"/></svg><span>ค่ารักษา</span></div>
+          <div class="icon-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="8" cy="16" r="3"/><circle cx="16" cy="16" r="3"/><path d="M8 13V7h6l2 6"/></svg><span>ประกันตัว</span></div>
+          <div class="icon-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M3 15l1-5a3 3 0 013-2h10a3 3 0 013 2l1 5"/><circle cx="7" cy="17" r="1.5"/><circle cx="17" cy="17" r="1.5"/></svg><span>รถยนต์</span></div>
+          <div class="icon-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 3l7 4v5c0 5-3 8-7 9-4-1-7-4-7-9V7z"/><path d="M9 12l2 2 4-4"/></svg><span>สูญหาย/ไฟไหม้</span></div>
+          <div class="icon-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M3 17c1.5 1 3 1 4.5 0s3-1 4.5 0 3 1 4.5 0 3-1 4.5 0"/><path d="M3 12c1.5 1 3 1 4.5 0s3-1 4.5 0 3 1 4.5 0 3-1 4.5 0"/></svg><span>น้ำท่วม</span></div>
+        </div>
+        <a class="cta-btn bottom" href="DropLead02.html">ติดต่อเจ้าหน้าที่</a>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="card mid">
+      <div class="card-header">
+        <svg class="car-icon" viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="2.5"><path d="M8 40 L12 26 Q14 20 22 20 H42 Q50 20 52 26 L56 40" stroke-linecap="round" stroke-linejoin="round"/><rect x="6" y="40" width="52" height="10" rx="3"/><circle cx="18" cy="50" r="5" fill="#fff" stroke="none"/><circle cx="46" cy="50" r="5" fill="#fff" stroke="none"/></svg>
+        <div class="card-title">รถเก๋ง<small>กระบะ 4 ประตู</small></div>
+      </div>
+      <div class="card-body">
+        <div class="price">เริ่มต้น 17,000 บาท</div>
+        <a class="cta-btn" href="DropLead02.html">ติดต่อเจ้าหน้าที่</a>
+        <hr class="divider">
+        <div class="spec-row"><span>ทุนประกัน</span><span>ตามทุนประกัน</span></div>
+        <div class="spec-row"><span>แผนการซ่อม</span><span>ซ่อมห้าง</span></div>
+        <div class="spec-row"><span>ค่าเสียหายส่วนแรก</span><span>-</span></div>
+        <div class="spec-row"><span>ค่าเสียหายจากน้ำท่วม</span><span>ตามทุนประกัน</span></div>
+        <a class="more-link" href="#">ดูรายละเอียดเพิ่มเติม</a>
+
+        <div class="icon-grid">
+          <div class="icon-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M8 13l3 3 5-6"/></svg><span>ทรัพย์สิน</span></div>
+          <div class="icon-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span>ชีวิต/ร่างกาย</span></div>
+          <div class="icon-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M4 17l2-8h12l2 8"/><circle cx="8" cy="17" r="1.5"/><circle cx="16" cy="17" r="1.5"/><path d="M9 9l2-3h2l2 3"/></svg><span>อุบัติเหตุ</span></div>
+          <div class="icon-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="12" cy="8" r="3.5"/><path d="M6 21v-2a6 6 0 0112 0v2"/><path d="M9 3l1 2M15 3l-1 2"/></svg><span>ค่ารักษา</span></div>
+          <div class="icon-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="8" cy="16" r="3"/><circle cx="16" cy="16" r="3"/><path d="M8 13V7h6l2 6"/></svg><span>ประกันตัว</span></div>
+          <div class="icon-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M3 15l1-5a3 3 0 013-2h10a3 3 0 013 2l1 5"/><circle cx="7" cy="17" r="1.5"/><circle cx="17" cy="17" r="1.5"/></svg><span>รถยนต์</span></div>
+          <div class="icon-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 3l7 4v5c0 5-3 8-7 9-4-1-7-4-7-9V7z"/><path d="M9 12l2 2 4-4"/></svg><span>สูญหาย/ไฟไหม้</span></div>
+          <div class="icon-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M3 17c1.5 1 3 1 4.5 0s3-1 4.5 0 3 1 4.5 0 3-1 4.5 0"/><path d="M3 12c1.5 1 3 1 4.5 0s3-1 4.5 0 3 1 4.5 0 3-1 4.5 0"/></svg><span>น้ำท่วม</span></div>
+        </div>
+        <a class="cta-btn bottom" href="DropLead02.html">ติดต่อเจ้าหน้าที่</a>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="card light">
+      <div class="card-header">
+        <svg class="car-icon" viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="2.5"><path d="M6 40 L10 26 Q12 20 20 20 H36 L44 20 Q50 20 52 26 L56 40" stroke-linecap="round" stroke-linejoin="round"/><rect x="6" y="40" width="52" height="10" rx="3"/><path d="M36 20v20" /><circle cx="18" cy="50" r="5" fill="#fff" stroke="none"/><circle cx="46" cy="50" r="5" fill="#fff" stroke="none"/></svg>
+        <div class="card-title">รถกระบะตอนครึ่ง<small>(ไม่เกิน 3 ตัน)</small></div>
+      </div>
+      <div class="card-body">
+        <div class="price">เริ่มต้น 16,500 บาท</div>
+        <a class="cta-btn" href="DropLead02.html">ติดต่อเจ้าหน้าที่</a>
+        <hr class="divider">
+        <div class="spec-row"><span>ทุนประกัน</span><span>ตามทุนประกัน</span></div>
+        <div class="spec-row"><span>แผนการซ่อม</span><span>ซ่อมอู่</span></div>
+        <div class="spec-row"><span>ค่าเสียหายส่วนแรก</span><span>-</span></div>
+        <div class="spec-row"><span>ค่าเสียหายจากน้ำท่วม</span><span>ตามทุนประกัน</span></div>
+        <a class="more-link" href="#">ดูรายละเอียดเพิ่มเติม</a>
+
+        <div class="icon-grid">
+          <div class="icon-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M8 13l3 3 5-6"/></svg><span>ทรัพย์สิน</span></div>
+          <div class="icon-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span>ชีวิต/ร่างกาย</span></div>
+          <div class="icon-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M4 17l2-8h12l2 8"/><circle cx="8" cy="17" r="1.5"/><circle cx="16" cy="17" r="1.5"/><path d="M9 9l2-3h2l2 3"/></svg><span>อุบัติเหตุ</span></div>
+          <div class="icon-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="12" cy="8" r="3.5"/><path d="M6 21v-2a6 6 0 0112 0v2"/><path d="M9 3l1 2M15 3l-1 2"/></svg><span>ค่ารักษา</span></div>
+          <div class="icon-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="8" cy="16" r="3"/><circle cx="16" cy="16" r="3"/><path d="M8 13V7h6l2 6"/></svg><span>ประกันตัว</span></div>
+          <div class="icon-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M3 15l1-5a3 3 0 013-2h10a3 3 0 013 2l1 5"/><circle cx="7" cy="17" r="1.5"/><circle cx="17" cy="17" r="1.5"/></svg><span>รถยนต์</span></div>
+          <div class="icon-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 3l7 4v5c0 5-3 8-7 9-4-1-7-4-7-9V7z"/><path d="M9 12l2 2 4-4"/></svg><span>สูญหาย/ไฟไหม้</span></div>
+          <div class="icon-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M3 17c1.5 1 3 1 4.5 0s3-1 4.5 0 3 1 4.5 0 3-1 4.5 0"/><path d="M3 12c1.5 1 3 1 4.5 0s3-1 4.5 0 3 1 4.5 0 3-1 4.5 0"/></svg><span>น้ำท่วม</span></div>
+        </div>
+        <a class="cta-btn bottom" href="DropLead02.html">ติดต่อเจ้าหน้าที่</a>
+      </div>
+    </div>
+  </div>
+
+  <button class="arrow-btn">&#10095;</button>
+</div>
+
+</body>
+</html>

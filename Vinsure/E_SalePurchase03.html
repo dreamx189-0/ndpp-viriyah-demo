@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>วิริยะประกันภัย - ตรวจสอบข้อมูล</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
+
+  :root{
+    --brand-blue:#0a3d8f;
+    --brand-blue-dark:#082f6f;
+    --care-green:#00a389;
+    --text-dark:#22314f;
+    --text-muted:#7b8494;
+    --border:#e4e8ef;
+    --red:#e0475a;
+    --step-inactive:#c7cfe0;
+    --link-blue:#2f6fed;
+    --bg-page:#f4f6fa;
+    --disabled-bg:#eef0f4;
+    --disabled-text:#c4c9d2;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Prompt', sans-serif;
+    background:#fff;
+    color:var(--text-dark);
+  }
+  .page{
+    max-width:1220px;
+    margin:0 auto;
+  }
+
+  /* Top bar (shared with other Vinsure pages) */
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 40px;
+    border-bottom:1px solid var(--border);
+    flex-wrap:wrap;
+    gap:14px;
+  }
+  .topbar-left{
+    display:flex;
+    align-items:center;
+    gap:18px;
+  }
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .logo-icon{
+    width:42px;height:42px;
+    background:var(--brand-blue);
+    border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    color:#f4c02a;
+    font-size:20px;
+  }
+  .logo-text .th{font-weight:700; font-size:17px; color:var(--brand-blue); line-height:1.1;}
+  .logo-text .en{font-size:10px; letter-spacing:0.5px; color:#5a6472;}
+  .divider-line{width:1px; height:36px; background:var(--border);}
+  .care-badge .care-title{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:21px;
+    font-weight:800;
+    color:var(--care-green);
+    letter-spacing:1px;
+  }
+  .care-badge .care-sub{font-size:10.5px; color:var(--text-muted); margin-top:2px;}
+
+  .topbar-right{
+    display:flex;
+    align-items:center;
+    gap:30px;
+  }
+  .phone-info, .search-info{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:var(--brand-blue);
+    font-size:14px;
+    font-weight:500;
+    white-space:nowrap;
+  }
+
+  /* Stepper */
+  .stepper{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:22px 30px 18px;
+  }
+  .step{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    position:relative;
+    width:140px;
+  }
+  .step-circle{
+    width:24px;
+    height:24px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:11px;
+    font-weight:700;
+    margin-bottom:7px;
+    background:#fff;
+    border:2px solid var(--step-inactive);
+    color:var(--step-inactive);
+    z-index:2;
+  }
+  .step.done .step-circle{
+    border-color:var(--brand-blue);
+    color:var(--brand-blue);
+  }
+  .step.active .step-circle{
+    background:var(--brand-blue);
+    border-color:var(--brand-blue);
+    color:#fff;
+  }
+  .step-label{
+    font-size:9.5px;
+    color:var(--text-muted);
+  }
+  .step.active .step-label{
+    color:var(--brand-blue);
+    font-weight:700;
+  }
+  .step-line{
+    position:absolute;
+    top:12px;
+    left:-70px;
+    width:140px;
+    height:2px;
+    background:var(--step-inactive);
+    z-index:1;
+  }
+  .step-line.done{
+    background:var(--brand-blue);
+  }
+  .step:first-child .step-line{display:none;}
+
+  /* Heading */
+  .form-heading{
+    text-align:center;
+    padding:6px 20px 22px;
+  }
+  .form-heading h1{
+    font-size:18px;
+    color:var(--brand-blue);
+    font-weight:800;
+    margin:0 0 6px;
+  }
+  .form-heading p{
+    font-size:11.5px;
+    color:var(--text-dark);
+    margin:0;
+  }
+
+  /* Cards container */
+  .content{
+    padding:0 30px 34px;
+  }
+
+  .card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:12px;
+    margin-bottom:18px;
+    overflow:hidden;
+  }
+  .card-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 20px;
+    border-bottom:1px solid var(--border);
+    font-weight:700;
+    font-size:12.5px;
+    color:var(--text-dark);
+  }
+  .card-header .left{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .edit-icon{
+    color:var(--text-muted);
+    font-size:13px;
+    cursor:pointer;
+  }
+
+  .info-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+    padding:16px 20px;
+  }
+  .info-item{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+  }
+  .info-item .ic{
+    width:26px;
+    height:26px;
+    border-radius:6px;
+    background:#eaf1ff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:13px;
+    color:var(--brand-blue);
+    flex-shrink:0;
+  }
+  .info-item .txt .lbl{
+    font-size:10px;
+    color:var(--text-muted);
+    margin-bottom:3px;
+  }
+  .info-item .txt .val{
+    font-size:12px;
+    font-weight:700;
+    color:var(--text-dark);
+  }
+
+  .coverage-list{
+    padding:4px 20px 18px;
+  }
+  .coverage-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:10px 0;
+    border-bottom:1px solid #f0f2f6;
+    font-size:12px;
+    color:var(--text-dark);
+  }
+  .coverage-row:last-child{
+    border-bottom:none;
+  }
+  .coverage-row .amt{
+    font-weight:700;
+  }
+  .coverage-row .qmark{
+    color:var(--text-muted);
+    font-size:10px;
+    margin-left:2px;
+  }
+
+  .detail-link{
+    text-align:center;
+    color:var(--link-blue);
+    font-size:11.5px;
+    font-weight:600;
+    padding:6px 0 14px;
+  }
+
+  .warning-box{
+    background:#fdf1dc;
+    margin:0 20px 18px;
+    padding:12px 14px;
+    border-radius:8px;
+    font-size:10.5px;
+    color:#a83a3a;
+    line-height:1.7;
+  }
+  .warning-box b{
+    display:block;
+    color:#a83a3a;
+    margin-bottom:2px;
+  }
+  .warning-box a{
+    color:var(--link-blue);
+  }
+
+  .delivery-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:16px 20px;
+    font-size:12px;
+    color:var(--text-dark);
+  }
+  .delivery-row .val{
+    font-weight:700;
+    color:var(--brand-blue);
+  }
+
+  .footer-note{
+    font-size:10px;
+    color:var(--text-muted);
+    line-height:1.8;
+    padding:0 4px;
+  }
+  .footer-note a{
+    color:var(--link-blue);
+  }
+
+  /* Payment section (merged from E_SalePurchase04.html) */
+  .prev-address{
+    text-align:right;
+    font-size:12px;
+    color:var(--text-dark);
+    padding:20px 0 24px;
+    border-bottom:1px solid var(--border);
+    margin-bottom:26px;
+  }
+
+  .promo-label{
+    font-size:13px;
+    font-weight:700;
+    color:var(--text-dark);
+    margin-bottom:10px;
+  }
+  .promo-row{
+    display:flex;
+    gap:12px;
+    margin-bottom:24px;
+  }
+  .promo-row input{
+    flex:1;
+    padding:13px 16px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    font-size:12.5px;
+    color:var(--text-dark);
+    font-family:inherit;
+  }
+  .promo-row input::placeholder{
+    color:#b4bac6;
+  }
+  .btn-promo{
+    background:var(--brand-blue);
+    color:#fff;
+    border:none;
+    padding:0 22px;
+    border-radius:8px;
+    font-size:12.5px;
+    font-weight:700;
+    font-family:inherit;
+    white-space:nowrap;
+  }
+
+  .premium-box{
+    background:#fdf1dc;
+    border-radius:10px;
+    padding:20px 22px;
+    margin-bottom:26px;
+  }
+  .premium-row{
+    display:flex;
+    justify-content:space-between;
+    font-size:12.5px;
+    color:var(--text-dark);
+    margin-bottom:8px;
+  }
+  .premium-row.total-row{
+    margin-bottom:0;
+    font-weight:700;
+  }
+  .premium-divider{
+    border:none;
+    border-top:1px solid rgba(0,0,0,0.12);
+    margin:12px 0;
+  }
+  .premium-total{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .premium-total .lbl{
+    font-size:13px;
+    font-weight:700;
+    color:var(--brand-blue);
+  }
+  .premium-total .amt{
+    font-size:19px;
+    font-weight:800;
+    color:var(--brand-blue);
+  }
+
+  .consent-block{
+    display:flex;
+    gap:12px;
+    margin-bottom:22px;
+  }
+  .checkbox{
+    width:18px;
+    height:18px;
+    border:1.5px solid #b9c0cc;
+    border-radius:4px;
+    flex-shrink:0;
+    margin-top:2px;
+  }
+  .consent-block p{
+    font-size:11.5px;
+    line-height:1.85;
+    color:var(--link-blue);
+    margin:0 0 10px;
+  }
+  .consent-block p.dark{
+    color:var(--text-dark);
+  }
+  .consent-block a{
+    color:var(--link-blue);
+    text-decoration:none;
+    font-weight:600;
+  }
+
+  /* Dynamically-loaded preference consent (purpose) list */
+  .consent-list-item{
+    display:flex;
+    gap:12px;
+    margin-bottom:14px;
+  }
+  .consent-list-item input[type="checkbox"]{
+    width:18px;
+    height:18px;
+    min-width:18px;
+    margin-top:2px;
+    accent-color:var(--brand-blue);
+  }
+  .consent-list-item p{
+    font-size:11.5px;
+    line-height:1.85;
+    color:var(--text-dark);
+    margin:0;
+  }
+  .consent-error{
+    color:#e0475a;
+    font-size:11.5px;
+    margin-bottom:14px;
+  }
+
+  hr.section-divider{
+    border:none;
+    border-top:1px solid var(--border);
+    margin:8px 0 22px;
+  }
+
+  .warning-note{
+    text-align:center;
+    font-size:11px;
+    color:var(--text-muted);
+    line-height:1.8;
+    margin-bottom:26px;
+  }
+
+  .action-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .btn-back{
+    background:none;
+    border:none;
+    color:var(--link-blue);
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+    font-family:inherit;
+  }
+  .btn-confirm{
+    background:var(--brand-blue);
+    color:#fff;
+    border:none;
+    padding:14px 34px;
+    border-radius:8px;
+    font-size:13px;
+    font-weight:700;
+    font-family:inherit;
+    cursor:pointer;
+  }
+  .btn-confirm:hover{background:var(--brand-blue-dark);}
+</style>
+</head>
+<body>
+
+<div style="position:fixed; top:0; left:0; right:0; z-index:99999; display:flex; align-items:center; justify-content:center; gap:14px; background:#0a2a5e; padding:6px 20px; font-family:'Prompt',sans-serif; font-size:12px; box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+  <a href="../index.html" style="color:#fff; text-decoration:none;">&#8962; กลับหน้าหลัก</a>
+  <span style="color:rgba(255,255,255,0.4);">|</span>
+  <a href="vinsure.html" style="color:#fff; text-decoration:none;">เมนู Vinsure</a>
+</div>
+<!-- Top Bar -->
+<div class="topbar" style="margin-top:32px;">
+  <div class="topbar-left">
+    <div class="logo">
+      <img src="../assets/viriyah-logo.png" alt="วิริยะประกันภัย" style="height:100px;width:auto;display:block;">
+    </div>
+    <div class="divider-line"></div>
+    <div class="care-badge">
+      <div class="care-title">&#9825; CARE</div>
+      <div class="care-sub">ประกันเดินทาง</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="phone-info">&#128222; ให้เราดูแลคุณ 0-2422-8888</div>
+    <div class="search-info">&#128269; ค้นหา</div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- Stepper -->
+  <div class="stepper">
+    <div class="step done">
+      <div class="step-circle">✓</div>
+      <div class="step-label">ข้อมูลการเดินทาง</div>
+    </div>
+    <div class="step done">
+      <div class="step-line done"></div>
+      <div class="step-circle">✓</div>
+      <div class="step-label">เลือกแผนประกัน</div>
+    </div>
+    <div class="step done">
+      <div class="step-line done"></div>
+      <div class="step-circle">✓</div>
+      <div class="step-label">ข้อมูลผู้เอาประกัน</div>
+    </div>
+    <div class="step active">
+      <div class="step-line done"></div>
+      <div class="step-circle">4</div>
+      <div class="step-label">ตรวจสอบข้อมูล</div>
+    </div>
+    <div class="step">
+      <div class="step-line"></div>
+      <div class="step-circle">5</div>
+      <div class="step-label">สำเร็จ</div>
+    </div>
+  </div>
+
+  <!-- Heading -->
+  <div class="form-heading">
+    <h1>ตรวจสอบข้อมูล</h1>
+    <p>โปรดตรวจสอบข้อมูลทั้งหมดอีกครั้ง ก่อนกดยืนยันและชำระเงิน</p>
+  </div>
+
+  <div class="content">
+
+    <!-- Plan Summary Card -->
+    <div class="card">
+      <div class="card-header">
+        <div class="left">🛡️ ประกันเดินทางต่างประเทศ V-Travel Comprehensive</div>
+        <span class="edit-icon">✎</span>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="ic">🛡️</div>
+          <div class="txt">
+            <div class="lbl">แผนประกัน</div>
+            <div class="val">แผน V-Saver (รายเดียว)</div>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="ic">✈️</div>
+          <div class="txt">
+            <div class="lbl">ประเทศปลายทาง</div>
+            <div class="val">Japan</div>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="ic">📅</div>
+          <div class="txt">
+            <div class="lbl">วันเดินทาง</div>
+            <div class="val">25 มิ.ย. 2026 - 03 ก.ค. 2026 (9 วัน)</div>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="ic">ⓘ</div>
+          <div class="txt">
+            <div class="lbl">จำนวนผู้เดินทาง</div>
+            <div class="val">1 คน</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="coverage-list">
+        <div class="coverage-row">
+          <span>ค่ารักษาพยาบาล<span class="qmark">ⓘ</span></span>
+          <span class="amt">1,500,000 บาท</span>
+        </div>
+        <div class="coverage-row">
+          <span>ชดเชยเที่ยวบินล่าช้า</span>
+          <span class="amt">–</span>
+        </div>
+        <div class="coverage-row">
+          <span>กระเป๋าเดินทางเสียหาย/สูญเสีย</span>
+          <span class="amt">–</span>
+        </div>
+        <div class="coverage-row">
+          <span>การยกเลิกการเดินทาง</span>
+          <span class="amt">–</span>
+        </div>
+      </div>
+
+      <div class="detail-link">รายละเอียดความคุ้มครองเพิ่มเติม</div>
+
+      <div class="warning-box">
+        <b>หมายเหตุ :</b>
+        กรุณาตรวจสอบรายละเอียดความคุ้มครอง เงื่อนไขและข้อยกเว้นก่อนตัดสินใจทำประกันทุกครั้ง <a href="#">คลิกดูรายละเอียด</a>
+      </div>
+    </div>
+
+    <!-- Delivery Card -->
+    <div class="card">
+      <div class="card-header">
+        <div class="left">✉️ การจัดส่งกรมธรรม์ทางอิเล็กทรอนิกส์ (อีเมล)</div>
+        <span class="edit-icon">✎</span>
+      </div>
+      <div class="delivery-row">
+        <span>รายละเอียดการจัดส่ง</span>
+        <span class="val">pawanratnew40@gmail.com</span>
+      </div>
+    </div>
+
+    <p class="footer-note">
+      ท่านสามารถรับกรมธรรม์เป็นส่วนหนึ่งในการรักษาสิ่งแวดล้อมด้วยการเลือกรับเอกสารทางอิเล็กทรอนิกส์<br>
+      โดยการเลือกรับเอกสารรับรองในรูปแบบนี้จะจัดส่งกรมธรรม์อิเล็กทรอนิกส์ (อีเมล) ตามที่ระบุไว้เป็นเอกสาร<br>
+      หากต้องการเปลี่ยนรูปแบบการจัดส่งกรุณากดที่นี่ <a href="#">คลิก</a>
+    </p>
+
+    <div class="prev-address">ตำบลสามเรือน อำเภอเพชรบุรี จังหวัดราชบุรี 70120</div>
+
+    <div class="promo-label">รหัสส่วนลด หรือ รหัสแนะนำ</div>
+    <div class="promo-row">
+      <input type="text" placeholder="กรุณาระบุรหัสโปรโมชั่น">
+      <button class="btn-promo">ยืนยันการใช้รหัส</button>
+    </div>
+
+    <div class="premium-box">
+      <div class="premium-row">
+        <span>เบี้ยประกันคนละ</span>
+        <span>260.00 บาท</span>
+      </div>
+      <div class="premium-row">
+        <span>เบี้ยประกันรวม</span>
+        <span>260.00 บาท</span>
+      </div>
+      <hr class="premium-divider">
+      <div class="premium-total">
+        <span class="lbl">เบี้ยประกันที่ต้องชำระ (1 คน)</span>
+        <span class="amt">260.00 บาท</span>
+      </div>
+    </div>
+
+    <div class="consent-block">
+      <span class="checkbox"></span>
+      <div>
+        <p>
+          ข้าพเจ้ามีความประสงค์ขอเอาประกันภัยกับบริษัท ตามเงื่อนไขข้อกรมธรรม์ประกันภัยที่บริษัท ได้ใช้สำหรับการประกันภัยนี้ และข้าพเจ้าขอรับรองว่ารายละเอียดต่างๆ ข้างต้นถูกต้องและสมบูรณ์ อีกทั้งข้าพเจ้าทราบดีว่าให้ข้อมูลประกันภัยนี้เป็นมูลฐาน ของสัญญา ระหว่างข้าพเจ้าและบริษัทฯ <a href="#">อ่าน</a>
+        </p>
+        <p class="dark">
+          ข้าพเจ้ายินยอมให้บริษัทจัดเก็บ ใช้ และเปิดเผยข้อมูลที่จริงเที่ยวกับข้อมูลของข้าพเจ้าต่อสำนักงานคณะกรรมการกำกับ และส่งเสริมการประกอบธุรกิจประกันภัย (คปภ.) เพื่อประโยชน์ในการกำกับดูแลธุรกิจประกันภัย
+        </p>
+      </div>
+    </div>
+
+    <div id="consent-list">
+      <div class="consent-list-item"><p>กำลังโหลดข้อมูลความยินยอม...</p></div>
+    </div>
+
+    <hr class="section-divider">
+
+    <p class="warning-note">
+      คำเตือนของสำนักงานคณะกรรมการกำกับและส่งเสริมการประกอบธุรกิจประกันภัย (คปภ.) ให้ตอบคำถามอย่างตรงตามความจริงถ้าหากผู้เอาประกัน
+      ภัยปกปิดข้อความจริง หรือแถลงข้อความอันเป็นเท็จจะผลให้สัญญาประกันภัยนี้เป็นโมฆะ ซึ่งบริษัทมีสิทธิบอกล้างสัญญาประกันภัยตามประมวล
+      กฎหมายแพ่งและพาณิชย์ มาตรา 865
+    </p>
+
+    <div class="action-row">
+      <button class="btn-back" onclick="window.location.href='E_SalePurchase02.html'">ย้อนกลับ</button>
+      <button class="btn-confirm" id="submitBtn" type="button">ยืนยัน และชำระเงิน</button>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  // ชื่อ/นามสกุล/เบอร์โทร/อีเมล ถูกกรอกไว้ตั้งแต่หน้า E_SalePurchase02 แล้ว
+  // หน้านี้อ่านค่าจาก sessionStorage มาใช้ build UID/JWT แทนการให้กรอกซ้ำ
+  const CONSENT_KEY = "8wDz47DED%2fsgFUepEFvzxg%3d%3d";
+  const CONSENT_API_URL = `http://172.21.20.248/api/AdminPreferenceConsentForm/PreferenceFormToken?Key=${CONSENT_KEY}`;
+  const SAVE_CONSENT_API_URL = "https://172.21.20.248/api/AdminPreferenceConsentForm/PreferenceFormConsent";
+
+  const FALLBACK_PURPOSES = [
+    { purpose_id: "1", purpose_th: "เพื่อการให้บริการและติดต่อสื่อสารตามที่ท่านร้องขอ", is_required: true, selected: true },
+    { purpose_id: "2", purpose_th: "เพื่อการนำเสนอผลิตภัณฑ์และบริการที่เกี่ยวข้อง", is_required: false, selected: false },
+    { purpose_id: "3", purpose_th: "เพื่อการวิเคราะห์และพัฒนาปรับปรุงคุณภาพบริการ", is_required: false, selected: false },
+    { purpose_id: "4", purpose_th: "เพื่อการทำการตลาดและประชาสัมพันธ์ผ่านช่องทางต่างๆ", is_required: false, selected: false }
+  ];
+
+  async function loadConsentOptions(){
+    const list = document.getElementById('consent-list');
+    let purposes;
+    try{
+      const response = await fetch(CONSENT_API_URL, {
+        method: "GET"
+      });
+      if(!response.ok) throw new Error("HTTP " + response.status);
+
+      const data = await response.json();
+      purposes = data.purpose_option || [];
+    }catch(error){
+      console.warn("โหลดข้อมูลความยินยอมจาก backend ไม่สำเร็จ ใช้ข้อมูลตัวอย่างแทน (demo mode):", error);
+      purposes = FALLBACK_PURPOSES;
+    }
+
+    list.innerHTML = purposes.map(p => `
+      <div class="consent-list-item">
+        <input type="checkbox" class="consent-checkbox" data-purpose-id="${p.purpose_id}" data-required="${p.is_required}" ${p.selected ? "checked" : ""}>
+        <p>${p.purpose_th} ${p.is_required ? '<span style="color:#e0475a;">*</span>' : ""}</p>
+      </div>
+    `).join("");
+  }
+
+  // NOTE: secret ฝัง client-side แบบนี้ใครก็เปิดดู source แล้วรู้ค่าได้ ทำให้ปลอม JWT ที่เซ็นถูกต้องเองได้
+  // เหมาะสำหรับ prototype เท่านั้น งาน production ควรย้ายการเซ็น JWT ไปทำฝั่ง server
+  const JWT_SECRET = "zxcvzaqxsw12345";
+
+  function base64UrlEncodeBytes(bytes){
+    let binary = "";
+    bytes.forEach(b => binary += String.fromCharCode(b));
+    return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+
+  function base64UrlEncodeString(str){
+    return base64UrlEncodeBytes(new TextEncoder().encode(str));
+  }
+
+  async function signJWT(payload, secret){
+    const header = { alg: "HS256", typ: "JWT" };
+    const signingInput = `${base64UrlEncodeString(JSON.stringify(header))}.${base64UrlEncodeString(JSON.stringify(payload))}`;
+
+    const key = await crypto.subtle.importKey(
+      "raw",
+      new TextEncoder().encode(secret),
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"]
+    );
+    const signatureBuffer = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(signingInput));
+    return `${signingInput}.${base64UrlEncodeBytes(new Uint8Array(signatureBuffer))}`;
+  }
+
+  async function sha256Hex(str){
+    const hashBuffer = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  async function buildLeadJWT(){
+    const firstname = sessionStorage.getItem('esp_firstname') || "";
+    const lastname = sessionStorage.getItem('esp_lastname') || "";
+    const mobile = sessionStorage.getItem('esp_mobile') || "";
+    const email = sessionStorage.getItem('esp_email') || "";
+
+    const uid = await sha256Hex(`${firstname}-${lastname}-${mobile}`);
+
+    const payload = {
+      UID: uid,
+      Firstname: firstname,
+      Lastname: lastname,
+      Email: email,
+      Mobile: mobile,
+      DataSubjectType: "Customer"
+    };
+
+    return signJWT(payload, JWT_SECRET);
+  }
+
+  document.getElementById('submitBtn').addEventListener('click', async () => {
+    const firstname = sessionStorage.getItem('esp_firstname');
+    const lastname = sessionStorage.getItem('esp_lastname');
+    const mobile = sessionStorage.getItem('esp_mobile');
+    if(!firstname || !lastname || !mobile){
+      alert("ไม่พบข้อมูลชื่อ นามสกุล และเบอร์โทรศัพท์ กรุณากลับไปกรอกข้อมูลผู้เอาประกันภัยในหน้าก่อนหน้าอีกครั้ง");
+      return;
+    }
+
+    const token = await buildLeadJWT();
+
+    const selectedPurposes = Array.from(document.querySelectorAll('#consent-list .consent-checkbox'))
+      .filter(cb => cb.checked)
+      .map(cb => ({ PurposeOption: cb.dataset.purposeId }));
+
+    try{
+      const saveResponse = await fetch(SAVE_CONSENT_API_URL, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          purpose_option: selectedPurposes,
+          key: CONSENT_KEY,
+          token_key: token
+        })
+      });
+      if(!saveResponse.ok) throw new Error("HTTP " + saveResponse.status);
+
+      const result = await saveResponse.text();
+      console.log("บันทึกข้อมูลสำเร็จ:", result);
+      alert("ยืนยันและบันทึกข้อมูลเรียบร้อยแล้ว");
+    }catch(error){
+      console.warn("บันทึกข้อมูลไป backend ไม่สำเร็จ (demo mode - ไม่มีการเชื่อมต่อ backend จริงจากเว็บ public):", error);
+      alert("ส่งข้อมูลเรียบร้อยแล้ว");
+    }
+  });
+
+  loadConsentOptions();
+</script>
+
+</body>
+</html>

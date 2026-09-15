@@ -1,0 +1,591 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>ข้อมูลผู้สั่งซื้อและอำระเบียนประกันภัย</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
+
+  :root{
+    --orange:#f5a623;
+    --navy:#0a2a5e;
+    --gray-border:#dfe2e8;
+    --placeholder:#9aa1ac;
+    --red:#e0392b;
+    --text:#2b2b2b;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Prompt', sans-serif;
+    background:#eceff3;
+    display:flex;
+    justify-content:center;
+    padding:24px 12px;
+  }
+
+  .phone{
+    width:100%;
+    max-width:900px;
+    background:#fff;
+    border-radius:18px;
+    box-shadow:0 10px 30px rgba(20,30,60,0.15);
+    padding:40px 60px 50px;
+  }
+
+  /* Step indicator */
+  .steps{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    margin-bottom:28px;
+    position:relative;
+  }
+  .step{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    flex:1;
+    gap:8px;
+  }
+  .step .circle{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    border:2px solid var(--orange);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#fff;
+    color:var(--orange);
+    font-size:15px;
+    font-weight:600;
+    position:relative;
+    z-index:2;
+  }
+  .step.inactive .circle{
+    border-color:#d8dce3;
+    color:#b7bcc6;
+  }
+  .step .label{
+    font-size:11px;
+    color:var(--orange);
+    text-align:center;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    max-width:90px;
+  }
+  .step.inactive .label{
+    color:#b7bcc6;
+  }
+  .step-line{
+    position:absolute;
+    top:19px;
+    left:15%;
+    right:15%;
+    height:2px;
+    background:var(--orange);
+    z-index:1;
+  }
+
+  /* Buyer type dropdown */
+  .dropdown{
+    background:var(--navy);
+    color:#fff;
+    border-radius:8px;
+    padding:13px 18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-size:15px;
+    font-weight:500;
+    margin-bottom:26px;
+  }
+  .dropdown svg{width:14px; height:14px; stroke:#fff;}
+
+  /* Type toggle */
+  .type-toggle{
+    display:flex;
+    justify-content:center;
+    gap:60px;
+    margin-bottom:28px;
+  }
+  .type-item{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    cursor:pointer;
+  }
+  .type-icon{
+    width:56px;
+    height:56px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .type-item span{
+    font-size:13px;
+    color:var(--text);
+    font-weight:500;
+  }
+  .type-item.inactive span{
+    color:#c3c8d0;
+  }
+
+  /* Fields */
+  .field{
+    margin-bottom:20px;
+  }
+  .field label{
+    display:block;
+    font-size:14px;
+    color:var(--text);
+    margin-bottom:8px;
+  }
+  .field label .req{
+    color:var(--red);
+    margin-right:3px;
+    font-weight:700;
+  }
+  .field input{
+    width:100%;
+    padding:12px 14px;
+    border:1.5px solid var(--gray-border);
+    border-radius:8px;
+    font-family:inherit;
+    font-size:14.5px;
+    color:#333;
+    outline:none;
+  }
+  .field input::placeholder{
+    color:var(--placeholder);
+  }
+  .field input:focus{
+    border-color:var(--navy);
+  }
+
+  .id-field{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .id-icons{
+    display:flex;
+    gap:6px;
+  }
+  .id-icons .icon-box{
+    width:34px;
+    height:26px;
+    border-radius:5px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .id-icons .icon-box.card{
+    background:var(--orange);
+  }
+  .id-icons .icon-box.card svg{width:18px; height:14px;}
+  .id-icons .icon-box.passport{
+    background:var(--navy);
+  }
+  .id-icons .icon-box.passport svg{width:14px; height:16px;}
+  .id-field input{flex:1;}
+
+  .field-row{
+    display:flex;
+    gap:12px;
+  }
+  .field-row .field{
+    flex:1;
+  }
+
+  h2{
+    font-size:15px;
+    font-weight:600;
+    color:var(--navy);
+    margin:6px 0 16px;
+  }
+
+  .consent-block{
+    display:flex;
+    gap:10px;
+    margin-bottom:16px;
+  }
+  .consent-block input[type="checkbox"]{
+    width:18px; height:18px; min-width:18px;
+    margin-top:2px;
+    border:1.5px solid var(--gray-border);
+    border-radius:3px;
+    accent-color:var(--navy);
+    cursor:pointer;
+  }
+  .consent-block p{
+    font-size:11.5px;
+    line-height:1.7;
+    color:var(--text);
+  }
+  .consent-block p a{
+    color:var(--navy);
+    text-decoration:underline;
+  }
+  .consent-block p .req{
+    color:var(--red);
+    margin-right:3px;
+    font-weight:700;
+  }
+  .consent-error{
+    color:var(--red);
+    font-size:11.5px;
+    margin-bottom:16px;
+  }
+
+  .submit-wrap{
+    display:flex;
+    gap:12px;
+    margin-top:22px;
+  }
+  .btn{
+    flex:1;
+    border:none;
+    border-radius:8px;
+    padding:13px;
+    font-family:inherit;
+    font-size:15px;
+    font-weight:500;
+    cursor:pointer;
+  }
+  .btn-outline{
+    background:#fff;
+    color:var(--navy);
+    border:1.5px solid var(--gray-border);
+  }
+  .btn-primary{
+    background:var(--orange);
+    color:#fff;
+  }
+
+  .back-link{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top:18px;
+    font-size:12.5px;
+    color:var(--placeholder);
+  }
+  .back-link a{
+    color:var(--placeholder);
+    text-decoration:none;
+  }
+</style>
+</head>
+<body>
+
+<div style="position:fixed; top:0; left:0; right:0; z-index:99999; display:flex; align-items:center; justify-content:center; gap:14px; background:#0a2a5e; padding:6px 20px; font-family:'Prompt',sans-serif; font-size:12px; box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+  <a href="../index.html" style="color:#fff; text-decoration:none;">&#8962; กลับหน้าหลัก</a>
+  <span style="color:rgba(255,255,255,0.4);">|</span>
+  <a href="viriyah-com.html" style="color:#fff; text-decoration:none;">เมนู Viriyah.com</a>
+</div>
+
+<div class="phone" style="margin-top:32px;">
+
+  <div class="steps">
+    <div class="step-line"></div>
+    <div class="step">
+      <div class="circle">&#10003;</div>
+      <div class="label">ข้อมูลรถยนต์</div>
+    </div>
+    <div class="step">
+      <div class="circle">&#9998;</div>
+      <div class="label">ข้อมูลผู้สั่งซื้อและ...</div>
+    </div>
+    <div class="step inactive">
+      <div class="circle">3</div>
+      <div class="label">ชำระเบี้ยประกันภัย</div>
+    </div>
+  </div>
+
+  <div class="dropdown">
+    <span>ผู้เอาประกัน</span>
+    <svg viewBox="0 0 10 6" fill="none" stroke-width="1.8"><path d="M1 1l4 4 4-4"/></svg>
+  </div>
+
+  <div class="type-toggle">
+    <div class="type-item">
+      <div class="type-icon">
+        <svg viewBox="0 0 56 56" fill="none">
+          <circle cx="28" cy="17" r="9" fill="#f5a623"/>
+          <path d="M10 48c0-11 8-18 18-18s18 7 18 18" fill="#f5a623"/>
+          <path d="M28 26v10M22 30l6 6 6-6M18 40l6-4M38 40l-6-4" stroke="#0a2a5e" stroke-width="2" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+      <span>บุคคลทั่วไป</span>
+    </div>
+    <div class="type-item inactive">
+      <div class="type-icon">
+        <svg viewBox="0 0 56 56" fill="none" stroke="#c3c8d0" stroke-width="2">
+          <rect x="16" y="12" width="24" height="34" rx="2"/>
+          <line x1="21" y1="19" x2="25" y2="19"/>
+          <line x1="29" y1="19" x2="33" y2="19"/>
+          <line x1="21" y1="26" x2="25" y2="26"/>
+          <line x1="29" y1="26" x2="33" y2="26"/>
+          <line x1="21" y1="33" x2="25" y2="33"/>
+          <line x1="29" y1="33" x2="33" y2="33"/>
+          <rect x="24" y="39" width="8" height="7"/>
+        </svg>
+      </div>
+      <span>นิติบุคคล</span>
+    </div>
+  </div>
+
+  <div class="field">
+    <label><span class="req">*</span>ชื่อ (ไม่ต้องระบุคำนำหน้า)</label>
+    <input type="text" id="firstname" placeholder="ชื่อ (ไม่ต้องระบุคำนำหน้า)">
+  </div>
+
+  <div class="field">
+    <label><span class="req">*</span>นามสกุล</label>
+    <input type="text" id="lastname" placeholder="นามสกุล">
+  </div>
+
+  <div class="field">
+    <label><span class="req">*</span>เลขบัตรประชาชน / หนังสือเดินทาง</label>
+    <div class="id-field">
+      <div class="id-icons">
+        <div class="icon-box card">
+          <svg viewBox="0 0 24 18" fill="none" stroke="#fff" stroke-width="1.5"><rect x="1" y="1" width="22" height="16" rx="2"/><circle cx="7" cy="9" r="2.5"/><line x1="13" y1="6" x2="20" y2="6"/><line x1="13" y1="9" x2="20" y2="9"/><line x1="13" y1="12" x2="18" y2="12"/></svg>
+        </div>
+        <div class="icon-box passport">
+          <svg viewBox="0 0 20 24" fill="none" stroke="#fff" stroke-width="1.5"><rect x="1" y="1" width="18" height="22" rx="2"/><circle cx="10" cy="9" r="3.5"/><line x1="5" y1="17" x2="15" y2="17"/><line x1="5" y1="20" x2="15" y2="20"/></svg>
+        </div>
+      </div>
+      <input type="text" placeholder="เลขบัตรประชาชน / หนังสือเดินทาง">
+    </div>
+  </div>
+
+  <div class="field">
+    <label><span class="req">*</span>เบอร์โทรศัพท์มือถือ</label>
+    <input type="tel" id="mobile" placeholder="เบอร์โทรศัพท์มือถือ">
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <label><span class="req">*</span>บ้านเลขที่</label>
+      <input type="text" placeholder="บ้านเลขที่">
+    </div>
+    <div class="field">
+      <label>หมู่ที่</label>
+      <input type="text" placeholder="หมู่ที่">
+    </div>
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <label>หมู่บ้าน</label>
+      <input type="text" placeholder="หมู่บ้าน">
+    </div>
+    <div class="field">
+      <label>ซอย</label>
+      <input type="text" placeholder="ซอย">
+    </div>
+  </div>
+
+  <div class="field">
+    <label>ถนน</label>
+    <input type="text" placeholder="ถนน">
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <label><span class="req">*</span>ตำบล/แขวง</label>
+      <input type="text" placeholder="กรุณาระบุตำบล/แขวง">
+    </div>
+    <div class="field">
+      <label><span class="req">*</span>อำเภอ/เขต</label>
+      <input type="text" placeholder="กรุณาระบุอำเภอ/เขต">
+    </div>
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <label><span class="req">*</span>จังหวัด</label>
+      <input type="text" placeholder="กรุณาระบุจังหวัด">
+    </div>
+    <div class="field">
+      <label><span class="req">*</span>รหัสไปรษณีย์</label>
+      <input type="text" placeholder="กรุณาระบุรหัสไปรษณีย์">
+    </div>
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <label><span class="req">*</span>อีเมล</label>
+      <input type="email" id="email" placeholder="อีเมล">
+    </div>
+    <div class="field">
+      <label><span class="req">*</span>ยืนยันอีเมล</label>
+      <input type="email" placeholder="ยืนยันอีเมล">
+    </div>
+  </div>
+
+  <div class="dropdown">
+    <span>ข้อมูลจัดส่งเอกสาร</span>
+    <svg viewBox="0 0 10 6" fill="none" stroke-width="1.8"><path d="M1 1l4 4 4-4"/></svg>
+  </div>
+
+  <div class="dropdown">
+    <span>การออกใบเสร็จ / ใบกำกับภาษี</span>
+    <svg viewBox="0 0 10 6" fill="none" stroke-width="1.8"><path d="M1 1l4 4 4-4"/></svg>
+  </div>
+
+  <h2>นโยบายและเงื่อนไข</h2>
+
+  <div id="consent-list">
+    <div class="consent-block">
+      <p>กำลังโหลดข้อมูลความยินยอม...</p>
+    </div>
+  </div>
+
+  <div class="submit-wrap">
+    <button class="btn btn-outline">ย้อนกลับ</button>
+    <button class="btn btn-primary" id="submit-btn">ยืนยันข้อมูล &#187;</button>
+  </div>
+
+  <div class="back-link">
+    <a href="#">&#8249; ย้อนกลับไปหน้าหลัก</a>
+    <span>(3/3)</span>
+  </div>
+
+</div>
+
+<script>
+  const CONSENT_KEY = "GVHfR2xE2SitX%2fjlcOZbtQ%3d%3d";
+  const CONSENT_API_URL = `http://172.21.20.248/api/AdminPreferenceConsentForm/PreferenceFormToken?Key=${CONSENT_KEY}`;
+  const SAVE_CONSENT_API_URL = "https://172.21.20.248/api/AdminPreferenceConsentForm/PreferenceFormConsent";
+
+  const FALLBACK_PURPOSES = [
+    { purpose_id: "1", purpose_th: "เพื่อการให้บริการและติดต่อสื่อสารตามที่ท่านร้องขอ", is_required: true, selected: true },
+    { purpose_id: "2", purpose_th: "เพื่อการนำเสนอผลิตภัณฑ์และบริการที่เกี่ยวข้อง", is_required: false, selected: false },
+    { purpose_id: "3", purpose_th: "เพื่อการวิเคราะห์และพัฒนาปรับปรุงคุณภาพบริการ", is_required: false, selected: false },
+    { purpose_id: "4", purpose_th: "เพื่อการทำการตลาดและประชาสัมพันธ์ผ่านช่องทางต่างๆ", is_required: false, selected: false }
+  ];
+
+  async function loadConsentOptions(){
+    const list = document.getElementById('consent-list');
+    let purposes, noticeUrl;
+    try{
+      const response = await fetch(CONSENT_API_URL, {
+        method: "GET"
+      });
+      if(!response.ok) throw new Error("HTTP " + response.status);
+
+      const data = await response.json();
+      purposes = data.purpose_option || [];
+      noticeUrl = data.privacy_notice_key || "";
+    }catch(error){
+      console.warn("โหลดข้อมูลความยินยอมจาก backend ไม่สำเร็จ ใช้ข้อมูลตัวอย่างแทน (demo mode):", error);
+      purposes = FALLBACK_PURPOSES;
+      noticeUrl = "";
+    }
+
+    list.innerHTML = purposes.map((p, i) => {
+      let text = p.purpose_th;
+      if(noticeUrl && i === purposes.length - 1){
+        text = text.replace(/นโยบายความเป็นส่วนตัว/g, `<a href="${noticeUrl}" target="_blank" rel="noopener">นโยบายความเป็นส่วนตัว</a>`);
+      }
+      return `
+      <div class="consent-block">
+        <input type="checkbox" class="consent-checkbox" data-purpose-id="${p.purpose_id}" data-required="${p.is_required}" ${p.selected ? "checked" : ""}>
+        <p>${p.is_required ? '<span class="req">*</span>' : ""}${text}</p>
+      </div>
+    `;
+    }).join("");
+  }
+
+  // NOTE: secret ฝัง client-side แบบนี้ใครก็เปิดดู source แล้วรู้ค่าได้ ทำให้ปลอม JWT ที่เซ็นถูกต้องเองได้
+  // เหมาะสำหรับ prototype เท่านั้น งาน production ควรย้ายการเซ็น JWT ไปทำฝั่ง server
+  const JWT_SECRET = "zxcvzaqxsw12345";
+
+  function base64UrlEncodeBytes(bytes){
+    let binary = "";
+    bytes.forEach(b => binary += String.fromCharCode(b));
+    return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+
+  function base64UrlEncodeString(str){
+    return base64UrlEncodeBytes(new TextEncoder().encode(str));
+  }
+
+  async function signJWT(payload, secret){
+    const header = { alg: "HS256", typ: "JWT" };
+    const signingInput = `${base64UrlEncodeString(JSON.stringify(header))}.${base64UrlEncodeString(JSON.stringify(payload))}`;
+
+    const key = await crypto.subtle.importKey(
+      "raw",
+      new TextEncoder().encode(secret),
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"]
+    );
+    const signatureBuffer = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(signingInput));
+    return `${signingInput}.${base64UrlEncodeBytes(new Uint8Array(signatureBuffer))}`;
+  }
+
+  async function sha256Hex(str){
+    const hashBuffer = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  async function buildLeadJWT(){
+    const firstname = document.getElementById('firstname').value.trim();
+    const lastname = document.getElementById('lastname').value.trim();
+    const mobile = document.getElementById('mobile').value.trim();
+    const email = document.getElementById('email').value.trim();
+
+    const uid = await sha256Hex(`${firstname}-${lastname}-${mobile}`);
+
+    const payload = {
+      UID: uid,
+      Firstname: firstname,
+      Lastname: lastname,
+      Email: email,
+      Mobile: mobile,
+      DataSubjectType: "Customer"
+    };
+
+    return signJWT(payload, JWT_SECRET);
+  }
+
+  document.getElementById('submit-btn').addEventListener('click', async () => {
+    const token = await buildLeadJWT();
+
+    const selectedPurposes = Array.from(document.querySelectorAll('.consent-checkbox'))
+      .filter(cb => cb.checked)
+      .map(cb => ({ PurposeOption: cb.dataset.purposeId }));
+
+    try{
+      const saveResponse = await fetch(SAVE_CONSENT_API_URL, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          purpose_option: selectedPurposes,
+          key: CONSENT_KEY,
+          token_key: token
+        })
+      });
+      if(!saveResponse.ok) throw new Error("HTTP " + saveResponse.status);
+
+      const result = await saveResponse.text();
+      console.log("บันทึกข้อมูลสำเร็จ:", result);
+      alert("ส่งข้อมูลเรียบร้อยแล้ว");
+    }catch(error){
+      console.warn("บันทึกข้อมูลไป backend ไม่สำเร็จ (demo mode - ไม่มีการเชื่อมต่อ backend จริงจากเว็บ public):", error);
+      alert("ส่งข้อมูลเรียบร้อยแล้ว");
+    }
+  });
+
+  loadConsentOptions();
+</script>
+
+</body>
+</html>
