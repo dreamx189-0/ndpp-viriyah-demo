@@ -395,11 +395,26 @@
 </div>
 
 <script>
-    fetch("https://172.21.20.248/api/cookie/cookiesetting?key=P7ol7rY4Z7gRnKe4nI6G2Q%3d%3d")
+  window.NKS_CONSENT_MODE_CONFIG = {
+    "mode": "basic",
+    "bannerRegions": [],
+    "grantOutsideBannerRegions": false,
+    "waitForUpdate": 2000
+  };
+</script>
+<script src="https://cookiebanner.pdpanetka.com/nksAutoBlock.min.js"></script>
+<script>
+  fetch("https://ndppdemo.netkasystem.co.th/api/cookie/cookiesetting?key=Cr14Y%2fDJkWjTrSLgA7fdmw%3d%3d")
     .then((res) => res.text())
     .then((html) => {
-        var documentFragment = document.createRange().createContextualFragment(html);
-        document.body.appendChild(documentFragment);
+      var documentFragment = document.createRange().createContextualFragment(html);
+      documentFragment.querySelectorAll('script[src*="nksAutoBlock"]')
+        .forEach((el) => el.remove());
+      documentFragment.querySelectorAll('script:not([src])')
+        .forEach((el) => {
+          if (el.textContent.indexOf('NKS_CONSENT_MODE_CONFIG') !== -1) el.remove();
+        });
+      document.body.appendChild(documentFragment);
     })
     .catch((err) => console.warn('API went wrong.', err));
 </script>
