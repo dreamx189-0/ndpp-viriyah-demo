@@ -394,30 +394,5 @@
   </p>
 </div>
 
-<script>
-  window.NKS_CONSENT_MODE_CONFIG = {
-    "mode": "basic",
-    "bannerRegions": [],
-    "grantOutsideBannerRegions": false,
-    "waitForUpdate": 2000
-  };
-</script>
-<script src="https://cookiebanner.pdpanetka.com/nksAutoBlock.min.js"></script>
-<script>
-  fetch("https://ndppdemo.netkasystem.co.th/api/cookie/cookiesetting?key=Cr14Y%2fDJkWjTrSLgA7fdmw%3d%3d")
-    .then((res) => res.text())
-    .then((html) => {
-      var documentFragment = document.createRange().createContextualFragment(html);
-      documentFragment.querySelectorAll('script[src*="nksAutoBlock"]')
-        .forEach((el) => el.remove());
-      documentFragment.querySelectorAll('script:not([src])')
-        .forEach((el) => {
-          if (el.textContent.indexOf('NKS_CONSENT_MODE_CONFIG') !== -1) el.remove();
-        });
-      document.body.appendChild(documentFragment);
-    })
-    .catch((err) => console.warn('API went wrong.', err));
-</script>
-
 </body>
 </html>
