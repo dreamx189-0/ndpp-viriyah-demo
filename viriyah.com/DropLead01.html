@@ -377,6 +377,12 @@
 </div>
 
 <script>
+  // ตัวอย่างคุกกี้เพิ่มเติม สำหรับให้ NDPP Discovery scan เจอข้อมูลในหมวด Functional และ Targeting
+  document.cookie = "viriyah_lang=th; path=/; max-age=" + (60 * 60 * 24 * 180); // Functional: จำภาษาที่เลือกไว้
+  document.cookie = "viriyah_ad_id=" + Math.random().toString(36).slice(2) + "; path=/; max-age=" + (60 * 60 * 24 * 90); // Targeting: ระบุตัวตนสำหรับโฆษณา/รีมาร์เก็ตติ้ง
+</script>
+
+<script>
   window.NKS_CONSENT_MODE_CONFIG = {
     "mode": "basic",
     "bannerRegions": [],
